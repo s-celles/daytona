@@ -70,6 +70,11 @@ var ServeCmd = &cobra.Command{
 			return err
 		}
 
+		daytonaConfigDir, err := config.GetConfigDir()
+		if err != nil {
+			return err
+		}
+
 		telemetryService := posthogservice.NewTelemetryService(posthogservice.PosthogServiceConfig{
 			ApiKey:   internal.PosthogApiKey,
 			Endpoint: internal.PosthogEndpoint,
@@ -82,6 +87,7 @@ var ServeCmd = &cobra.Command{
 			Version:          internal.Version,
 			ServerId:         c.Id,
 			Frps:             c.Frps,
+			ConfigPath:       filepath.Join(daytonaConfigDir, "config.json"),
 		})
 
 		server, err := GetInstance(c, configDir, internal.Version, telemetryService)
