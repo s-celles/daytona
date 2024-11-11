@@ -229,7 +229,7 @@ func (a *ApiServer) Start() error {
 		targetController.DELETE("/:target", target.RemoveTarget)
 	}
 
-	logController := protected.Group("/log")
+	logController := public.Group("/log")
 	{
 		logController.GET("/server", log_controller.ReadServerLog)
 		logController.GET("/workspace/:workspaceId", log_controller.ReadWorkspaceLog)
