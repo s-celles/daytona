@@ -16,7 +16,7 @@ import (
 	apiclient_util "github.com/daytonaio/daytona/internal/util/apiclient"
 	ssh_config "github.com/daytonaio/daytona/pkg/agent/ssh/config"
 	"github.com/daytonaio/daytona/pkg/apiclient"
-	workspace_common "github.com/daytonaio/daytona/pkg/cmd/workspace/common"
+	cmd_common "github.com/daytonaio/daytona/pkg/cmd/common"
 	"github.com/daytonaio/daytona/pkg/common"
 	"github.com/daytonaio/daytona/pkg/logs"
 	"github.com/daytonaio/daytona/pkg/views"
@@ -222,7 +222,7 @@ var CreateCmd = &cobra.Command{
 		if err != nil {
 			return apiclient_util.HandleErrorResponse(res, err)
 		}
-		gpgKey, err := workspace_common.GetGitProviderGpgKey(apiClient, ctx, createWorkspaceDtos[0].GitProviderConfigId)
+		gpgKey, err := cmd_common.GetGitProviderGpgKey(apiClient, ctx, createWorkspaceDtos[0].GitProviderConfigId)
 		if err != nil {
 			log.Warn(err)
 		}
@@ -267,7 +267,7 @@ var CreateCmd = &cobra.Command{
 
 		views.RenderCreationInfoMessage(fmt.Sprintf("Opening the workspace in %s ...", chosenIde.Name))
 
-		return workspace_common.OpenIDE(chosenIdeId, activeProfile, createWorkspaceDtos[0].Name, *ws.Info.ProviderMetadata, YesFlag, gpgKey)
+		return cmd_common.OpenIDE(chosenIdeId, activeProfile, createWorkspaceDtos[0].Name, *ws.Info.ProviderMetadata, YesFlag, gpgKey)
 	},
 }
 
@@ -278,7 +278,7 @@ var noIdeFlag bool
 var blankFlag bool
 var multiWorkspaceFlag bool
 
-var workspaceConfigurationFlags = workspace_common.WorkspaceConfigurationFlags{
+var workspaceConfigurationFlags = cmd_common.WorkspaceConfigurationFlags{
 	Builder:           new(views_util.BuildChoice),
 	CustomImage:       new(string),
 	CustomImageUser:   new(string),
@@ -305,7 +305,7 @@ func init() {
 	CreateCmd.Flags().BoolVarP(&YesFlag, "yes", "y", false, "Automatically confirm any prompts")
 	CreateCmd.Flags().StringSliceVar(workspaceConfigurationFlags.Branches, "branch", []string{}, "Specify the Git branches to use in the workspaces")
 
-	workspace_common.AddWorkspaceConfigurationFlags(CreateCmd, workspaceConfigurationFlags, true)
+	cmd_common.AddWorkspaceConfigurationFlags(CreateCmd, workspaceConfigurationFlags, true)
 }
 
 func waitForDial(target *apiclient.TargetDTO, workspaceId string, activeProfile *config.Profile, tsConn *tsnet.Server, gpgKey string) error {

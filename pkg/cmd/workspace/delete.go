@@ -9,11 +9,10 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/huh"
-	"github.com/daytonaio/daytona/cmd/daytona/config"
 	"github.com/daytonaio/daytona/internal/util"
 	apiclient_util "github.com/daytonaio/daytona/internal/util/apiclient"
 	"github.com/daytonaio/daytona/pkg/apiclient"
-	"github.com/daytonaio/daytona/pkg/cmd/workspace/common"
+	"github.com/daytonaio/daytona/pkg/cmd/common"
 	"github.com/daytonaio/daytona/pkg/views"
 	views_util "github.com/daytonaio/daytona/pkg/views/util"
 	"github.com/daytonaio/daytona/pkg/views/workspace/selection"
@@ -123,7 +122,7 @@ var DeleteCmd = &cobra.Command{
 			fmt.Println("Operation canceled.")
 		} else {
 			for _, workspace := range workspaceDeleteList {
-				err := RemoveWorkspace(ctx, apiClient, workspace, forceFlag)
+				err := common.RemoveWorkspace(ctx, apiClient, workspace, forceFlag)
 				if err != nil {
 					log.Error(fmt.Sprintf("[ %s ] : %v", workspace.Name, err))
 				}
@@ -156,43 +155,12 @@ func DeleteAllWorkspaces(force bool) error {
 	}
 
 	for _, workspace := range workspaceList {
-		err := RemoveWorkspace(ctx, apiClient, &workspace, force)
+		err := common.RemoveWorkspace(ctx, apiClient, &workspace, force)
 		if err != nil {
 			log.Errorf("Failed to delete workspace %s: %v", workspace.Name, err)
 			continue
 		}
 		views.RenderInfoMessage(fmt.Sprintf("- Workspace '%s' successfully deleted", workspace.Name))
 	}
-	return nil
-}
-
-func RemoveWorkspace(ctx context.Context, apiClient *apiclient.APIClient, workspace *apiclient.WorkspaceDTO, force bool) error {
-	message := fmt.Sprintf("Deleting workspace %s", workspace.Name)
-	err := views_util.WithInlineSpinner(message, func() error {
-		res, err := apiClient.WorkspaceAPI.RemoveWorkspace(ctx, workspace.Id).Force(force).Execute()
-		if err != nil {
-			return apiclient_util.HandleErrorResponse(res, err)
-		}
-		c, err := config.GetConfig()
-		if err != nil {
-			return err
-		}
-
-		activeProfile, err := c.GetActiveProfile()
-		if err != nil {
-			return err
-		}
-
-		err = config.RemoveWorkspaceSshEntries(activeProfile.Id, workspace.Id)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-
-	if err != nil {
-		return err
-	}
-
 	return nil
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/charmbracelet/huh"
 	apiclient_util "github.com/daytonaio/daytona/internal/util/apiclient"
 	"github.com/daytonaio/daytona/pkg/apiclient"
+	"github.com/daytonaio/daytona/pkg/cmd/common"
 	"github.com/daytonaio/daytona/pkg/views"
 	"github.com/daytonaio/daytona/pkg/views/target/selection"
 	views_util "github.com/daytonaio/daytona/pkg/views/util"
@@ -171,9 +172,38 @@ func DeleteAllTargets(workspaceList []apiclient.WorkspaceDTO, force bool) error 
 }
 
 func RemoveTarget(ctx context.Context, apiClient *apiclient.APIClient, target *apiclient.TargetDTO, workspaceList []apiclient.WorkspaceDTO, force bool) error {
-	for _, workspace := range workspaceList {
-		if workspace.TargetId == target.Id {
-			return fmt.Errorf("target '%s' is in use by workspace '%s', please remove workspaces before deleting their target", target.Name, workspace.Name)
+	targetWorkspaces := getTargetWorkspacesFromWorkspaceList(target.Id, workspaceList)
+	numOfTargetWorkspaces := len(targetWorkspaces)
+	var targetWorkspacesNames []string
+	for _, workspace := range targetWorkspaces {
+		targetWorkspacesNames = append(targetWorkspacesNames, workspace.Name)
+	}
+
+	var deleteWorkspacesFlag bool
+
+	if numOfTargetWorkspaces > 0 {
+		form := huh.NewForm(
+			huh.NewGroup(
+				huh.NewConfirm().
+					Title(fmt.Sprintf("Target '%s' is in use by %d workspace(s). Delete workspaces: [%s]?", target.Name, numOfTargetWorkspaces, strings.Join(targetWorkspacesNames, ", "))).
+					Description(fmt.Sprintf("Do you want to delete workspace(s): [%s]?", strings.Join(targetWorkspacesNames, ", "))).
+					Value(&deleteWorkspacesFlag),
+			),
+		).WithTheme(views.GetCustomTheme())
+
+		err := form.Run()
+		if err != nil {
+			return err
+		}
+
+		if deleteWorkspacesFlag {
+			for _, workspace := range targetWorkspaces {
+				err := common.RemoveWorkspace(ctx, apiClient, &workspace, force)
+				if err != nil {
+					log.Errorf("Failed to delete workspace %s: %v", workspace.Name, err)
+					continue
+				}
+			}
 		}
 	}
 
@@ -192,4 +222,14 @@ func RemoveTarget(ctx context.Context, apiClient *apiclient.APIClient, target *a
 	}
 
 	return nil
+}
+
+func getTargetWorkspacesFromWorkspaceList(targetId string, workspaceList []apiclient.WorkspaceDTO) []apiclient.WorkspaceDTO {
+	var workspaces []apiclient.WorkspaceDTO
+	for _, workspace := range workspaceList {
+		if workspace.TargetId == targetId {
+			workspaces = append(workspaces, workspace)
+		}
+	}
+	return workspaces
 }
