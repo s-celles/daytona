@@ -120,7 +120,7 @@ func (a *Agent) startWorkspaceMode() error {
 
 	go func() {
 		for {
-			err := a.updateWorkspaceState()
+			err := a.updateWorkspaceMetadata()
 			if err != nil {
 				log.Error(fmt.Sprintf("failed to update workspace state: %s", err))
 			}
@@ -201,7 +201,7 @@ func (a *Agent) uptime() int32 {
 	return max(int32(time.Since(a.startTime).Seconds()), 1)
 }
 
-func (a *Agent) updateWorkspaceState() error {
+func (a *Agent) updateWorkspaceMetadata() error {
 	apiClient, err := apiclient_util.GetAgentApiClient(a.Config.Server.ApiUrl, a.Config.Server.ApiKey, a.Config.ClientId, a.TelemetryEnabled)
 	if err != nil {
 		return err
@@ -213,7 +213,7 @@ func (a *Agent) updateWorkspaceState() error {
 	}
 
 	uptime := a.uptime()
-	res, err := apiClient.WorkspaceAPI.SetWorkspaceState(context.Background(), a.Config.WorkspaceId).SetState(apiclient.SetWorkspaceState{
+	res, err := apiClient.WorkspaceAPI.SetWorkspaceMetadata(context.Background(), a.Config.WorkspaceId).SetState(apiclient.SetWorkspaceMetadata{
 		Uptime:    uptime,
 		GitStatus: conversion.ToGitStatusDTO(gitStatus),
 	}).Execute()

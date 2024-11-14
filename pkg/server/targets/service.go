@@ -18,9 +18,9 @@ import (
 
 type ITargetService interface {
 	CreateTarget(ctx context.Context, req dto.CreateTargetDTO) (*target.Target, error)
-	GetTarget(ctx context.Context, filter *target.TargetFilter, verbose bool) (*dto.TargetDTO, error)
+	GetTarget(ctx context.Context, filter *target.Filter, verbose bool) (*dto.TargetDTO, error)
 	GetTargetLogReader(targetId string) (io.Reader, error)
-	ListTargets(ctx context.Context, filter *target.TargetFilter, verbose bool) ([]dto.TargetDTO, error)
+	ListTargets(ctx context.Context, filter *target.Filter, verbose bool) ([]dto.TargetDTO, error)
 	StartTarget(ctx context.Context, targetId string) error
 	StopTarget(ctx context.Context, targetId string) error
 	SetDefault(ctx context.Context, targetId string) error
@@ -29,7 +29,7 @@ type ITargetService interface {
 }
 
 type targetConfigStore interface {
-	Find(filter *config.TargetConfigFilter) (*config.TargetConfig, error)
+	Find(filter *config.Filter) (*config.TargetConfig, error)
 }
 
 type TargetServiceConfig struct {

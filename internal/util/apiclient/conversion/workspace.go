@@ -29,13 +29,13 @@ func ToWorkspace(workspaceDTO *apiclient.WorkspaceDTO) *workspace.Workspace {
 		Url:    workspaceDTO.Repository.Url,
 	}
 
-	var workspaceState *workspace.WorkspaceState
-	if workspaceDTO.State != nil {
-		uptime := workspaceDTO.State.Uptime
-		workspaceState = &workspace.WorkspaceState{
-			UpdatedAt: workspaceDTO.State.UpdatedAt,
+	var workspaceMetadata *workspace.WorkspaceMetadata
+	if workspaceDTO.Metadata != nil {
+		uptime := workspaceDTO.Metadata.Uptime
+		workspaceMetadata = &workspace.WorkspaceMetadata{
+			UpdatedAt: workspaceDTO.Metadata.UpdatedAt,
 			Uptime:    uint64(uptime),
-			GitStatus: ToGitStatus(workspaceDTO.State.GitStatus),
+			GitStatus: ToGitStatus(workspaceDTO.Metadata.GitStatus),
 		}
 	}
 
@@ -57,7 +57,7 @@ func ToWorkspace(workspaceDTO *apiclient.WorkspaceDTO) *workspace.Workspace {
 		BuildConfig:         workspaceBuild,
 		Repository:          repository,
 		TargetId:            workspaceDTO.TargetId,
-		State:               workspaceState,
+		Metadata:            workspaceMetadata,
 		GitProviderConfigId: workspaceDTO.GitProviderConfigId,
 	}
 

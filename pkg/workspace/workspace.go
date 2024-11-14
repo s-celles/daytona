@@ -14,6 +14,7 @@ import (
 type Workspace struct {
 	Id                  string                     `json:"id" validate:"required"`
 	Name                string                     `json:"name" validate:"required"`
+	State               WorkspaceState             `json:"state" validate:"required"`
 	Image               string                     `json:"image" validate:"required"`
 	User                string                     `json:"user" validate:"required"`
 	BuildConfig         *buildconfig.BuildConfig   `json:"buildConfig,omitempty" validate:"optional"`
@@ -21,9 +22,28 @@ type Workspace struct {
 	EnvVars             map[string]string          `json:"envVars" validate:"required"`
 	TargetId            string                     `json:"targetId" validate:"required"`
 	ApiKey              string                     `json:"-"`
-	State               *WorkspaceState            `json:"state,omitempty" validate:"optional"`
+	Metadata            *WorkspaceMetadata         `json:"metadata,omitempty" validate:"optional"`
 	GitProviderConfigId *string                    `json:"gitProviderConfigId,omitempty" validate:"optional"`
 } // @name Workspace
+
+type WorkspaceState string // @name WorkspaceState
+
+const (
+	WorkspaceStatePendingCreate       WorkspaceState = "pending-create"
+	WorkspaceStateCreating            WorkspaceState = "creating"
+	WorkspaceStatePendingStart        WorkspaceState = "pending-start"
+	WorkspaceStateStarting            WorkspaceState = "starting"
+	WorkspaceStateStarted             WorkspaceState = "started"
+	WorkspaceStatePendingStop         WorkspaceState = "pending-stop"
+	WorkspaceStateStopping            WorkspaceState = "stopping"
+	WorkspaceStateStopped             WorkspaceState = "stopped"
+	WorkspaceStatePendingRestart      WorkspaceState = "pending-restart"
+	WorkspaceStateError               WorkspaceState = "error"
+	WorkspaceStateUnresponsive        WorkspaceState = "unresponsive"
+	WorkspaceStatePendingDelete       WorkspaceState = "pending-delete"
+	WorkspaceStatePendingForcedDelete WorkspaceState = "pending-forced-delete"
+	WorkspaceStateDeleting            WorkspaceState = "deleting"
+)
 
 func (w *Workspace) WorkspaceFolderName() string {
 	if w.Repository != nil {
@@ -40,11 +60,11 @@ type WorkspaceInfo struct {
 	TargetId         string `json:"targetId" validate:"required"`
 } // @name WorkspaceInfo
 
-type WorkspaceState struct {
+type WorkspaceMetadata struct {
 	UpdatedAt string     `json:"updatedAt" validate:"required"`
 	Uptime    uint64     `json:"uptime" validate:"required"`
 	GitStatus *GitStatus `json:"gitStatus" validate:"required"`
-} // @name WorkspaceState
+} // @name WorkspaceMetadata
 
 type GitStatus struct {
 	CurrentBranch   string        `json:"currentBranch" validate:"required"`

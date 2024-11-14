@@ -11,168 +11,90 @@ API version: v0.0.0-dev
 package apiclient
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
 
-// checks if the WorkspaceState type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &WorkspaceState{}
+// WorkspaceState the model 'WorkspaceState'
+type WorkspaceState string
 
-// WorkspaceState struct for WorkspaceState
-type WorkspaceState struct {
-	GitStatus GitStatus `json:"gitStatus"`
-	UpdatedAt string    `json:"updatedAt"`
-	Uptime    int32     `json:"uptime"`
+// List of WorkspaceState
+const (
+	WorkspaceStatePendingCreate       WorkspaceState = "pending-create"
+	WorkspaceStateCreating            WorkspaceState = "creating"
+	WorkspaceStatePendingStart        WorkspaceState = "pending-start"
+	WorkspaceStateStarting            WorkspaceState = "starting"
+	WorkspaceStateStarted             WorkspaceState = "started"
+	WorkspaceStatePendingStop         WorkspaceState = "pending-stop"
+	WorkspaceStateStopping            WorkspaceState = "stopping"
+	WorkspaceStateStopped             WorkspaceState = "stopped"
+	WorkspaceStatePendingRestart      WorkspaceState = "pending-restart"
+	WorkspaceStateError               WorkspaceState = "error"
+	WorkspaceStateUnresponsive        WorkspaceState = "unresponsive"
+	WorkspaceStatePendingDelete       WorkspaceState = "pending-delete"
+	WorkspaceStatePendingForcedDelete WorkspaceState = "pending-forced-delete"
+	WorkspaceStateDeleting            WorkspaceState = "deleting"
+)
+
+// All allowed values of WorkspaceState enum
+var AllowedWorkspaceStateEnumValues = []WorkspaceState{
+	"pending-create",
+	"creating",
+	"pending-start",
+	"starting",
+	"started",
+	"pending-stop",
+	"stopping",
+	"stopped",
+	"pending-restart",
+	"error",
+	"unresponsive",
+	"pending-delete",
+	"pending-forced-delete",
+	"deleting",
 }
 
-type _WorkspaceState WorkspaceState
-
-// NewWorkspaceState instantiates a new WorkspaceState object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewWorkspaceState(gitStatus GitStatus, updatedAt string, uptime int32) *WorkspaceState {
-	this := WorkspaceState{}
-	this.GitStatus = gitStatus
-	this.UpdatedAt = updatedAt
-	this.Uptime = uptime
-	return &this
-}
-
-// NewWorkspaceStateWithDefaults instantiates a new WorkspaceState object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewWorkspaceStateWithDefaults() *WorkspaceState {
-	this := WorkspaceState{}
-	return &this
-}
-
-// GetGitStatus returns the GitStatus field value
-func (o *WorkspaceState) GetGitStatus() GitStatus {
-	if o == nil {
-		var ret GitStatus
-		return ret
-	}
-
-	return o.GitStatus
-}
-
-// GetGitStatusOk returns a tuple with the GitStatus field value
-// and a boolean to check if the value has been set.
-func (o *WorkspaceState) GetGitStatusOk() (*GitStatus, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.GitStatus, true
-}
-
-// SetGitStatus sets field value
-func (o *WorkspaceState) SetGitStatus(v GitStatus) {
-	o.GitStatus = v
-}
-
-// GetUpdatedAt returns the UpdatedAt field value
-func (o *WorkspaceState) GetUpdatedAt() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.UpdatedAt
-}
-
-// GetUpdatedAtOk returns a tuple with the UpdatedAt field value
-// and a boolean to check if the value has been set.
-func (o *WorkspaceState) GetUpdatedAtOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.UpdatedAt, true
-}
-
-// SetUpdatedAt sets field value
-func (o *WorkspaceState) SetUpdatedAt(v string) {
-	o.UpdatedAt = v
-}
-
-// GetUptime returns the Uptime field value
-func (o *WorkspaceState) GetUptime() int32 {
-	if o == nil {
-		var ret int32
-		return ret
-	}
-
-	return o.Uptime
-}
-
-// GetUptimeOk returns a tuple with the Uptime field value
-// and a boolean to check if the value has been set.
-func (o *WorkspaceState) GetUptimeOk() (*int32, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Uptime, true
-}
-
-// SetUptime sets field value
-func (o *WorkspaceState) SetUptime(v int32) {
-	o.Uptime = v
-}
-
-func (o WorkspaceState) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
-	if err != nil {
-		return []byte{}, err
-	}
-	return json.Marshal(toSerialize)
-}
-
-func (o WorkspaceState) ToMap() (map[string]interface{}, error) {
-	toSerialize := map[string]interface{}{}
-	toSerialize["gitStatus"] = o.GitStatus
-	toSerialize["updatedAt"] = o.UpdatedAt
-	toSerialize["uptime"] = o.Uptime
-	return toSerialize, nil
-}
-
-func (o *WorkspaceState) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"gitStatus",
-		"updatedAt",
-		"uptime",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
+func (v *WorkspaceState) UnmarshalJSON(src []byte) error {
+	var value string
+	err := json.Unmarshal(src, &value)
 	if err != nil {
 		return err
 	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
+	enumTypeValue := WorkspaceState(value)
+	for _, existing := range AllowedWorkspaceStateEnumValues {
+		if existing == enumTypeValue {
+			*v = enumTypeValue
+			return nil
 		}
 	}
 
-	varWorkspaceState := _WorkspaceState{}
+	return fmt.Errorf("%+v is not a valid WorkspaceState", value)
+}
 
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varWorkspaceState)
-
-	if err != nil {
-		return err
+// NewWorkspaceStateFromValue returns a pointer to a valid WorkspaceState
+// for the value passed as argument, or an error if the value passed is not allowed by the enum
+func NewWorkspaceStateFromValue(v string) (*WorkspaceState, error) {
+	ev := WorkspaceState(v)
+	if ev.IsValid() {
+		return &ev, nil
+	} else {
+		return nil, fmt.Errorf("invalid value '%v' for WorkspaceState: valid values are %v", v, AllowedWorkspaceStateEnumValues)
 	}
+}
 
-	*o = WorkspaceState(varWorkspaceState)
+// IsValid return true if the value is valid for the enum, false otherwise
+func (v WorkspaceState) IsValid() bool {
+	for _, existing := range AllowedWorkspaceStateEnumValues {
+		if existing == v {
+			return true
+		}
+	}
+	return false
+}
 
-	return err
+// Ptr returns reference to WorkspaceState value
+func (v WorkspaceState) Ptr() *WorkspaceState {
+	return &v
 }
 
 type NullableWorkspaceState struct {

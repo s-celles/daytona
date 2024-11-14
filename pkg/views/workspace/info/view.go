@@ -90,12 +90,12 @@ func getSingleWorkspaceOutput(workspace *apiclient.WorkspaceDTO, isCreationView 
 	repositoryUrl = strings.TrimPrefix(repositoryUrl, "https://")
 	repositoryUrl = strings.TrimPrefix(repositoryUrl, "http://")
 
-	if workspace.State != nil {
-		output += getInfoLineState("State", workspace.State) + "\n"
-		output += getInfoLineGitStatus("Branch", &workspace.State.GitStatus) + "\n"
+	if workspace.Metadata != nil {
+		output += getInfoLineState("Metadata", workspace.Metadata) + "\n"
+		output += getInfoLineGitStatus("Branch", &workspace.Metadata.GitStatus) + "\n"
 	}
 
-	output += getInfoLinePrNumber(workspace.Repository.PrNumber, workspace.Repository, workspace.State)
+	output += getInfoLinePrNumber(workspace.Repository.PrNumber, workspace.Repository, workspace.Metadata)
 
 	if !isCreationView {
 		output += getInfoLine("Target", fmt.Sprintf("%s (%s)", workspace.TargetName, workspace.TargetId)) + "\n"
@@ -110,7 +110,7 @@ func getInfoLine(key, value string) string {
 	return propertyNameStyle.Render(fmt.Sprintf("%-*s", propertyNameWidth, key)) + propertyValueStyle.Render(value) + "\n"
 }
 
-func getInfoLineState(key string, state *apiclient.WorkspaceState) string {
+func getInfoLineState(key string, state *apiclient.WorkspaceMetadata) string {
 	var uptime int
 	var stateProperty string
 
@@ -171,7 +171,7 @@ func getInfoLineGitStatus(key string, status *apiclient.GitStatus) string {
 	return output
 }
 
-func getInfoLinePrNumber(PrNumber *int32, repo apiclient.GitRepository, state *apiclient.WorkspaceState) string {
+func getInfoLinePrNumber(PrNumber *int32, repo apiclient.GitRepository, state *apiclient.WorkspaceMetadata) string {
 	if PrNumber != nil && (state == nil || state.GitStatus.CurrentBranch == repo.Branch) {
 		return getInfoLine("PR Number", fmt.Sprintf("#%d", *PrNumber)) + "\n"
 	}

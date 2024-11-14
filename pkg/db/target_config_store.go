@@ -24,7 +24,7 @@ func NewTargetConfigStore(db *gorm.DB) (*TargetConfigStore, error) {
 	return &TargetConfigStore{db: db}, nil
 }
 
-func (s *TargetConfigStore) List(filter *config.TargetConfigFilter) ([]*config.TargetConfig, error) {
+func (s *TargetConfigStore) List(filter *config.Filter) ([]*config.TargetConfig, error) {
 	targetConfigDTOs := []TargetConfigDTO{}
 	tx := processTargetConfigFilters(s.db, filter).Find(&targetConfigDTOs)
 
@@ -37,7 +37,7 @@ func (s *TargetConfigStore) List(filter *config.TargetConfigFilter) ([]*config.T
 	}), nil
 }
 
-func (s *TargetConfigStore) Find(filter *config.TargetConfigFilter) (*config.TargetConfig, error) {
+func (s *TargetConfigStore) Find(filter *config.Filter) (*config.TargetConfig, error) {
 	targetConfigDTO := TargetConfigDTO{}
 	tx := processTargetConfigFilters(s.db, filter).First(&targetConfigDTO)
 
@@ -72,7 +72,7 @@ func (s *TargetConfigStore) Delete(targetConfig *config.TargetConfig) error {
 	return nil
 }
 
-func processTargetConfigFilters(tx *gorm.DB, filter *config.TargetConfigFilter) *gorm.DB {
+func processTargetConfigFilters(tx *gorm.DB, filter *config.Filter) *gorm.DB {
 	if filter != nil {
 		if filter.Name != nil {
 			tx = tx.Where("name = ?", *filter.Name)

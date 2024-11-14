@@ -21,17 +21,18 @@ var _ MappedNullable = &WorkspaceViewDTO{}
 
 // WorkspaceViewDTO struct for WorkspaceViewDTO
 type WorkspaceViewDTO struct {
-	BuildConfig         *BuildConfig      `json:"buildConfig,omitempty"`
-	EnvVars             map[string]string `json:"envVars"`
-	GitProviderConfigId *string           `json:"gitProviderConfigId,omitempty"`
-	Id                  string            `json:"id"`
-	Image               string            `json:"image"`
-	Name                string            `json:"name"`
-	Repository          GitRepository     `json:"repository"`
-	State               *WorkspaceState   `json:"state,omitempty"`
-	TargetId            string            `json:"targetId"`
-	TargetName          string            `json:"targetName"`
-	User                string            `json:"user"`
+	BuildConfig         *BuildConfig       `json:"buildConfig,omitempty"`
+	EnvVars             map[string]string  `json:"envVars"`
+	GitProviderConfigId *string            `json:"gitProviderConfigId,omitempty"`
+	Id                  string             `json:"id"`
+	Image               string             `json:"image"`
+	Metadata            *WorkspaceMetadata `json:"metadata,omitempty"`
+	Name                string             `json:"name"`
+	Repository          GitRepository      `json:"repository"`
+	State               WorkspaceState     `json:"state"`
+	TargetId            string             `json:"targetId"`
+	TargetName          string             `json:"targetName"`
+	User                string             `json:"user"`
 }
 
 type _WorkspaceViewDTO WorkspaceViewDTO
@@ -40,13 +41,14 @@ type _WorkspaceViewDTO WorkspaceViewDTO
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewWorkspaceViewDTO(envVars map[string]string, id string, image string, name string, repository GitRepository, targetId string, targetName string, user string) *WorkspaceViewDTO {
+func NewWorkspaceViewDTO(envVars map[string]string, id string, image string, name string, repository GitRepository, state WorkspaceState, targetId string, targetName string, user string) *WorkspaceViewDTO {
 	this := WorkspaceViewDTO{}
 	this.EnvVars = envVars
 	this.Id = id
 	this.Image = image
 	this.Name = name
 	this.Repository = repository
+	this.State = state
 	this.TargetId = targetId
 	this.TargetName = targetName
 	this.User = user
@@ -197,6 +199,38 @@ func (o *WorkspaceViewDTO) SetImage(v string) {
 	o.Image = v
 }
 
+// GetMetadata returns the Metadata field value if set, zero value otherwise.
+func (o *WorkspaceViewDTO) GetMetadata() WorkspaceMetadata {
+	if o == nil || IsNil(o.Metadata) {
+		var ret WorkspaceMetadata
+		return ret
+	}
+	return *o.Metadata
+}
+
+// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WorkspaceViewDTO) GetMetadataOk() (*WorkspaceMetadata, bool) {
+	if o == nil || IsNil(o.Metadata) {
+		return nil, false
+	}
+	return o.Metadata, true
+}
+
+// HasMetadata returns a boolean if a field has been set.
+func (o *WorkspaceViewDTO) HasMetadata() bool {
+	if o != nil && !IsNil(o.Metadata) {
+		return true
+	}
+
+	return false
+}
+
+// SetMetadata gets a reference to the given WorkspaceMetadata and assigns it to the Metadata field.
+func (o *WorkspaceViewDTO) SetMetadata(v WorkspaceMetadata) {
+	o.Metadata = &v
+}
+
 // GetName returns the Name field value
 func (o *WorkspaceViewDTO) GetName() string {
 	if o == nil {
@@ -245,36 +279,28 @@ func (o *WorkspaceViewDTO) SetRepository(v GitRepository) {
 	o.Repository = v
 }
 
-// GetState returns the State field value if set, zero value otherwise.
+// GetState returns the State field value
 func (o *WorkspaceViewDTO) GetState() WorkspaceState {
-	if o == nil || IsNil(o.State) {
+	if o == nil {
 		var ret WorkspaceState
 		return ret
 	}
-	return *o.State
+
+	return o.State
 }
 
-// GetStateOk returns a tuple with the State field value if set, nil otherwise
+// GetStateOk returns a tuple with the State field value
 // and a boolean to check if the value has been set.
 func (o *WorkspaceViewDTO) GetStateOk() (*WorkspaceState, bool) {
-	if o == nil || IsNil(o.State) {
+	if o == nil {
 		return nil, false
 	}
-	return o.State, true
+	return &o.State, true
 }
 
-// HasState returns a boolean if a field has been set.
-func (o *WorkspaceViewDTO) HasState() bool {
-	if o != nil && !IsNil(o.State) {
-		return true
-	}
-
-	return false
-}
-
-// SetState gets a reference to the given WorkspaceState and assigns it to the State field.
+// SetState sets field value
 func (o *WorkspaceViewDTO) SetState(v WorkspaceState) {
-	o.State = &v
+	o.State = v
 }
 
 // GetTargetId returns the TargetId field value
@@ -368,11 +394,12 @@ func (o WorkspaceViewDTO) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["id"] = o.Id
 	toSerialize["image"] = o.Image
+	if !IsNil(o.Metadata) {
+		toSerialize["metadata"] = o.Metadata
+	}
 	toSerialize["name"] = o.Name
 	toSerialize["repository"] = o.Repository
-	if !IsNil(o.State) {
-		toSerialize["state"] = o.State
-	}
+	toSerialize["state"] = o.State
 	toSerialize["targetId"] = o.TargetId
 	toSerialize["targetName"] = o.TargetName
 	toSerialize["user"] = o.User
@@ -389,6 +416,7 @@ func (o *WorkspaceViewDTO) UnmarshalJSON(data []byte) (err error) {
 		"image",
 		"name",
 		"repository",
+		"state",
 		"targetId",
 		"targetName",
 		"user",

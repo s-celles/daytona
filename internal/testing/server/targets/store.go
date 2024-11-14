@@ -21,11 +21,11 @@ func NewInMemoryTargetStore() target.Store {
 	}
 }
 
-func (s *InMemoryTargetStore) List(filter *target.TargetFilter) ([]*target.TargetViewDTO, error) {
+func (s *InMemoryTargetStore) List(filter *target.Filter) ([]*target.TargetViewDTO, error) {
 	return s.processFilters(filter)
 }
 
-func (s *InMemoryTargetStore) Find(filter *target.TargetFilter) (*target.TargetViewDTO, error) {
+func (s *InMemoryTargetStore) Find(filter *target.Filter) (*target.TargetViewDTO, error) {
 	targets, err := s.processFilters(filter)
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (s *InMemoryTargetStore) Delete(target *target.Target) error {
 	return nil
 }
 
-func (s *InMemoryTargetStore) processFilters(filter *target.TargetFilter) ([]*target.TargetViewDTO, error) {
+func (s *InMemoryTargetStore) processFilters(filter *target.Filter) ([]*target.TargetViewDTO, error) {
 	var result []*target.TargetViewDTO
 	filteredTargets := make(map[string]*target.TargetViewDTO)
 	for k, v := range s.targets {

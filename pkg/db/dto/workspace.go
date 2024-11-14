@@ -37,7 +37,7 @@ type GitStatusDTO struct {
 	Behind          int32            `json:"behind,omitempty"`
 }
 
-type WorkspaceStateDTO struct {
+type WorkspaceMetadataDTO struct {
 	UpdatedAt string        `json:"updatedAt"`
 	Uptime    uint64        `json:"uptime"`
 	GitStatus *GitStatusDTO `json:"gitStatus"`
@@ -52,17 +52,17 @@ type WorkspaceBuildDTO struct {
 }
 
 type WorkspaceDTO struct {
-	Id                  string             `gorm:"primaryKey"`
-	Name                string             `json:"name"`
-	Image               string             `json:"image"`
-	User                string             `json:"user"`
-	Build               *WorkspaceBuildDTO `json:"build,omitempty" gorm:"serializer:json"`
-	Repository          RepositoryDTO      `json:"repository" gorm:"serializer:json"`
-	TargetId            string             `json:"targetId" gorm:"foreignKey:TargetId;references:Id"`
-	Target              TargetDTO          `gorm:"foreignKey:TargetId"`
-	ApiKey              string             `json:"apiKey"`
-	State               *WorkspaceStateDTO `json:"state,omitempty" gorm:"serializer:json"`
-	GitProviderConfigId *string            `json:"gitProviderConfigId,omitempty"`
+	Id                  string                `gorm:"primaryKey"`
+	Name                string                `json:"name"`
+	Image               string                `json:"image"`
+	User                string                `json:"user"`
+	Build               *WorkspaceBuildDTO    `json:"build,omitempty" gorm:"serializer:json"`
+	Repository          RepositoryDTO         `json:"repository" gorm:"serializer:json"`
+	TargetId            string                `json:"targetId" gorm:"foreignKey:TargetId;references:Id"`
+	Target              TargetDTO             `gorm:"foreignKey:TargetId"`
+	ApiKey              string                `json:"apiKey"`
+	Metadata            *WorkspaceMetadataDTO `json:"metadata,omitempty" gorm:"serializer:json"`
+	GitProviderConfigId *string               `json:"gitProviderConfigId,omitempty"`
 }
 
 func ToWorkspaceDTO(workspace *workspace.Workspace) WorkspaceDTO {
@@ -74,7 +74,7 @@ func ToWorkspaceDTO(workspace *workspace.Workspace) WorkspaceDTO {
 		Build:               ToWorkspaceBuildDTO(workspace.BuildConfig),
 		Repository:          ToRepositoryDTO(workspace.Repository),
 		TargetId:            workspace.TargetId,
-		State:               ToWorkspaceStateDTO(workspace.State),
+		Metadata:            ToWorkspaceMetadataDTO(workspace.Metadata),
 		ApiKey:              workspace.ApiKey,
 		GitProviderConfigId: workspace.GitProviderConfigId,
 	}
@@ -129,12 +129,12 @@ func ToGitStatusDTO(status *workspace.GitStatus) *GitStatusDTO {
 	return statusDTO
 }
 
-func ToWorkspaceStateDTO(state *workspace.WorkspaceState) *WorkspaceStateDTO {
+func ToWorkspaceMetadataDTO(state *workspace.WorkspaceMetadata) *WorkspaceMetadataDTO {
 	if state == nil {
 		return nil
 	}
 
-	return &WorkspaceStateDTO{
+	return &WorkspaceMetadataDTO{
 		UpdatedAt: state.UpdatedAt,
 		Uptime:    state.Uptime,
 		GitStatus: ToGitStatusDTO(state.GitStatus),
@@ -166,7 +166,7 @@ func ToWorkspace(workspaceDTO WorkspaceDTO) *workspace.Workspace {
 		BuildConfig:         ToWorkspaceBuild(workspaceDTO.Build),
 		Repository:          ToRepository(workspaceDTO.Repository),
 		TargetId:            workspaceDTO.TargetId,
-		State:               ToWorkspaceState(workspaceDTO.State),
+		Metadata:            ToWorkspaceMetadata(workspaceDTO.Metadata),
 		ApiKey:              workspaceDTO.ApiKey,
 		GitProviderConfigId: workspaceDTO.GitProviderConfigId,
 	}
@@ -204,12 +204,12 @@ func ToGitStatus(statusDTO *GitStatusDTO) *workspace.GitStatus {
 	return status
 }
 
-func ToWorkspaceState(stateDTO *WorkspaceStateDTO) *workspace.WorkspaceState {
+func ToWorkspaceMetadata(stateDTO *WorkspaceMetadataDTO) *workspace.WorkspaceMetadata {
 	if stateDTO == nil {
 		return nil
 	}
 
-	return &workspace.WorkspaceState{
+	return &workspace.WorkspaceMetadata{
 		UpdatedAt: stateDTO.UpdatedAt,
 		Uptime:    stateDTO.Uptime,
 		GitStatus: ToGitStatus(stateDTO.GitStatus),

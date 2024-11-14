@@ -16,14 +16,6 @@ type Store interface {
 	Delete(id string) error
 }
 
-var (
-	ErrBuildNotFound = errors.New("build not found")
-)
-
-func IsBuildNotFound(err error) bool {
-	return err.Error() == ErrBuildNotFound.Error()
-}
-
 type Filter struct {
 	Id            *string
 	States        *[]BuildState
@@ -33,6 +25,14 @@ type Filter struct {
 	RepositoryUrl *string
 	Branch        *string
 	EnvVars       *map[string]string
+}
+
+var (
+	ErrBuildNotFound = errors.New("build not found")
+)
+
+func IsBuildNotFound(err error) bool {
+	return err.Error() == ErrBuildNotFound.Error()
 }
 
 func (f *Filter) StatesToInterface() []interface{} {

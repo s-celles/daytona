@@ -69,7 +69,8 @@ func TestTargetService(t *testing.T) {
 	targetStore := t_targets.NewInMemoryTargetStore()
 	targetConfigStore := t_targetconfigs.NewInMemoryTargetConfigStore()
 
-	targetConfigStore.Save(&tc)
+	err := targetConfigStore.Save(&tc)
+	require.Nil(t, err)
 
 	apiKeyService := mocks.NewMockApiKeyService()
 	provisioner := mocks.NewMockProvisioner()
@@ -116,7 +117,7 @@ func TestTargetService(t *testing.T) {
 	t.Run("GetTarget", func(t *testing.T) {
 		provisioner.On("GetTargetInfo", mock.Anything, tg).Return(&targetInfo, nil)
 
-		target, err := service.GetTarget(ctx, &target.TargetFilter{IdOrName: &createTargetDTO.Id}, true)
+		target, err := service.GetTarget(ctx, &target.Filter{IdOrName: &createTargetDTO.Id}, true)
 
 		require.Nil(t, err)
 		require.NotNil(t, target)
@@ -125,7 +126,7 @@ func TestTargetService(t *testing.T) {
 	})
 
 	t.Run("GetTarget fails when target not found", func(t *testing.T) {
-		_, err := service.GetTarget(ctx, &target.TargetFilter{IdOrName: util.Pointer("invalid-id")}, true)
+		_, err := service.GetTarget(ctx, &target.Filter{IdOrName: util.Pointer("invalid-id")}, true)
 		require.NotNil(t, err)
 		require.Equal(t, targets.ErrTargetNotFound, err)
 	})
@@ -185,21 +186,22 @@ func TestTargetService(t *testing.T) {
 
 		require.Nil(t, err)
 
-		_, err = service.GetTarget(ctx, &target.TargetFilter{IdOrName: &createTargetDTO.Id}, true)
+		_, err = service.GetTarget(ctx, &target.Filter{IdOrName: &createTargetDTO.Id}, true)
 		require.Equal(t, targets.ErrTargetNotFound, err)
 	})
 
 	t.Run("ForceRemoveTarget", func(t *testing.T) {
-		targetStore.Save(tg)
+		err := targetStore.Save(tg)
+		require.Nil(t, err)
 
 		provisioner.On("DestroyTarget", tg).Return(nil)
 		apiKeyService.On("Revoke", mock.Anything).Return(nil)
 
-		err := service.ForceRemoveTarget(ctx, createTargetDTO.Id)
+		err = service.ForceRemoveTarget(ctx, createTargetDTO.Id)
 
 		require.Nil(t, err)
 
-		_, err = service.GetTarget(ctx, &target.TargetFilter{IdOrName: &createTargetDTO.Id}, true)
+		_, err = service.GetTarget(ctx, &target.Filter{IdOrName: &createTargetDTO.Id}, true)
 		require.Equal(t, targets.ErrTargetNotFound, err)
 	})
 

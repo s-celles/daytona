@@ -516,34 +516,34 @@ func (a *WorkspaceAPIService) RemoveWorkspaceExecute(r ApiRemoveWorkspaceRequest
 	return localVarHTTPResponse, nil
 }
 
-type ApiSetWorkspaceStateRequest struct {
+type ApiSetWorkspaceMetadataRequest struct {
 	ctx         context.Context
 	ApiService  *WorkspaceAPIService
 	workspaceId string
-	setState    *SetWorkspaceState
+	setState    *SetWorkspaceMetadata
 }
 
 // Set State
-func (r ApiSetWorkspaceStateRequest) SetState(setState SetWorkspaceState) ApiSetWorkspaceStateRequest {
+func (r ApiSetWorkspaceMetadataRequest) SetState(setState SetWorkspaceMetadata) ApiSetWorkspaceMetadataRequest {
 	r.setState = &setState
 	return r
 }
 
-func (r ApiSetWorkspaceStateRequest) Execute() (*http.Response, error) {
-	return r.ApiService.SetWorkspaceStateExecute(r)
+func (r ApiSetWorkspaceMetadataRequest) Execute() (*http.Response, error) {
+	return r.ApiService.SetWorkspaceMetadataExecute(r)
 }
 
 /*
-SetWorkspaceState Set workspace state
+SetWorkspaceMetadata Set workspace state
 
 Set workspace state
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workspaceId Workspace ID
-	@return ApiSetWorkspaceStateRequest
+	@return ApiSetWorkspaceMetadataRequest
 */
-func (a *WorkspaceAPIService) SetWorkspaceState(ctx context.Context, workspaceId string) ApiSetWorkspaceStateRequest {
-	return ApiSetWorkspaceStateRequest{
+func (a *WorkspaceAPIService) SetWorkspaceMetadata(ctx context.Context, workspaceId string) ApiSetWorkspaceMetadataRequest {
+	return ApiSetWorkspaceMetadataRequest{
 		ApiService:  a,
 		ctx:         ctx,
 		workspaceId: workspaceId,
@@ -551,14 +551,14 @@ func (a *WorkspaceAPIService) SetWorkspaceState(ctx context.Context, workspaceId
 }
 
 // Execute executes the request
-func (a *WorkspaceAPIService) SetWorkspaceStateExecute(r ApiSetWorkspaceStateRequest) (*http.Response, error) {
+func (a *WorkspaceAPIService) SetWorkspaceMetadataExecute(r ApiSetWorkspaceMetadataRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodPost
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkspaceAPIService.SetWorkspaceState")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkspaceAPIService.SetWorkspaceMetadata")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}

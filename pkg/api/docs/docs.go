@@ -1915,7 +1915,7 @@ const docTemplate = `{
                     "workspace"
                 ],
                 "summary": "Set workspace state",
-                "operationId": "SetWorkspaceState",
+                "operationId": "SetWorkspaceMetadata",
                 "parameters": [
                     {
                         "type": "string",
@@ -1930,7 +1930,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/SetWorkspaceState"
+                            "$ref": "#/definitions/SetWorkspaceMetadata"
                         }
                     }
                 ],
@@ -2826,7 +2826,7 @@ const docTemplate = `{
                 }
             }
         },
-        "SetWorkspaceState": {
+        "SetWorkspaceMetadata": {
             "type": "object",
             "required": [
                 "uptime"
@@ -3086,6 +3086,7 @@ const docTemplate = `{
                 "image",
                 "name",
                 "repository",
+                "state",
                 "targetId",
                 "targetName",
                 "user"
@@ -3111,6 +3112,9 @@ const docTemplate = `{
                 },
                 "info": {
                     "$ref": "#/definitions/WorkspaceInfo"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/WorkspaceMetadata"
                 },
                 "name": {
                     "type": "string"
@@ -3158,7 +3162,7 @@ const docTemplate = `{
                 }
             }
         },
-        "WorkspaceState": {
+        "WorkspaceMetadata": {
             "type": "object",
             "required": [
                 "gitStatus",
@@ -3177,6 +3181,41 @@ const docTemplate = `{
                 }
             }
         },
+        "WorkspaceState": {
+            "type": "string",
+            "enum": [
+                "pending-create",
+                "creating",
+                "pending-start",
+                "starting",
+                "started",
+                "pending-stop",
+                "stopping",
+                "stopped",
+                "pending-restart",
+                "error",
+                "unresponsive",
+                "pending-delete",
+                "pending-forced-delete",
+                "deleting"
+            ],
+            "x-enum-varnames": [
+                "WorkspaceStatePendingCreate",
+                "WorkspaceStateCreating",
+                "WorkspaceStatePendingStart",
+                "WorkspaceStateStarting",
+                "WorkspaceStateStarted",
+                "WorkspaceStatePendingStop",
+                "WorkspaceStateStopping",
+                "WorkspaceStateStopped",
+                "WorkspaceStatePendingRestart",
+                "WorkspaceStateError",
+                "WorkspaceStateUnresponsive",
+                "WorkspaceStatePendingDelete",
+                "WorkspaceStatePendingForcedDelete",
+                "WorkspaceStateDeleting"
+            ]
+        },
         "WorkspaceViewDTO": {
             "type": "object",
             "required": [
@@ -3185,6 +3224,7 @@ const docTemplate = `{
                 "image",
                 "name",
                 "repository",
+                "state",
                 "targetId",
                 "targetName",
                 "user"
@@ -3207,6 +3247,9 @@ const docTemplate = `{
                 },
                 "image": {
                     "type": "string"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/WorkspaceMetadata"
                 },
                 "name": {
                     "type": "string"

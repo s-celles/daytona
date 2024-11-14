@@ -135,7 +135,7 @@ Class | Method | HTTP request | Description
 *WorkspaceAPI* | [**GetWorkspace**](docs/WorkspaceAPI.md#getworkspace) | **Get** /workspace/{workspaceId} | Get workspace info
 *WorkspaceAPI* | [**ListWorkspaces**](docs/WorkspaceAPI.md#listworkspaces) | **Get** /workspace | List workspaces
 *WorkspaceAPI* | [**RemoveWorkspace**](docs/WorkspaceAPI.md#removeworkspace) | **Delete** /workspace/{workspaceId} | Remove workspace
-*WorkspaceAPI* | [**SetWorkspaceState**](docs/WorkspaceAPI.md#setworkspacestate) | **Post** /workspace/{workspaceId}/state | Set workspace state
+*WorkspaceAPI* | [**SetWorkspaceMetadata**](docs/WorkspaceAPI.md#setworkspacemetadata) | **Post** /workspace/{workspaceId}/state | Set workspace state
 *WorkspaceAPI* | [**StartWorkspace**](docs/WorkspaceAPI.md#startworkspace) | **Post** /workspace/{workspaceId}/start | Start workspace
 *WorkspaceAPI* | [**StopWorkspace**](docs/WorkspaceAPI.md#stopworkspace) | **Post** /workspace/{workspaceId}/stop | Stop workspace
 *WorkspaceConfigAPI* | [**DeleteWorkspaceConfig**](docs/WorkspaceConfigAPI.md#deleteworkspaceconfig) | **Delete** /workspace-config/{configName} | Delete workspace config data
@@ -186,7 +186,7 @@ Class | Method | HTTP request | Description
  - [Sample](docs/Sample.md)
  - [ServerConfig](docs/ServerConfig.md)
  - [SetGitProviderConfig](docs/SetGitProviderConfig.md)
- - [SetWorkspaceState](docs/SetWorkspaceState.md)
+ - [SetWorkspaceMetadata](docs/SetWorkspaceMetadata.md)
  - [SigningMethod](docs/SigningMethod.md)
  - [Status](docs/Status.md)
  - [Target](docs/Target.md)
@@ -198,6 +198,7 @@ Class | Method | HTTP request | Description
  - [WorkspaceConfig](docs/WorkspaceConfig.md)
  - [WorkspaceDTO](docs/WorkspaceDTO.md)
  - [WorkspaceInfo](docs/WorkspaceInfo.md)
+ - [WorkspaceMetadata](docs/WorkspaceMetadata.md)
  - [WorkspaceState](docs/WorkspaceState.md)
  - [WorkspaceViewDTO](docs/WorkspaceViewDTO.md)
 

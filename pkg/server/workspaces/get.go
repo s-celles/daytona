@@ -12,11 +12,12 @@ import (
 	"github.com/daytonaio/daytona/pkg/provisioner"
 	"github.com/daytonaio/daytona/pkg/server/workspaces/dto"
 	"github.com/daytonaio/daytona/pkg/target"
+	"github.com/daytonaio/daytona/pkg/workspace"
 	log "github.com/sirupsen/logrus"
 )
 
-func (s *WorkspaceService) GetWorkspace(ctx context.Context, workspaceId string, verbose bool) (*dto.WorkspaceDTO, error) {
-	ws, err := s.workspaceStore.Find(workspaceId)
+func (s *WorkspaceService) GetWorkspace(ctx context.Context, filter *workspace.Filter, verbose bool) (*dto.WorkspaceDTO, error) {
+	ws, err := s.workspaceStore.Find(filter)
 	if err != nil {
 		return nil, ErrWorkspaceNotFound
 	}
@@ -29,7 +30,7 @@ func (s *WorkspaceService) GetWorkspace(ctx context.Context, workspaceId string,
 		return response, nil
 	}
 
-	target, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &ws.TargetId})
+	target, err := s.targetStore.Find(&target.Filter{IdOrName: &ws.TargetId})
 	if err != nil {
 		return nil, err
 	}

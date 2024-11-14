@@ -22,9 +22,9 @@ func NewApiKeyStore(db *gorm.DB) (*ApiKeyStore, error) {
 	return &ApiKeyStore{db: db}, nil
 }
 
-func (a *ApiKeyStore) List() ([]*apikey.ApiKey, error) {
+func (s *ApiKeyStore) List() ([]*apikey.ApiKey, error) {
 	apiKeyDTOs := []ApiKeyDTO{}
-	tx := a.db.Find(&apiKeyDTOs)
+	tx := s.db.Find(&apiKeyDTOs)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -37,9 +37,9 @@ func (a *ApiKeyStore) List() ([]*apikey.ApiKey, error) {
 	return apiKeys, nil
 }
 
-func (a *ApiKeyStore) Find(key string) (*apikey.ApiKey, error) {
+func (s *ApiKeyStore) Find(key string) (*apikey.ApiKey, error) {
 	apiKeyDTO := ApiKeyDTO{}
-	tx := a.db.Where("key_hash = ?", key).First(&apiKeyDTO)
+	tx := s.db.Where("key_hash = ?", key).First(&apiKeyDTO)
 	if tx.Error != nil {
 		if IsRecordNotFound(tx.Error) {
 			return nil, apikey.ErrApiKeyNotFound
@@ -52,9 +52,9 @@ func (a *ApiKeyStore) Find(key string) (*apikey.ApiKey, error) {
 	return &apiKey, nil
 }
 
-func (a *ApiKeyStore) FindByName(name string) (*apikey.ApiKey, error) {
+func (s *ApiKeyStore) FindByName(name string) (*apikey.ApiKey, error) {
 	apiKeyDTO := ApiKeyDTO{}
-	tx := a.db.Where("name = ?", name).First(&apiKeyDTO)
+	tx := s.db.Where("name = ?", name).First(&apiKeyDTO)
 	if tx.Error != nil {
 		if IsRecordNotFound(tx.Error) {
 			return nil, apikey.ErrApiKeyNotFound
@@ -67,9 +67,9 @@ func (a *ApiKeyStore) FindByName(name string) (*apikey.ApiKey, error) {
 	return &apiKey, nil
 }
 
-func (a *ApiKeyStore) Save(apiKey *apikey.ApiKey) error {
+func (s *ApiKeyStore) Save(apiKey *apikey.ApiKey) error {
 	apiKeyDTO := ToApiKeyDTO(*apiKey)
-	tx := a.db.Save(&apiKeyDTO)
+	tx := s.db.Save(&apiKeyDTO)
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -77,8 +77,8 @@ func (a *ApiKeyStore) Save(apiKey *apikey.ApiKey) error {
 	return nil
 }
 
-func (a *ApiKeyStore) Delete(apiKey *apikey.ApiKey) error {
-	tx := a.db.Where("key_hash = ?", apiKey.KeyHash).Delete(&ApiKeyDTO{})
+func (s *ApiKeyStore) Delete(apiKey *apikey.ApiKey) error {
+	tx := s.db.Where("key_hash = ?", apiKey.KeyHash).Delete(&ApiKeyDTO{})
 	if tx.Error != nil {
 		return tx.Error
 	}

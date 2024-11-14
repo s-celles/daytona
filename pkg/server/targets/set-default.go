@@ -12,14 +12,14 @@ import (
 )
 
 func (s *TargetService) SetDefault(ctx context.Context, id string) error {
-	currentTarget, err := s.GetTarget(ctx, &target.TargetFilter{
+	currentTarget, err := s.GetTarget(ctx, &target.Filter{
 		IdOrName: &id,
 	}, false)
 	if err != nil || currentTarget == nil {
 		return err
 	}
 
-	defaultTarget, err := s.GetTarget(ctx, &target.TargetFilter{
+	defaultTarget, err := s.GetTarget(ctx, &target.Filter{
 		Default: util.Pointer(true),
 	}, false)
 	if err != nil && !target.IsTargetNotFound(err) {

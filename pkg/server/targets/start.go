@@ -18,7 +18,7 @@ import (
 )
 
 func (s *TargetService) StartTarget(ctx context.Context, targetId string) error {
-	t, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &targetId})
+	t, err := s.targetStore.Find(&target.Filter{IdOrName: &targetId})
 	if err != nil {
 		return s.handleStartError(ctx, nil, ErrTargetNotFound)
 	}

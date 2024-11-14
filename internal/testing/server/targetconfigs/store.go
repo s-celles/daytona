@@ -22,11 +22,11 @@ func NewInMemoryTargetConfigStore() config.TargetConfigStore {
 	}
 }
 
-func (s *InMemoryTargetConfigStore) List(filter *config.TargetConfigFilter) ([]*config.TargetConfig, error) {
+func (s *InMemoryTargetConfigStore) List(filter *config.Filter) ([]*config.TargetConfig, error) {
 	return s.processFilters(filter)
 }
 
-func (s *InMemoryTargetConfigStore) Find(filter *config.TargetConfigFilter) (*config.TargetConfig, error) {
+func (s *InMemoryTargetConfigStore) Find(filter *config.Filter) (*config.TargetConfig, error) {
 	targets, err := s.processFilters(filter)
 	if err != nil {
 		return nil, err
@@ -49,7 +49,7 @@ func (s *InMemoryTargetConfigStore) Delete(targetConfig *config.TargetConfig) er
 	return nil
 }
 
-func (s *InMemoryTargetConfigStore) processFilters(filter *config.TargetConfigFilter) ([]*config.TargetConfig, error) {
+func (s *InMemoryTargetConfigStore) processFilters(filter *config.Filter) ([]*config.TargetConfig, error) {
 	var result []*config.TargetConfig
 
 	if filter != nil {

@@ -268,7 +268,7 @@ func (a *ApiServer) Start() error {
 	workspaceGroup := protected.Group("/")
 	workspaceGroup.Use(middlewares.WorkspaceAuthMiddleware())
 	{
-		workspaceGroup.POST(workspaceController.BasePath()+"/:workspaceId/state", workspace.SetWorkspaceState)
+		workspaceGroup.POST(workspaceController.BasePath()+"/:workspaceId/state", workspace.SetWorkspaceMetadata)
 	}
 
 	a.httpServer = &http.Server{

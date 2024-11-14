@@ -588,7 +588,7 @@ definitions:
     - providerId
     - token
     type: object
-  SetWorkspaceState:
+  SetWorkspaceMetadata:
     properties:
       gitStatus:
         $ref: '#/definitions/GitStatus'
@@ -789,6 +789,8 @@ definitions:
         type: string
       info:
         $ref: '#/definitions/WorkspaceInfo'
+      metadata:
+        $ref: '#/definitions/WorkspaceMetadata'
       name:
         type: string
       repository:
@@ -807,6 +809,7 @@ definitions:
     - image
     - name
     - repository
+    - state
     - targetId
     - targetName
     - user
@@ -829,7 +832,7 @@ definitions:
     - name
     - targetId
     type: object
-  WorkspaceState:
+  WorkspaceMetadata:
     properties:
       gitStatus:
         $ref: '#/definitions/GitStatus'
@@ -842,6 +845,38 @@ definitions:
     - updatedAt
     - uptime
     type: object
+  WorkspaceState:
+    enum:
+    - pending-create
+    - creating
+    - pending-start
+    - starting
+    - started
+    - pending-stop
+    - stopping
+    - stopped
+    - pending-restart
+    - error
+    - unresponsive
+    - pending-delete
+    - pending-forced-delete
+    - deleting
+    type: string
+    x-enum-varnames:
+    - WorkspaceStatePendingCreate
+    - WorkspaceStateCreating
+    - WorkspaceStatePendingStart
+    - WorkspaceStateStarting
+    - WorkspaceStateStarted
+    - WorkspaceStatePendingStop
+    - WorkspaceStateStopping
+    - WorkspaceStateStopped
+    - WorkspaceStatePendingRestart
+    - WorkspaceStateError
+    - WorkspaceStateUnresponsive
+    - WorkspaceStatePendingDelete
+    - WorkspaceStatePendingForcedDelete
+    - WorkspaceStateDeleting
   WorkspaceViewDTO:
     properties:
       buildConfig:
@@ -856,6 +891,8 @@ definitions:
         type: string
       image:
         type: string
+      metadata:
+        $ref: '#/definitions/WorkspaceMetadata'
       name:
         type: string
       repository:
@@ -874,6 +911,7 @@ definitions:
     - image
     - name
     - repository
+    - state
     - targetId
     - targetName
     - user
@@ -2200,7 +2238,7 @@ paths:
   /workspace/{workspaceId}/state:
     post:
       description: Set workspace state
-      operationId: SetWorkspaceState
+      operationId: SetWorkspaceMetadata
       parameters:
       - description: Workspace ID
         in: path
@@ -2212,7 +2250,7 @@ paths:
         name: setState
         required: true
         schema:
-          $ref: '#/definitions/SetWorkspaceState'
+          $ref: '#/definitions/SetWorkspaceMetadata'
       responses:
         "200":
           description: OK

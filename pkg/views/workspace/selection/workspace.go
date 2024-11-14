@@ -37,11 +37,11 @@ func generateWorkspaceList(workspaces []apiclient.WorkspaceDTO, isMultipleSelect
 			createdTime = util.FormatTimestamp(workspace.Info.Created)
 		}
 
-		if workspace.State != nil {
-			if workspace.State.Uptime == 0 {
+		if workspace.Metadata != nil {
+			if workspace.Metadata.Uptime == 0 {
 				uptime = "STOPPED"
 			} else {
-				uptime = fmt.Sprintf("up %s", util.FormatUptime(workspace.State.Uptime))
+				uptime = fmt.Sprintf("up %s", util.FormatUptime(workspace.Metadata.Uptime))
 			}
 		}
 

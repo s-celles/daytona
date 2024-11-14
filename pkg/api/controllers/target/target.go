@@ -43,7 +43,7 @@ func GetTarget(ctx *gin.Context) {
 
 	server := server.GetInstance(nil)
 
-	t, err := server.TargetService.GetTarget(ctx.Request.Context(), &target.TargetFilter{IdOrName: &targetId}, verbose)
+	t, err := server.TargetService.GetTarget(ctx.Request.Context(), &target.Filter{IdOrName: &targetId}, verbose)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, fmt.Errorf("failed to get target: %w", err))
 		return

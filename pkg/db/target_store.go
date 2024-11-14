@@ -23,7 +23,7 @@ func NewTargetStore(db *gorm.DB) (*TargetStore, error) {
 	return &TargetStore{db: db}, nil
 }
 
-func (s *TargetStore) List(filter *target.TargetFilter) ([]*target.TargetViewDTO, error) {
+func (s *TargetStore) List(filter *target.Filter) ([]*target.TargetViewDTO, error) {
 	targetDTOs := []TargetDTO{}
 
 	tx := processTargetFilters(s.db, filter).Preload("Workspaces").Find(&targetDTOs)
@@ -43,7 +43,7 @@ func (s *TargetStore) List(filter *target.TargetFilter) ([]*target.TargetViewDTO
 	return targetViewDTOs, nil
 }
 
-func (s *TargetStore) Find(filter *target.TargetFilter) (*target.TargetViewDTO, error) {
+func (s *TargetStore) Find(filter *target.Filter) (*target.TargetViewDTO, error) {
 	targetDTO := TargetDTO{}
 
 	tx := processTargetFilters(s.db, filter).Preload("Workspaces").First(&targetDTO)
@@ -87,7 +87,7 @@ func (s *TargetStore) Delete(t *target.Target) error {
 	return nil
 }
 
-func processTargetFilters(tx *gorm.DB, filter *target.TargetFilter) *gorm.DB {
+func processTargetFilters(tx *gorm.DB, filter *target.Filter) *gorm.DB {
 	if filter != nil {
 		if filter.IdOrName != nil {
 			tx = tx.Where("id = ? OR name = ?", *filter.IdOrName, *filter.IdOrName)

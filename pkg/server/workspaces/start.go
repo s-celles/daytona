@@ -17,12 +17,29 @@ import (
 )
 
 func (s *WorkspaceService) StartWorkspace(ctx context.Context, workspaceId string) error {
-	ws, err := s.workspaceStore.Find(workspaceId)
+	ws, err := s.workspaceStore.Find(&workspace.Filter{IdOrName: &workspaceId})
 	if err != nil {
 		return s.handleStartError(ctx, &ws.Workspace, ErrWorkspaceNotFound)
 	}
 
-	target, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &ws.TargetId})
+	ws.State = workspace.WorkspaceStatePendingStart
+	err = s.workspaceStore.Save(&ws.Workspace)
+	return s.handleStartError(ctx, &ws.Workspace, err)
+}
+
+func (s *WorkspaceService) RunStartWorkspace(ctx context.Context, workspaceId string) error {
+	ws, err := s.workspaceStore.Find(&workspace.Filter{IdOrName: &workspaceId})
+	if err != nil {
+		return s.handleStartError(ctx, &ws.Workspace, ErrWorkspaceNotFound)
+	}
+
+	ws.State = workspace.WorkspaceStateStarting
+	err = s.workspaceStore.Save(&ws.Workspace)
+	if err != nil {
+		return s.handleStartError(ctx, &ws.Workspace, err)
+	}
+
+	target, err := s.targetStore.Find(&target.Filter{IdOrName: &ws.TargetId})
 	if err != nil {
 		return s.handleStartError(ctx, &ws.Workspace, err)
 	}

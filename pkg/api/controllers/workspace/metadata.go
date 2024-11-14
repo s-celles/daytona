@@ -14,22 +14,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SetWorkspaceState 			godoc
+// SetWorkspaceMetadata 			godoc
 //
 //	@Tags			workspace
 //	@Summary		Set workspace state
 //	@Description	Set workspace state
-//	@Param			workspaceId	path	string				true	"Workspace ID"
-//	@Param			setState	body	SetWorkspaceState	true	"Set State"
+//	@Param			workspaceId	path	string					true	"Workspace ID"
+//	@Param			setState	body	SetWorkspaceMetadata	true	"Set State"
 //	@Success		200
 //	@Router			/workspace/{workspaceId}/state [post]
 //
-//	@id				SetWorkspaceState
-func SetWorkspaceState(ctx *gin.Context) {
+//	@id				SetWorkspaceMetadata
+func SetWorkspaceMetadata(ctx *gin.Context) {
 	workspaceId := ctx.Param("workspaceId")
 
-	var setWorkspaceStateDTO dto.SetWorkspaceState
-	err := ctx.BindJSON(&setWorkspaceStateDTO)
+	var setWorkspaceMetadataDTO dto.SetWorkspaceMetadata
+	err := ctx.BindJSON(&setWorkspaceMetadataDTO)
 	if err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, fmt.Errorf("invalid request body: %w", err))
 		return
@@ -37,10 +37,10 @@ func SetWorkspaceState(ctx *gin.Context) {
 
 	server := server.GetInstance(nil)
 
-	_, err = server.WorkspaceService.SetWorkspaceState(workspaceId, &workspace.WorkspaceState{
-		Uptime:    setWorkspaceStateDTO.Uptime,
+	_, err = server.WorkspaceService.SetWorkspaceMetadata(workspaceId, &workspace.WorkspaceMetadata{
+		Uptime:    setWorkspaceMetadataDTO.Uptime,
 		UpdatedAt: time.Now().Format(time.RFC1123),
-		GitStatus: setWorkspaceStateDTO.GitStatus,
+		GitStatus: setWorkspaceMetadataDTO.GitStatus,
 	})
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, fmt.Errorf("failed to set workspace state for %s: %w", workspaceId, err))

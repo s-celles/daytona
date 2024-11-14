@@ -29,7 +29,7 @@ var workspace1 = &workspace.Workspace{
 		Name: "daytona",
 	},
 	TargetId: "123",
-	State: &workspace.WorkspaceState{
+	Metadata: &workspace.WorkspaceMetadata{
 		UpdatedAt: "123",
 		Uptime:    148,
 		GitStatus: gitStatus1,

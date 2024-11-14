@@ -61,6 +61,7 @@ require (
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/ini.v1 v1.67.0
 	gorm.io/gorm v1.25.11
+	gvisor.dev/gvisor v0.0.0-20240722211153-64c016c92987
 	tailscale.com v1.72.1
 )
 
@@ -290,7 +291,6 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gorm.io/driver/postgres v1.5.9 // indirect
 	gotest.tools/v3 v3.5.1 // indirect
-	gvisor.dev/gvisor v0.0.0-20240722211153-64c016c92987 // indirect
 	k8s.io/apimachinery v0.30.3 // indirect
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
 	modernc.org/libc v1.60.1 // indirect

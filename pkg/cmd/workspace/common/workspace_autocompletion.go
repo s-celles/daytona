@@ -51,11 +51,11 @@ func GetAllWorkspacesByState(state workspaceState) ([]string, cobra.ShellCompDir
 
 	var choices []string
 	for _, workspace := range workspaceList {
-		if state == WORKSPACE_STATE_RUNNING && workspace.State.Uptime != 0 {
+		if state == WORKSPACE_STATE_RUNNING && workspace.Metadata.Uptime != 0 {
 			choices = append(choices, workspace.Name)
 			break
 		}
-		if state == WORKSPACE_STATE_STOPPED && workspace.State.Uptime == 0 {
+		if state == WORKSPACE_STATE_STOPPED && workspace.Metadata.Uptime == 0 {
 			choices = append(choices, workspace.Name)
 			break
 		}

@@ -9,9 +9,10 @@ Name | Type | Description | Notes
 **GitProviderConfigId** | Pointer to **string** |  | [optional] 
 **Id** | **string** |  | 
 **Image** | **string** |  | 
+**Metadata** | Pointer to [**WorkspaceMetadata**](WorkspaceMetadata.md) |  | [optional] 
 **Name** | **string** |  | 
 **Repository** | [**GitRepository**](GitRepository.md) |  | 
-**State** | Pointer to [**WorkspaceState**](WorkspaceState.md) |  | [optional] 
+**State** | [**WorkspaceState**](WorkspaceState.md) |  | 
 **TargetId** | **string** |  | 
 **TargetName** | **string** |  | 
 **User** | **string** |  | 
@@ -20,7 +21,7 @@ Name | Type | Description | Notes
 
 ### NewWorkspaceViewDTO
 
-`func NewWorkspaceViewDTO(envVars map[string]string, id string, image string, name string, repository GitRepository, targetId string, targetName string, user string, ) *WorkspaceViewDTO`
+`func NewWorkspaceViewDTO(envVars map[string]string, id string, image string, name string, repository GitRepository, state WorkspaceState, targetId string, targetName string, user string, ) *WorkspaceViewDTO`
 
 NewWorkspaceViewDTO instantiates a new WorkspaceViewDTO object
 This constructor will assign default values to properties that have it defined,
@@ -145,6 +146,31 @@ and a boolean to check if the value has been set.
 SetImage sets Image field to given value.
 
 
+### GetMetadata
+
+`func (o *WorkspaceViewDTO) GetMetadata() WorkspaceMetadata`
+
+GetMetadata returns the Metadata field if non-nil, zero value otherwise.
+
+### GetMetadataOk
+
+`func (o *WorkspaceViewDTO) GetMetadataOk() (*WorkspaceMetadata, bool)`
+
+GetMetadataOk returns a tuple with the Metadata field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMetadata
+
+`func (o *WorkspaceViewDTO) SetMetadata(v WorkspaceMetadata)`
+
+SetMetadata sets Metadata field to given value.
+
+### HasMetadata
+
+`func (o *WorkspaceViewDTO) HasMetadata() bool`
+
+HasMetadata returns a boolean if a field has been set.
+
 ### GetName
 
 `func (o *WorkspaceViewDTO) GetName() string`
@@ -204,11 +230,6 @@ and a boolean to check if the value has been set.
 
 SetState sets State field to given value.
 
-### HasState
-
-`func (o *WorkspaceViewDTO) HasState() bool`
-
-HasState returns a boolean if a field has been set.
 
 ### GetTargetId
 

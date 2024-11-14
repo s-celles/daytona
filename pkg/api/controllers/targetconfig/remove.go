@@ -27,7 +27,7 @@ func RemoveTargetConfig(ctx *gin.Context) {
 
 	server := server.GetInstance(nil)
 
-	targetConfig, err := server.TargetConfigService.Find(&config.TargetConfigFilter{
+	targetConfig, err := server.TargetConfigService.Find(&config.Filter{
 		Name: &configName,
 	})
 	if err != nil {

@@ -5,16 +5,16 @@ package target
 
 import "errors"
 
-type TargetFilter struct {
-	IdOrName *string
-	Default  *bool
-}
-
 type Store interface {
-	List(filter *TargetFilter) ([]*TargetViewDTO, error)
-	Find(filter *TargetFilter) (*TargetViewDTO, error)
+	List(filter *Filter) ([]*TargetViewDTO, error)
+	Find(filter *Filter) (*TargetViewDTO, error)
 	Save(target *Target) error
 	Delete(target *Target) error
+}
+
+type Filter struct {
+	IdOrName *string
+	Default  *bool
 }
 
 type TargetViewDTO struct {

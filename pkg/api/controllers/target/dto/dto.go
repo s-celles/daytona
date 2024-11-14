@@ -5,7 +5,7 @@ package dto
 
 import "github.com/daytonaio/daytona/pkg/workspace"
 
-type SetWorkspaceState struct {
+type SetWorkspaceMetadata struct {
 	Uptime    uint64               `json:"uptime" validate:"required"`
 	GitStatus *workspace.GitStatus `json:"gitStatus,omitempty" validate:"optional"`
-} // @name SetWorkspaceState
+} // @name SetWorkspaceMetadata

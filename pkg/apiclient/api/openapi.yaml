@@ -1368,7 +1368,7 @@ paths:
   /workspace/{workspaceId}/state:
     post:
       description: Set workspace state
-      operationId: SetWorkspaceState
+      operationId: SetWorkspaceMetadata
       parameters:
       - description: Workspace ID
         in: path
@@ -1380,7 +1380,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/SetWorkspaceState'
+              $ref: '#/components/schemas/SetWorkspaceMetadata'
         description: Set State
         required: true
       responses:
@@ -2267,7 +2267,7 @@ components:
       - providerId
       - token
       type: object
-    SetWorkspaceState:
+    SetWorkspaceMetadata:
       example:
         gitStatus:
           behind: 6
@@ -2536,21 +2536,9 @@ components:
       type: object
     WorkspaceDTO:
       example:
-        buildConfig:
-          cachedBuild:
-            image: image
-            user: user
-          devcontainer:
-            filePath: filePath
         gitProviderConfigId: gitProviderConfigId
         image: image
-        targetName: targetName
-        targetId: targetId
-        envVars:
-          key: envVars
-        name: name
-        id: id
-        state:
+        metadata:
           gitStatus:
             behind: 6
             fileStatus:
@@ -2567,6 +2555,10 @@ components:
             currentBranch: currentBranch
           updatedAt: updatedAt
           uptime: 1
+        targetName: targetName
+        targetId: targetId
+        envVars:
+          key: envVars
         repository:
           owner: owner
           path: path
@@ -2578,6 +2570,15 @@ components:
           cloneTarget: null
           sha: sha
           url: url
+        buildConfig:
+          cachedBuild:
+            image: image
+            user: user
+          devcontainer:
+            filePath: filePath
+        name: name
+        id: id
+        state: null
         user: user
         info:
           providerMetadata: providerMetadata
@@ -2600,6 +2601,8 @@ components:
           type: string
         info:
           $ref: '#/components/schemas/WorkspaceInfo'
+        metadata:
+          $ref: '#/components/schemas/WorkspaceMetadata'
         name:
           type: string
         repository:
@@ -2618,6 +2621,7 @@ components:
       - image
       - name
       - repository
+      - state
       - targetId
       - targetName
       - user
@@ -2646,7 +2650,7 @@ components:
       - name
       - targetId
       type: object
-    WorkspaceState:
+    WorkspaceMetadata:
       example:
         gitStatus:
           behind: 6
@@ -2676,6 +2680,38 @@ components:
       - updatedAt
       - uptime
       type: object
+    WorkspaceState:
+      enum:
+      - pending-create
+      - creating
+      - pending-start
+      - starting
+      - started
+      - pending-stop
+      - stopping
+      - stopped
+      - pending-restart
+      - error
+      - unresponsive
+      - pending-delete
+      - pending-forced-delete
+      - deleting
+      type: string
+      x-enum-varnames:
+      - WorkspaceStatePendingCreate
+      - WorkspaceStateCreating
+      - WorkspaceStatePendingStart
+      - WorkspaceStateStarting
+      - WorkspaceStateStarted
+      - WorkspaceStatePendingStop
+      - WorkspaceStateStopping
+      - WorkspaceStateStopped
+      - WorkspaceStatePendingRestart
+      - WorkspaceStateError
+      - WorkspaceStateUnresponsive
+      - WorkspaceStatePendingDelete
+      - WorkspaceStatePendingForcedDelete
+      - WorkspaceStateDeleting
     WorkspaceViewDTO:
       example:
         buildConfig:
@@ -2686,13 +2722,7 @@ components:
             filePath: filePath
         gitProviderConfigId: gitProviderConfigId
         image: image
-        targetName: targetName
-        targetId: targetId
-        envVars:
-          key: envVars
-        name: name
-        id: id
-        state:
+        metadata:
           gitStatus:
             behind: 6
             fileStatus:
@@ -2709,6 +2739,13 @@ components:
             currentBranch: currentBranch
           updatedAt: updatedAt
           uptime: 1
+        targetName: targetName
+        targetId: targetId
+        envVars:
+          key: envVars
+        name: name
+        id: id
+        state: null
         repository:
           owner: owner
           path: path
@@ -2734,6 +2771,8 @@ components:
           type: string
         image:
           type: string
+        metadata:
+          $ref: '#/components/schemas/WorkspaceMetadata'
         name:
           type: string
         repository:
@@ -2752,6 +2791,7 @@ components:
       - image
       - name
       - repository
+      - state
       - targetId
       - targetName
       - user

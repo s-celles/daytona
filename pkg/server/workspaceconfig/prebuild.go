@@ -11,6 +11,7 @@ import (
 	"github.com/daytonaio/daytona/internal/util"
 	"github.com/daytonaio/daytona/pkg/build"
 	"github.com/daytonaio/daytona/pkg/gitprovider"
+	"github.com/daytonaio/daytona/pkg/scheduler"
 	build_dto "github.com/daytonaio/daytona/pkg/server/builds/dto"
 	"github.com/daytonaio/daytona/pkg/server/workspaceconfig/dto"
 	"github.com/daytonaio/daytona/pkg/workspace/config"
@@ -384,9 +385,9 @@ func (s *WorkspaceConfigService) EnforceRetentionPolicy() error {
 }
 
 func (s *WorkspaceConfigService) StartRetentionPoller() error {
-	scheduler := build.NewCronScheduler()
+	scheduler := scheduler.NewCronScheduler()
 
-	err := scheduler.AddFunc(build.DEFAULT_POLL_INTERVAL, func() {
+	err := scheduler.AddFunc(build.DEFAULT_BUILD_POLL_INTERVAL, func() {
 		err := s.EnforceRetentionPolicy()
 		if err != nil {
 			log.Error(err)

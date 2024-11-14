@@ -4,6 +4,9 @@
 package db
 
 import (
+	"fmt"
+	"strings"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -24,9 +27,9 @@ func NewWorkspaceStore(db *gorm.DB) (*WorkspaceStore, error) {
 	return &WorkspaceStore{db: db}, nil
 }
 
-func (store *WorkspaceStore) List() ([]*workspace.WorkspaceViewDTO, error) {
+func (s *WorkspaceStore) List(filter *workspace.Filter) ([]*workspace.WorkspaceViewDTO, error) {
 	workspaceDTOs := []WorkspaceDTO{}
-	tx := store.db.Preload(clause.Associations).Find(&workspaceDTOs)
+	tx := processWorkspaceFilters(s.db, filter).Preload(clause.Associations).Find(&workspaceDTOs)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -39,9 +42,9 @@ func (store *WorkspaceStore) List() ([]*workspace.WorkspaceViewDTO, error) {
 	return workspaceViewDTOs, nil
 }
 
-func (w *WorkspaceStore) Find(idOrName string) (*workspace.WorkspaceViewDTO, error) {
+func (w *WorkspaceStore) Find(filter *workspace.Filter) (*workspace.WorkspaceViewDTO, error) {
 	workspaceDTO := WorkspaceDTO{}
-	tx := w.db.Preload(clause.Associations).Where("id = ? OR name = ?", idOrName, idOrName).First(&workspaceDTO)
+	tx := processWorkspaceFilters(w.db, filter).Preload(clause.Associations).First(&workspaceDTO)
 	if tx.Error != nil {
 		if IsRecordNotFound(tx.Error) {
 			return nil, workspace.ErrWorkspaceNotFound
@@ -52,8 +55,8 @@ func (w *WorkspaceStore) Find(idOrName string) (*workspace.WorkspaceViewDTO, err
 	return ToWorkspaceViewDTO(workspaceDTO), nil
 }
 
-func (w *WorkspaceStore) Save(workspace *workspace.Workspace) error {
-	tx := w.db.Save(ToWorkspaceDTO(workspace))
+func (s *WorkspaceStore) Save(workspace *workspace.Workspace) error {
+	tx := s.db.Save(ToWorkspaceDTO(workspace))
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -61,8 +64,8 @@ func (w *WorkspaceStore) Save(workspace *workspace.Workspace) error {
 	return nil
 }
 
-func (w *WorkspaceStore) Delete(t *workspace.Workspace) error {
-	tx := w.db.Delete(ToWorkspaceDTO(t))
+func (s *WorkspaceStore) Delete(t *workspace.Workspace) error {
+	tx := s.db.Delete(ToWorkspaceDTO(t))
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -71,4 +74,20 @@ func (w *WorkspaceStore) Delete(t *workspace.Workspace) error {
 	}
 
 	return nil
+}
+
+func processWorkspaceFilters(tx *gorm.DB, filter *workspace.Filter) *gorm.DB {
+	if filter != nil {
+		if filter.IdOrName != nil {
+			tx = tx.Where("id = ? OR name = ?", *filter.IdOrName, *filter.IdOrName)
+		}
+		if filter.States != nil && len(*filter.States) > 0 {
+			placeholders := strings.Repeat("?,", len(*filter.States))
+			placeholders = placeholders[:len(placeholders)-1]
+
+			tx = tx.Where(fmt.Sprintf("state IN (%s)", placeholders), filter.StatesToInterface()...)
+		}
+	}
+
+	return tx
 }

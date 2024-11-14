@@ -22,9 +22,9 @@ func NewProfileDataStore(db *gorm.DB) (*ProfileDataStore, error) {
 	return &ProfileDataStore{db: db}, nil
 }
 
-func (p *ProfileDataStore) Get() (*profiledata.ProfileData, error) {
+func (s *ProfileDataStore) Get() (*profiledata.ProfileData, error) {
 	profileDataDTO := ProfileDataDTO{}
-	tx := p.db.Where("id = ?", ProfileDataId).First(&profileDataDTO)
+	tx := s.db.Where("id = ?", ProfileDataId).First(&profileDataDTO)
 	if tx.Error != nil {
 		if tx.Error == gorm.ErrRecordNotFound {
 			return nil, profiledata.ErrProfileDataNotFound
@@ -37,9 +37,9 @@ func (p *ProfileDataStore) Get() (*profiledata.ProfileData, error) {
 	return profileData, nil
 }
 
-func (p *ProfileDataStore) Save(profileData *profiledata.ProfileData) error {
+func (s *ProfileDataStore) Save(profileData *profiledata.ProfileData) error {
 	profileDataDTO := ToProfileDataDTO(profileData)
-	tx := p.db.Save(&profileDataDTO)
+	tx := s.db.Save(&profileDataDTO)
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -47,8 +47,8 @@ func (p *ProfileDataStore) Save(profileData *profiledata.ProfileData) error {
 	return nil
 }
 
-func (p *ProfileDataStore) Delete() error {
-	tx := p.db.Where("id = ?", ProfileDataId).Delete(&ProfileDataDTO{})
+func (s *ProfileDataStore) Delete() error {
+	tx := s.db.Where("id = ?", ProfileDataId).Delete(&ProfileDataDTO{})
 	if tx.Error != nil {
 		return tx.Error
 	}

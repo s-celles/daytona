@@ -13,7 +13,7 @@ import (
 )
 
 func (s *TargetService) RemoveTarget(ctx context.Context, targetId string) error {
-	target, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &targetId})
+	target, err := s.targetStore.Find(&target.Filter{IdOrName: &targetId})
 	if err != nil {
 		return s.handleRemoveError(ctx, &target.Target, ErrTargetNotFound)
 	}
@@ -45,7 +45,7 @@ func (s *TargetService) RemoveTarget(ctx context.Context, targetId string) error
 
 // ForceRemoveTarget ignores provider errors and makes sure the target is removed from storage.
 func (s *TargetService) ForceRemoveTarget(ctx context.Context, targetId string) error {
-	target, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &targetId})
+	target, err := s.targetStore.Find(&target.Filter{IdOrName: &targetId})
 	if err != nil {
 		return s.handleRemoveError(ctx, nil, ErrTargetNotFound)
 	}

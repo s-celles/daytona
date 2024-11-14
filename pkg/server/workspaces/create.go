@@ -15,6 +15,7 @@ import (
 	"github.com/daytonaio/daytona/pkg/build"
 	"github.com/daytonaio/daytona/pkg/containerregistry"
 	"github.com/daytonaio/daytona/pkg/gitprovider"
+	workspace_jobs "github.com/daytonaio/daytona/pkg/jobs/workspace"
 	"github.com/daytonaio/daytona/pkg/logs"
 	"github.com/daytonaio/daytona/pkg/server/workspaces/dto"
 	"github.com/daytonaio/daytona/pkg/target"
@@ -26,30 +27,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func isValidWorkspaceName(name string) bool {
-	// The repository name can only contain ASCII letters, digits, and the characters ., -, and _.
-	var validName = regexp.MustCompile(`^[a-zA-Z0-9._-]+$`)
-
-	// Check if the name matches the basic regex
-	if !validName.MatchString(name) {
-		return false
-	}
-
-	// Names starting with a period must have atleast one char appended to it.
-	if name == "." || name == "" {
-		return false
-	}
-
-	return true
-}
-
 func (s *WorkspaceService) CreateWorkspace(ctx context.Context, req dto.CreateWorkspaceDTO) (*workspace.WorkspaceViewDTO, error) {
-	_, err := s.workspaceStore.Find(req.Name)
+	_, err := s.workspaceStore.Find(&workspace.Filter{IdOrName: &req.Id})
 	if err == nil {
 		return s.handleCreateError(ctx, nil, ErrWorkspaceAlreadyExists)
 	}
 
-	target, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &req.TargetId})
+	// TODO: revise -  check if target exists?
+	_, err = s.targetStore.Find(&target.Filter{IdOrName: &req.TargetId})
 	if err != nil {
 		return s.handleCreateError(ctx, nil, err)
 	}
@@ -111,11 +96,36 @@ func (s *WorkspaceService) CreateWorkspace(ctx context.Context, req dto.CreateWo
 		return s.handleCreateError(ctx, w, err)
 	}
 
+	err = s.jobStore.Save(&workspace_jobs.Job{
+		WorkspaceId: w.Id,
+		Action:      workspace_jobs.JobActionCreate,
+		State:       workspace_jobs.JobStatePending,
+	})
+
+	if err != nil {
+		return s.handleCreateError(ctx, w, err)
+	}
+
+	return &workspace.WorkspaceViewDTO{Workspace: *w}, nil
+}
+
+func (s *WorkspaceService) RunCreateWorkspace(ctx context.Context, w workspace.Workspace) error {
+	w.State = workspace.WorkspaceStateCreating
+	err := s.workspaceStore.Save(&w)
+	if err != nil {
+		return s.handleRunCreateError(ctx, &w, err)
+	}
+
+	target, err := s.targetStore.Find(&target.Filter{IdOrName: &w.TargetId})
+	if err != nil {
+		return s.handleRunCreateError(ctx, nil, err)
+	}
+
 	workspaceLogger := s.loggerFactory.CreateWorkspaceLogger(w.Id, w.Name, logs.LogSourceServer)
 	defer workspaceLogger.Close()
 
-	workspaceWithEnv := *w
-	workspaceWithEnv.EnvVars = workspace.GetWorkspaceEnvVars(w, workspace.WorkspaceEnvVarParams{
+	workspaceWithEnv := w
+	workspaceWithEnv.EnvVars = workspace.GetWorkspaceEnvVars(&w, workspace.WorkspaceEnvVarParams{
 		ApiUrl:        s.serverApiUrl,
 		ServerUrl:     s.serverUrl,
 		ServerVersion: s.serverVersion,
@@ -126,13 +136,13 @@ func (s *WorkspaceService) CreateWorkspace(ctx context.Context, req dto.CreateWo
 		workspaceWithEnv.EnvVars[k] = v
 	}
 
-	w = &workspaceWithEnv
+	w = workspaceWithEnv
 
 	workspaceLogger.Write([]byte(fmt.Sprintf("Creating workspace %s\n", w.Name)))
 
 	cr, err := s.containerRegistryService.FindByImageName(w.Image)
 	if err != nil && !containerregistry.IsContainerRegistryNotFound(err) {
-		return s.handleCreateError(ctx, w, err)
+		return s.handleRunCreateError(ctx, &w, err)
 	}
 
 	var gc *gitprovider.GitProviderConfig
@@ -140,20 +150,31 @@ func (s *WorkspaceService) CreateWorkspace(ctx context.Context, req dto.CreateWo
 	if w.GitProviderConfigId != nil {
 		gc, err = s.gitProviderService.GetConfig(*w.GitProviderConfigId)
 		if err != nil && !gitprovider.IsGitProviderNotFound(err) {
-			return s.handleCreateError(ctx, w, err)
+			return s.handleRunCreateError(ctx, &w, err)
 		}
 	}
 
-	err = s.provisioner.CreateWorkspace(w, &target.Target, cr, gc)
+	err = s.provisioner.CreateWorkspace(&w, &target.Target, cr, gc)
 	if err != nil {
-		return s.handleCreateError(ctx, w, err)
+		return s.handleRunCreateError(ctx, &w, err)
 	}
 
 	workspaceLogger.Write([]byte(views.GetPrettyLogLine(fmt.Sprintf("Workspace %s created", w.Name))))
 
-	err = s.startWorkspace(w, &target.Target, workspaceLogger)
+	w.State = workspace.WorkspaceStateStarting
+	err = s.workspaceStore.Save(&w)
+	if err != nil {
+		return s.handleRunCreateError(ctx, &w, err)
+	}
 
-	return s.handleCreateError(ctx, w, err)
+	err = s.startWorkspace(&w, &target.Target, workspaceLogger)
+	if err != nil {
+		return s.handleRunCreateError(ctx, &w, err)
+	}
+
+	w.State = workspace.WorkspaceStateStarted
+	err = s.workspaceStore.Save(&w)
+	return s.handleRunCreateError(ctx, &w, err)
 }
 
 func (s *WorkspaceService) handleCreateError(ctx context.Context, w *workspace.Workspace, err error) (*workspace.WorkspaceViewDTO, error) {
@@ -182,6 +203,46 @@ func (s *WorkspaceService) handleCreateError(ctx context.Context, w *workspace.W
 	}
 
 	return &workspace.WorkspaceViewDTO{Workspace: *w}, err
+}
+
+func (s *WorkspaceService) handleRunCreateError(ctx context.Context, w *workspace.Workspace, err error) error {
+	if !telemetry.TelemetryEnabled(ctx) {
+		return err
+	}
+
+	clientId := telemetry.ClientId(ctx)
+
+	telemetryProps := telemetry.NewWorkspaceEventProps(ctx, w)
+	event := telemetry.ServerEventWorkspaceCreated
+	if err != nil {
+		telemetryProps["error"] = err.Error()
+		event = telemetry.ServerEventWorkspaceCreateError
+	}
+	telemetryError := s.telemetryService.TrackServerEvent(event, clientId, telemetryProps)
+	if telemetryError != nil {
+		log.Trace(err)
+	}
+
+	// TODO: check - set state to error
+	w.State = workspace.WorkspaceStateError
+	return s.workspaceStore.Save(w)
+}
+
+func isValidWorkspaceName(name string) bool {
+	// The repository name can only contain ASCII letters, digits, and the characters ., -, and _.
+	var validName = regexp.MustCompile(`^[a-zA-Z0-9._-]+$`)
+
+	// Check if the name matches the basic regex
+	if !validName.MatchString(name) {
+		return false
+	}
+
+	// Names starting with a period must have atleast one char appended to it.
+	if name == "." || name == "" {
+		return false
+	}
+
+	return true
 }
 
 func (s *WorkspaceService) getCachedBuildForWorkspace(w *workspace.Workspace) (*buildconfig.CachedBuild, error) {

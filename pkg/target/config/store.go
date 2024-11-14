@@ -5,15 +5,15 @@ package config
 
 import "errors"
 
-type TargetConfigFilter struct {
-	Name *string
-}
-
 type TargetConfigStore interface {
-	List(filter *TargetConfigFilter) ([]*TargetConfig, error)
-	Find(filter *TargetConfigFilter) (*TargetConfig, error)
+	List(filter *Filter) ([]*TargetConfig, error)
+	Find(filter *Filter) (*TargetConfig, error)
 	Save(targetConfig *TargetConfig) error
 	Delete(targetConfig *TargetConfig) error
+}
+
+type Filter struct {
+	Name *string
 }
 
 var (

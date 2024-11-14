@@ -37,12 +37,12 @@ func isValidTargetName(name string) bool {
 }
 
 func (s *TargetService) CreateTarget(ctx context.Context, req dto.CreateTargetDTO) (*target.Target, error) {
-	_, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &req.Id})
+	_, err := s.targetStore.Find(&target.Filter{IdOrName: &req.Id})
 	if err == nil {
 		return nil, ErrTargetAlreadyExists
 	}
 
-	tc, err := s.targetConfigStore.Find(&config.TargetConfigFilter{Name: &req.TargetConfigName})
+	tc, err := s.targetConfigStore.Find(&config.Filter{Name: &req.TargetConfigName})
 	if err != nil {
 		return s.handleCreateError(ctx, nil, err)
 	}

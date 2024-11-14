@@ -13,11 +13,12 @@ import (
 	"github.com/daytonaio/daytona/pkg/provisioner"
 	"github.com/daytonaio/daytona/pkg/server/workspaces/dto"
 	"github.com/daytonaio/daytona/pkg/target"
+	"github.com/daytonaio/daytona/pkg/workspace"
 	log "github.com/sirupsen/logrus"
 )
 
-func (s *WorkspaceService) ListWorkspaces(ctx context.Context, verbose bool) ([]dto.WorkspaceDTO, error) {
-	workspaces, err := s.workspaceStore.List()
+func (s *WorkspaceService) ListWorkspaces(ctx context.Context, filter *workspace.Filter, verbose bool) ([]dto.WorkspaceDTO, error) {
+	workspaces, err := s.workspaceStore.List(filter)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +36,7 @@ func (s *WorkspaceService) ListWorkspaces(ctx context.Context, verbose bool) ([]
 		go func(i int) {
 			defer wg.Done()
 
-			target, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &ws.TargetId})
+			target, err := s.targetStore.Find(&target.Filter{IdOrName: &ws.TargetId})
 			if err != nil {
 				log.Error(fmt.Errorf("failed to get target for %s", ws.TargetId))
 				return

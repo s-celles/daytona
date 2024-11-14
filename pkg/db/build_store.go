@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/daytonaio/daytona/internal/util"
 	"github.com/daytonaio/daytona/pkg/build"
 	. "github.com/daytonaio/daytona/pkg/db/dto"
 	"github.com/daytonaio/daytona/pkg/workspace/buildconfig"
@@ -29,12 +30,12 @@ func NewBuildStore(db *gorm.DB) (*BuildStore, error) {
 	return &BuildStore{db: db}, nil
 }
 
-func (b *BuildStore) Find(filter *build.Filter) (*build.Build, error) {
-	b.Lock.Lock()
-	defer b.Lock.Unlock()
+func (s *BuildStore) Find(filter *build.Filter) (*build.Build, error) {
+	s.Lock.Lock()
+	defer s.Lock.Unlock()
 
 	buildDTO := BuildDTO{}
-	tx := processBuildFilters(b.db, filter).First(&buildDTO)
+	tx := processBuildFilters(s.db, filter).First(&buildDTO)
 
 	if tx.Error != nil {
 		if tx.Error == gorm.ErrRecordNotFound {
@@ -48,12 +49,12 @@ func (b *BuildStore) Find(filter *build.Filter) (*build.Build, error) {
 	return build, nil
 }
 
-func (b *BuildStore) List(filter *build.Filter) ([]*build.Build, error) {
-	b.Lock.Lock()
-	defer b.Lock.Unlock()
+func (s *BuildStore) List(filter *build.Filter) ([]*build.Build, error) {
+	s.Lock.Lock()
+	defer s.Lock.Unlock()
 
 	buildDTOs := []BuildDTO{}
-	tx := processBuildFilters(b.db, filter).Find(&buildDTOs)
+	tx := processBuildFilters(s.db, filter).Find(&buildDTOs)
 
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -67,12 +68,12 @@ func (b *BuildStore) List(filter *build.Filter) ([]*build.Build, error) {
 	return builds, nil
 }
 
-func (b *BuildStore) Save(build *build.Build) error {
-	b.Lock.Lock()
-	defer b.Lock.Unlock()
+func (s *BuildStore) Save(build *build.Build) error {
+	s.Lock.Lock()
+	defer s.Lock.Unlock()
 
 	buildDTO := ToBuildDTO(build)
-	tx := b.db.Save(&buildDTO)
+	tx := s.db.Save(&buildDTO)
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -80,11 +81,11 @@ func (b *BuildStore) Save(build *build.Build) error {
 	return nil
 }
 
-func (b *BuildStore) Delete(id string) error {
-	b.Lock.Lock()
-	defer b.Lock.Unlock()
+func (s *BuildStore) Delete(id string) error {
+	s.Lock.Lock()
+	defer s.Lock.Unlock()
 
-	tx := b.db.Where("id = ?", id).Delete(&BuildDTO{})
+	tx := s.db.Where("id = ?", id).Delete(&BuildDTO{})
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -110,7 +111,7 @@ func processBuildFilters(tx *gorm.DB, filter *build.Filter) *gorm.DB {
 			placeholders := strings.Repeat("?,", len(*filter.PrebuildIds))
 			placeholders = placeholders[:len(placeholders)-1]
 
-			tx = tx.Where(fmt.Sprintf("prebuild_id IN (%s)", placeholders), stringsToInterface(*filter.PrebuildIds)...)
+			tx = tx.Where(fmt.Sprintf("prebuild_id IN (%s)", placeholders), util.StringsToInterface(*filter.PrebuildIds)...)
 		}
 		if filter.GetNewest != nil && *filter.GetNewest {
 			tx = tx.Order("created_at desc").Limit(1)
@@ -136,12 +137,4 @@ func processBuildFilters(tx *gorm.DB, filter *build.Filter) *gorm.DB {
 		}
 	}
 	return tx
-}
-
-func stringsToInterface(slice []string) []interface{} {
-	args := make([]interface{}, len(slice))
-	for i, v := range slice {
-		args[i] = v
-	}
-	return args
 }

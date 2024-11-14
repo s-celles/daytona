@@ -15,14 +15,25 @@ import (
 )
 
 func (s *WorkspaceService) RemoveWorkspace(ctx context.Context, workspaceId string) error {
-	ws, err := s.workspaceStore.Find(workspaceId)
+	ws, err := s.workspaceStore.Find(&workspace.Filter{IdOrName: &workspaceId})
+	if err != nil {
+		return s.handleRemoveError(ctx, &ws.Workspace, ErrWorkspaceNotFound)
+	}
+
+	ws.State = workspace.WorkspaceStatePendingDelete
+	err = s.workspaceStore.Save(&ws.Workspace)
+	return s.handleRemoveError(ctx, &ws.Workspace, err)
+}
+
+func (s *WorkspaceService) RunRemoveWorkspace(ctx context.Context, workspaceId string) error {
+	ws, err := s.workspaceStore.Find(&workspace.Filter{IdOrName: &workspaceId})
 	if err != nil {
 		return s.handleRemoveError(ctx, &ws.Workspace, ErrWorkspaceNotFound)
 	}
 
 	log.Infof("Destroying workspace %s", ws.Name)
 
-	target, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &ws.TargetId})
+	target, err := s.targetStore.Find(&target.Filter{IdOrName: &ws.TargetId})
 	if err != nil {
 		return s.handleRemoveError(ctx, &ws.Workspace, err)
 	}
@@ -47,18 +58,30 @@ func (s *WorkspaceService) RemoveWorkspace(ctx context.Context, workspaceId stri
 	err = s.workspaceStore.Delete(&ws.Workspace)
 
 	return s.handleRemoveError(ctx, &ws.Workspace, err)
+
 }
 
 // ForceRemoveWorkspace ignores provider errors and makes sure the workspace is removed from storage.
 func (s *WorkspaceService) ForceRemoveWorkspace(ctx context.Context, workspaceId string) error {
-	ws, err := s.workspaceStore.Find(workspaceId)
+	ws, err := s.workspaceStore.Find(&workspace.Filter{IdOrName: &workspaceId})
+	if err != nil {
+		return s.handleRemoveError(ctx, &ws.Workspace, ErrWorkspaceNotFound)
+	}
+
+	ws.State = workspace.WorkspaceStatePendingForcedDelete
+	err = s.workspaceStore.Save(&ws.Workspace)
+	return s.handleRemoveError(ctx, &ws.Workspace, err)
+}
+
+func (s *WorkspaceService) RunForceRemoveWorkspace(ctx context.Context, workspaceId string) error {
+	ws, err := s.workspaceStore.Find(&workspace.Filter{IdOrName: &workspaceId})
 	if err != nil {
 		return s.handleRemoveError(ctx, &ws.Workspace, ErrWorkspaceNotFound)
 	}
 
 	log.Infof("Destroying workspace %s", ws.Name)
 
-	target, err := s.targetStore.Find(&target.TargetFilter{IdOrName: &ws.TargetId})
+	target, err := s.targetStore.Find(&target.Filter{IdOrName: &ws.TargetId})
 	if err != nil {
 		return s.handleRemoveError(ctx, &ws.Workspace, err)
 	}

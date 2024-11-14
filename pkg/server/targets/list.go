@@ -16,7 +16,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (s *TargetService) ListTargets(ctx context.Context, filter *target.TargetFilter, verbose bool) ([]dto.TargetDTO, error) {
+func (s *TargetService) ListTargets(ctx context.Context, filter *target.Filter, verbose bool) ([]dto.TargetDTO, error) {
 	targets, err := s.targetStore.List(filter)
 	if err != nil {
 		return nil, err

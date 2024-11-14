@@ -10,9 +10,10 @@ Name | Type | Description | Notes
 **Id** | **string** |  | 
 **Image** | **string** |  | 
 **Info** | Pointer to [**WorkspaceInfo**](WorkspaceInfo.md) |  | [optional] 
+**Metadata** | Pointer to [**WorkspaceMetadata**](WorkspaceMetadata.md) |  | [optional] 
 **Name** | **string** |  | 
 **Repository** | [**GitRepository**](GitRepository.md) |  | 
-**State** | Pointer to [**WorkspaceState**](WorkspaceState.md) |  | [optional] 
+**State** | [**WorkspaceState**](WorkspaceState.md) |  | 
 **TargetId** | **string** |  | 
 **TargetName** | **string** |  | 
 **User** | **string** |  | 
@@ -21,7 +22,7 @@ Name | Type | Description | Notes
 
 ### NewWorkspaceDTO
 
-`func NewWorkspaceDTO(envVars map[string]string, id string, image string, name string, repository GitRepository, targetId string, targetName string, user string, ) *WorkspaceDTO`
+`func NewWorkspaceDTO(envVars map[string]string, id string, image string, name string, repository GitRepository, state WorkspaceState, targetId string, targetName string, user string, ) *WorkspaceDTO`
 
 NewWorkspaceDTO instantiates a new WorkspaceDTO object
 This constructor will assign default values to properties that have it defined,
@@ -171,6 +172,31 @@ SetInfo sets Info field to given value.
 
 HasInfo returns a boolean if a field has been set.
 
+### GetMetadata
+
+`func (o *WorkspaceDTO) GetMetadata() WorkspaceMetadata`
+
+GetMetadata returns the Metadata field if non-nil, zero value otherwise.
+
+### GetMetadataOk
+
+`func (o *WorkspaceDTO) GetMetadataOk() (*WorkspaceMetadata, bool)`
+
+GetMetadataOk returns a tuple with the Metadata field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMetadata
+
+`func (o *WorkspaceDTO) SetMetadata(v WorkspaceMetadata)`
+
+SetMetadata sets Metadata field to given value.
+
+### HasMetadata
+
+`func (o *WorkspaceDTO) HasMetadata() bool`
+
+HasMetadata returns a boolean if a field has been set.
+
 ### GetName
 
 `func (o *WorkspaceDTO) GetName() string`
@@ -230,11 +256,6 @@ and a boolean to check if the value has been set.
 
 SetState sets State field to given value.
 
-### HasState
-
-`func (o *WorkspaceDTO) HasState() bool`
-
-HasState returns a boolean if a field has been set.
 
 ### GetTargetId
 

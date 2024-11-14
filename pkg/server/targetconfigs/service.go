@@ -9,8 +9,8 @@ import (
 
 type ITargetConfigService interface {
 	Delete(targetConfig *config.TargetConfig) error
-	Find(filter *config.TargetConfigFilter) (*config.TargetConfig, error)
-	List(filter *config.TargetConfigFilter) ([]*config.TargetConfig, error)
+	Find(filter *config.Filter) (*config.TargetConfig, error)
+	List(filter *config.Filter) ([]*config.TargetConfig, error)
 	Map() (map[string]*config.TargetConfig, error)
 	Save(targetConfig *config.TargetConfig) error
 }
@@ -29,7 +29,7 @@ func NewTargetConfigService(config TargetConfigServiceConfig) ITargetConfigServi
 	}
 }
 
-func (s *TargetConfigService) List(filter *config.TargetConfigFilter) ([]*config.TargetConfig, error) {
+func (s *TargetConfigService) List(filter *config.Filter) ([]*config.TargetConfig, error) {
 	return s.targetConfigStore.List(filter)
 }
 
@@ -47,7 +47,7 @@ func (s *TargetConfigService) Map() (map[string]*config.TargetConfig, error) {
 	return targetConfigs, nil
 }
 
-func (s *TargetConfigService) Find(filter *config.TargetConfigFilter) (*config.TargetConfig, error) {
+func (s *TargetConfigService) Find(filter *config.Filter) (*config.TargetConfig, error) {
 	return s.targetConfigStore.Find(filter)
 }
 

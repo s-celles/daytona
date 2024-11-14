@@ -26,6 +26,7 @@ import (
 	"github.com/daytonaio/daytona/pkg/posthogservice"
 	"github.com/daytonaio/daytona/pkg/provider/manager"
 	"github.com/daytonaio/daytona/pkg/provisioner"
+	"github.com/daytonaio/daytona/pkg/scheduler"
 	"github.com/daytonaio/daytona/pkg/server"
 	"github.com/daytonaio/daytona/pkg/server/apikeys"
 	"github.com/daytonaio/daytona/pkg/server/builds"
@@ -458,7 +459,7 @@ func GetBuildRunner(c *server.Config, buildRunnerConfig *build.Config, telemetry
 
 	return build.NewBuildRunner(build.BuildRunnerInstanceConfig{
 		Interval:          buildRunnerConfig.Interval,
-		Scheduler:         build.NewCronScheduler(),
+		Scheduler:         scheduler.NewCronScheduler(),
 		BuildRunnerId:     buildRunnerConfig.Id,
 		ContainerRegistry: builderRegistry,
 		GitProviderStore:  gitProviderService,

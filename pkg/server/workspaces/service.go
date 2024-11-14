@@ -7,6 +7,7 @@ import (
 	"context"
 	"io"
 
+	workspace_jobs "github.com/daytonaio/daytona/pkg/jobs/workspace"
 	"github.com/daytonaio/daytona/pkg/logs"
 	"github.com/daytonaio/daytona/pkg/provisioner"
 	"github.com/daytonaio/daytona/pkg/server/apikeys"
@@ -21,19 +22,27 @@ import (
 
 type IWorkspaceService interface {
 	CreateWorkspace(ctx context.Context, req dto.CreateWorkspaceDTO) (*workspace.WorkspaceViewDTO, error)
-	GetWorkspace(ctx context.Context, workspaceId string, verbose bool) (*dto.WorkspaceDTO, error)
-	ListWorkspaces(ctx context.Context, verbose bool) ([]dto.WorkspaceDTO, error)
+	GetWorkspace(ctx context.Context, filter *workspace.Filter, verbose bool) (*dto.WorkspaceDTO, error)
+	ListWorkspaces(ctx context.Context, filter *workspace.Filter, verbose bool) ([]dto.WorkspaceDTO, error)
 	StartWorkspace(ctx context.Context, workspaceId string) error
 	StopWorkspace(ctx context.Context, workspaceId string) error
+	RestartWorkspace(ctx context.Context, workspaceId string) error
 	RemoveWorkspace(ctx context.Context, workspaceId string) error
 	ForceRemoveWorkspace(ctx context.Context, workspaceId string) error
 
+	RunCreateWorkspace(ctx context.Context, ws workspace.Workspace) error
+	RunStartWorkspace(ctx context.Context, workspaceId string) error
+	RunStopWorkspace(ctx context.Context, workspaceId string) error
+	RunRestartWorkspace(ctx context.Context, workspaceId string) error
+	RunRemoveWorkspace(ctx context.Context, workspaceId string) error
+	RunForceRemoveWorkspace(ctx context.Context, workspaceId string) error
+
 	GetWorkspaceLogReader(workspaceId string) (io.Reader, error)
-	SetWorkspaceState(workspaceId string, state *workspace.WorkspaceState) (*workspace.WorkspaceViewDTO, error)
+	SetWorkspaceMetadata(workspaceId string, state *workspace.WorkspaceMetadata) (*workspace.WorkspaceViewDTO, error)
 }
 
 type targetStore interface {
-	Find(filter *target.TargetFilter) (*target.TargetViewDTO, error)
+	Find(filter *target.Filter) (*target.TargetViewDTO, error)
 }
 
 type WorkspaceServiceConfig struct {
@@ -51,6 +60,7 @@ type WorkspaceServiceConfig struct {
 	LoggerFactory            logs.LoggerFactory
 	GitProviderService       gitproviders.IGitProviderService
 	TelemetryService         telemetry.TelemetryService
+	JobStore                 workspace_jobs.Store
 }
 
 func NewWorkspaceService(config WorkspaceServiceConfig) IWorkspaceService {
@@ -69,6 +79,7 @@ func NewWorkspaceService(config WorkspaceServiceConfig) IWorkspaceService {
 		apiKeyService:            config.ApiKeyService,
 		gitProviderService:       config.GitProviderService,
 		telemetryService:         config.TelemetryService,
+		jobStore:                 config.JobStore,
 	}
 }
 
@@ -87,15 +98,16 @@ type WorkspaceService struct {
 	loggerFactory            logs.LoggerFactory
 	gitProviderService       gitproviders.IGitProviderService
 	telemetryService         telemetry.TelemetryService
+	jobStore                 workspace_jobs.Store
 }
 
-func (s *WorkspaceService) SetWorkspaceState(workspaceId string, state *workspace.WorkspaceState) (*workspace.WorkspaceViewDTO, error) {
-	ws, err := s.workspaceStore.Find(workspaceId)
+func (s *WorkspaceService) SetWorkspaceMetadata(workspaceId string, state *workspace.WorkspaceMetadata) (*workspace.WorkspaceViewDTO, error) {
+	ws, err := s.workspaceStore.Find(&workspace.Filter{IdOrName: &workspaceId})
 	if err != nil {
 		return nil, ErrWorkspaceNotFound
 	}
 
-	ws.State = state
+	ws.Metadata = state
 	return ws, s.workspaceStore.Save(&ws.Workspace)
 }
 

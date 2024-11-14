@@ -23,9 +23,9 @@ func NewGitProviderConfigStore(db *gorm.DB) (*GitProviderConfigStore, error) {
 	return &GitProviderConfigStore{db: db}, nil
 }
 
-func (p *GitProviderConfigStore) List() ([]*gitprovider.GitProviderConfig, error) {
+func (s *GitProviderConfigStore) List() ([]*gitprovider.GitProviderConfig, error) {
 	gitProviderDTOs := []GitProviderConfigDTO{}
-	tx := p.db.Find(&gitProviderDTOs)
+	tx := s.db.Find(&gitProviderDTOs)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -39,9 +39,9 @@ func (p *GitProviderConfigStore) List() ([]*gitprovider.GitProviderConfig, error
 	return gitProviders, nil
 }
 
-func (p *GitProviderConfigStore) Find(id string) (*gitprovider.GitProviderConfig, error) {
+func (s *GitProviderConfigStore) Find(id string) (*gitprovider.GitProviderConfig, error) {
 	gitProviderDTO := GitProviderConfigDTO{}
-	tx := p.db.Where("id = ?", id).First(&gitProviderDTO)
+	tx := s.db.Where("id = ?", id).First(&gitProviderDTO)
 	if tx.Error != nil {
 		if IsRecordNotFound(tx.Error) {
 			return nil, gitprovider.ErrGitProviderConfigNotFound
@@ -54,9 +54,9 @@ func (p *GitProviderConfigStore) Find(id string) (*gitprovider.GitProviderConfig
 	return &gitProvider, nil
 }
 
-func (p *GitProviderConfigStore) Save(gitProvider *gitprovider.GitProviderConfig) error {
+func (s *GitProviderConfigStore) Save(gitProvider *gitprovider.GitProviderConfig) error {
 	gitProviderDTO := ToGitProviderConfigDTO(*gitProvider)
-	tx := p.db.Save(&gitProviderDTO)
+	tx := s.db.Save(&gitProviderDTO)
 	if tx.Error != nil {
 		return tx.Error
 	}
@@ -64,9 +64,9 @@ func (p *GitProviderConfigStore) Save(gitProvider *gitprovider.GitProviderConfig
 	return nil
 }
 
-func (p *GitProviderConfigStore) Delete(gitProvider *gitprovider.GitProviderConfig) error {
+func (s *GitProviderConfigStore) Delete(gitProvider *gitprovider.GitProviderConfig) error {
 	gitProviderDTO := ToGitProviderConfigDTO(*gitProvider)
-	tx := p.db.Delete(&gitProviderDTO)
+	tx := s.db.Delete(&gitProviderDTO)
 	if tx.Error != nil {
 		return tx.Error
 	}

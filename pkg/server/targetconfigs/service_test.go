@@ -106,7 +106,7 @@ func (s *TargetConfigServiceTestSuite) TestMap() {
 func (s *TargetConfigServiceTestSuite) TestFind() {
 	require := s.Require()
 
-	targetConfig, err := s.targetConfigService.Find(&config.TargetConfigFilter{
+	targetConfig, err := s.targetConfigService.Find(&config.Filter{
 		Name: &targetConfig1.Name,
 	})
 	require.Nil(err)
