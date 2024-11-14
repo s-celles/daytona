@@ -125,6 +125,7 @@ var DeleteCmd = &cobra.Command{
 				err := common.RemoveWorkspace(ctx, apiClient, workspace.Id, workspace.Name, forceFlag)
 				if err != nil {
 					log.Error(fmt.Sprintf("[ %s ] : %v", workspace.Name, err))
+					continue
 				}
 				views.RenderInfoMessage(fmt.Sprintf("Workspace '%s' successfully deleted", workspace.Name))
 			}

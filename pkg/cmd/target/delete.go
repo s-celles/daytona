@@ -221,6 +221,7 @@ func removeWorkspacesForTarget(ctx context.Context, apiClient *apiclient.APIClie
 				log.Errorf("Failed to delete workspace %s: %v", workspace.Name, err)
 				continue
 			}
+			views.RenderInfoMessage(fmt.Sprintf("Workspace '%s' successfully deleted", workspace.Name))
 		}
 	}
 
