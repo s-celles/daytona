@@ -122,7 +122,7 @@ var DeleteCmd = &cobra.Command{
 			fmt.Println("Operation canceled.")
 		} else {
 			for _, workspace := range workspaceDeleteList {
-				err := common.RemoveWorkspace(ctx, apiClient, workspace, forceFlag)
+				err := common.RemoveWorkspace(ctx, apiClient, workspace.Id, workspace.Name, forceFlag)
 				if err != nil {
 					log.Error(fmt.Sprintf("[ %s ] : %v", workspace.Name, err))
 				}
@@ -155,7 +155,7 @@ func DeleteAllWorkspaces(force bool) error {
 	}
 
 	for _, workspace := range workspaceList {
-		err := common.RemoveWorkspace(ctx, apiClient, &workspace, force)
+		err := common.RemoveWorkspace(ctx, apiClient, workspace.Id, workspace.Name, force)
 		if err != nil {
 			log.Errorf("Failed to delete workspace %s: %v", workspace.Name, err)
 			continue

@@ -13,10 +13,10 @@ import (
 	views_util "github.com/daytonaio/daytona/pkg/views/util"
 )
 
-func RemoveWorkspace(ctx context.Context, apiClient *apiclient.APIClient, workspace *apiclient.WorkspaceDTO, force bool) error {
-	message := fmt.Sprintf("Deleting workspace %s", workspace.Name)
+func RemoveWorkspace(ctx context.Context, apiClient *apiclient.APIClient, workspaceId, workspaceName string, force bool) error {
+	message := fmt.Sprintf("Deleting workspace %s", workspaceName)
 	err := views_util.WithInlineSpinner(message, func() error {
-		res, err := apiClient.WorkspaceAPI.RemoveWorkspace(ctx, workspace.Id).Force(force).Execute()
+		res, err := apiClient.WorkspaceAPI.RemoveWorkspace(ctx, workspaceId).Force(force).Execute()
 		if err != nil {
 			return apiclient_util.HandleErrorResponse(res, err)
 		}
@@ -30,7 +30,7 @@ func RemoveWorkspace(ctx context.Context, apiClient *apiclient.APIClient, worksp
 			return err
 		}
 
-		err = config.RemoveWorkspaceSshEntries(activeProfile.Id, workspace.Id)
+		err = config.RemoveWorkspaceSshEntries(activeProfile.Id, workspaceId)
 		if err != nil {
 			return err
 		}

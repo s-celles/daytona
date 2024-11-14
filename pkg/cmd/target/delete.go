@@ -23,7 +23,7 @@ var yesFlag bool
 var forceFlag bool
 
 var deleteCmd = &cobra.Command{
-	Use:     "delete [TARGET]",
+	Use:     "delete [TARGET]...",
 	Short:   "Delete a target",
 	Aliases: []string{"remove", "rm"},
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -37,13 +37,8 @@ var deleteCmd = &cobra.Command{
 			return err
 		}
 
-		workspaceList, res, err := apiClient.WorkspaceAPI.ListWorkspaces(ctx).Execute()
-		if err != nil {
-			return apiclient_util.HandleErrorResponse(res, err)
-		}
-
 		if allFlag {
-			return deleteAllTargetsView(ctx, apiClient, workspaceList)
+			return deleteAllTargetsView(ctx, apiClient)
 		}
 
 		if len(args) == 0 {
@@ -99,7 +94,7 @@ var deleteCmd = &cobra.Command{
 			fmt.Println("Operation canceled.")
 		} else {
 			for _, target := range targetDeleteList {
-				err := removeTarget(ctx, apiClient, target, workspaceList)
+				err := removeTarget(ctx, apiClient, target)
 				if err != nil {
 					log.Error(fmt.Sprintf("[ %s ] : %v", target.Name, err))
 				} else {
@@ -120,12 +115,12 @@ func init() {
 	deleteCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Delete a target by force")
 }
 
-func deleteAllTargetsView(ctx context.Context, apiClient *apiclient.APIClient, workspaceList []apiclient.WorkspaceDTO) error {
+func deleteAllTargetsView(ctx context.Context, apiClient *apiclient.APIClient) error {
 	var deleteAllTargetsFlag bool
 
 	if yesFlag {
 		fmt.Println("Deleting all targets.")
-		err := deleteAllTargets(ctx, apiClient, workspaceList)
+		err := deleteAllTargets(ctx, apiClient)
 		if err != nil {
 			return err
 		}
@@ -145,7 +140,7 @@ func deleteAllTargetsView(ctx context.Context, apiClient *apiclient.APIClient, w
 		}
 
 		if deleteAllTargetsFlag {
-			err := deleteAllTargets(ctx, apiClient, workspaceList)
+			err := deleteAllTargets(ctx, apiClient)
 			if err != nil {
 				return err
 			}
@@ -157,14 +152,14 @@ func deleteAllTargetsView(ctx context.Context, apiClient *apiclient.APIClient, w
 	return nil
 }
 
-func deleteAllTargets(ctx context.Context, apiClient *apiclient.APIClient, workspaceList []apiclient.WorkspaceDTO) error {
+func deleteAllTargets(ctx context.Context, apiClient *apiclient.APIClient) error {
 	targetList, res, err := apiClient.TargetAPI.ListTargets(ctx).Execute()
 	if err != nil {
 		return apiclient_util.HandleErrorResponse(res, err)
 	}
 
 	for _, target := range targetList {
-		err := removeTarget(ctx, apiClient, &target, workspaceList)
+		err := removeTarget(ctx, apiClient, &target)
 		if err != nil {
 			log.Errorf("Failed to delete target %s: %v", target.Name, err)
 			continue
@@ -174,11 +169,9 @@ func deleteAllTargets(ctx context.Context, apiClient *apiclient.APIClient, works
 	return nil
 }
 
-func removeTarget(ctx context.Context, apiClient *apiclient.APIClient, target *apiclient.TargetDTO, workspaceList []apiclient.WorkspaceDTO) error {
-	targetWorkspaces := getTargetWorkspacesFromWorkspaceList(target.Id, workspaceList)
-
-	if len(targetWorkspaces) > 0 {
-		err := removeWorkspacesForTarget(ctx, apiClient, target.Name, targetWorkspaces)
+func removeTarget(ctx context.Context, apiClient *apiclient.APIClient, target *apiclient.TargetDTO) error {
+	if len(target.Workspaces) > 0 {
+		err := removeWorkspacesForTarget(ctx, apiClient, target)
 		if err != nil {
 			return err
 		}
@@ -197,11 +190,11 @@ func removeTarget(ctx context.Context, apiClient *apiclient.APIClient, target *a
 	return err
 }
 
-func removeWorkspacesForTarget(ctx context.Context, apiClient *apiclient.APIClient, targetName string, targetWorkspaces []apiclient.WorkspaceDTO) error {
+func removeWorkspacesForTarget(ctx context.Context, apiClient *apiclient.APIClient, target *apiclient.TargetDTO) error {
 	var deleteWorkspacesFlag bool
 
 	var targetWorkspacesNames []string
-	for _, workspace := range targetWorkspaces {
+	for _, workspace := range target.Workspaces {
 		targetWorkspacesNames = append(targetWorkspacesNames, workspace.Name)
 	}
 
@@ -209,7 +202,7 @@ func removeWorkspacesForTarget(ctx context.Context, apiClient *apiclient.APIClie
 		form := huh.NewForm(
 			huh.NewGroup(
 				huh.NewConfirm().
-					Title(fmt.Sprintf("Target '%s' is in use by %d workspace(s). Delete workspaces: [%s]?", targetName, len(targetWorkspaces), strings.Join(targetWorkspacesNames, ", "))).
+					Title(fmt.Sprintf("Target '%s' is in use by %d workspace(s). Delete workspaces: [%s]?", target.Name, len(target.Workspaces), strings.Join(targetWorkspacesNames, ", "))).
 					Description(fmt.Sprintf("Do you want to delete workspace(s): [%s]?", strings.Join(targetWorkspacesNames, ", "))).
 					Value(&deleteWorkspacesFlag),
 			),
@@ -222,8 +215,8 @@ func removeWorkspacesForTarget(ctx context.Context, apiClient *apiclient.APIClie
 	}
 
 	if yesFlag || deleteWorkspacesFlag {
-		for _, workspace := range targetWorkspaces {
-			err := common.RemoveWorkspace(ctx, apiClient, &workspace, forceFlag)
+		for _, workspace := range target.Workspaces {
+			err := common.RemoveWorkspace(ctx, apiClient, workspace.Id, workspace.Name, forceFlag)
 			if err != nil {
 				log.Errorf("Failed to delete workspace %s: %v", workspace.Name, err)
 				continue
@@ -232,15 +225,4 @@ func removeWorkspacesForTarget(ctx context.Context, apiClient *apiclient.APIClie
 	}
 
 	return nil
-}
-
-func getTargetWorkspacesFromWorkspaceList(targetId string, workspaceList []apiclient.WorkspaceDTO) []apiclient.WorkspaceDTO {
-	var workspaces []apiclient.WorkspaceDTO
-	for _, workspace := range workspaceList {
-		if workspace.TargetId == targetId {
-			workspaces = append(workspaces, workspace)
-		}
-	}
-
-	return workspaces
 }
