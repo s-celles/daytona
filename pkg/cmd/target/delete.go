@@ -43,37 +43,7 @@ var deleteCmd = &cobra.Command{
 		}
 
 		if allFlag {
-			if yesFlag {
-				fmt.Println("Deleting all targets.")
-				err := DeleteAllTargets(workspaceList, forceFlag)
-				if err != nil {
-					return err
-				}
-			} else {
-				form := huh.NewForm(
-					huh.NewGroup(
-						huh.NewConfirm().
-							Title("Delete all targets?").
-							Description("Are you sure you want to delete all targets?").
-							Value(&yesFlag),
-					),
-				).WithTheme(views.GetCustomTheme())
-
-				err := form.Run()
-				if err != nil {
-					return err
-				}
-
-				if yesFlag {
-					err := DeleteAllTargets(workspaceList, forceFlag)
-					if err != nil {
-						return err
-					}
-				} else {
-					fmt.Println("Operation canceled.")
-				}
-			}
-			return nil
+			return deleteAllTargetsView(ctx, apiClient, workspaceList)
 		}
 
 		if len(args) == 0 {
@@ -107,13 +77,15 @@ var deleteCmd = &cobra.Command{
 			return nil
 		}
 
+		var deleteTargetsFlag bool
+
 		if !yesFlag {
 			form := huh.NewForm(
 				huh.NewGroup(
 					huh.NewConfirm().
 						Title(fmt.Sprintf("Delete target(s): [%s]?", strings.Join(targetDeleteListNames, ", "))).
 						Description(fmt.Sprintf("Are you sure you want to delete the target(s): [%s]?", strings.Join(targetDeleteListNames, ", "))).
-						Value(&yesFlag),
+						Value(&deleteTargetsFlag),
 				),
 			).WithTheme(views.GetCustomTheme())
 
@@ -123,11 +95,11 @@ var deleteCmd = &cobra.Command{
 			}
 		}
 
-		if !yesFlag {
+		if !yesFlag && !deleteTargetsFlag {
 			fmt.Println("Operation canceled.")
 		} else {
 			for _, target := range targetDeleteList {
-				err := RemoveTarget(ctx, apiClient, target, workspaceList, forceFlag)
+				err := removeTarget(ctx, apiClient, target, workspaceList)
 				if err != nil {
 					log.Error(fmt.Sprintf("[ %s ] : %v", target.Name, err))
 				} else {
@@ -148,20 +120,51 @@ func init() {
 	deleteCmd.Flags().BoolVarP(&forceFlag, "force", "f", false, "Delete a target by force")
 }
 
-func DeleteAllTargets(workspaceList []apiclient.WorkspaceDTO, force bool) error {
-	ctx := context.Background()
-	apiClient, err := apiclient_util.GetApiClient(nil)
-	if err != nil {
-		return err
+func deleteAllTargetsView(ctx context.Context, apiClient *apiclient.APIClient, workspaceList []apiclient.WorkspaceDTO) error {
+	var deleteAllTargetsFlag bool
+
+	if yesFlag {
+		fmt.Println("Deleting all targets.")
+		err := deleteAllTargets(ctx, apiClient, workspaceList)
+		if err != nil {
+			return err
+		}
+	} else {
+		form := huh.NewForm(
+			huh.NewGroup(
+				huh.NewConfirm().
+					Title("Delete all targets?").
+					Description("Are you sure you want to delete all targets?").
+					Value(&deleteAllTargetsFlag),
+			),
+		).WithTheme(views.GetCustomTheme())
+
+		err := form.Run()
+		if err != nil {
+			return err
+		}
+
+		if deleteAllTargetsFlag {
+			err := deleteAllTargets(ctx, apiClient, workspaceList)
+			if err != nil {
+				return err
+			}
+		} else {
+			fmt.Println("Operation canceled.")
+		}
 	}
 
+	return nil
+}
+
+func deleteAllTargets(ctx context.Context, apiClient *apiclient.APIClient, workspaceList []apiclient.WorkspaceDTO) error {
 	targetList, res, err := apiClient.TargetAPI.ListTargets(ctx).Execute()
 	if err != nil {
 		return apiclient_util.HandleErrorResponse(res, err)
 	}
 
 	for _, target := range targetList {
-		err := RemoveTarget(ctx, apiClient, &target, workspaceList, force)
+		err := removeTarget(ctx, apiClient, &target, workspaceList)
 		if err != nil {
 			log.Errorf("Failed to delete target %s: %v", target.Name, err)
 			continue
@@ -171,21 +174,42 @@ func DeleteAllTargets(workspaceList []apiclient.WorkspaceDTO, force bool) error 
 	return nil
 }
 
-func RemoveTarget(ctx context.Context, apiClient *apiclient.APIClient, target *apiclient.TargetDTO, workspaceList []apiclient.WorkspaceDTO, force bool) error {
+func removeTarget(ctx context.Context, apiClient *apiclient.APIClient, target *apiclient.TargetDTO, workspaceList []apiclient.WorkspaceDTO) error {
 	targetWorkspaces := getTargetWorkspacesFromWorkspaceList(target.Id, workspaceList)
-	numOfTargetWorkspaces := len(targetWorkspaces)
+
+	if len(targetWorkspaces) > 0 {
+		err := removeWorkspacesForTarget(ctx, apiClient, target.Name, targetWorkspaces)
+		if err != nil {
+			return err
+		}
+	}
+
+	message := fmt.Sprintf("Deleting target %s", target.Name)
+	err := views_util.WithInlineSpinner(message, func() error {
+		res, err := apiClient.TargetAPI.RemoveTarget(ctx, target.Id).Force(forceFlag).Execute()
+		if err != nil {
+			return apiclient_util.HandleErrorResponse(res, err)
+		}
+
+		return nil
+	})
+
+	return err
+}
+
+func removeWorkspacesForTarget(ctx context.Context, apiClient *apiclient.APIClient, targetName string, targetWorkspaces []apiclient.WorkspaceDTO) error {
+	var deleteWorkspacesFlag bool
+
 	var targetWorkspacesNames []string
 	for _, workspace := range targetWorkspaces {
 		targetWorkspacesNames = append(targetWorkspacesNames, workspace.Name)
 	}
 
-	var deleteWorkspacesFlag bool
-
-	if numOfTargetWorkspaces > 0 {
+	if !yesFlag {
 		form := huh.NewForm(
 			huh.NewGroup(
 				huh.NewConfirm().
-					Title(fmt.Sprintf("Target '%s' is in use by %d workspace(s). Delete workspaces: [%s]?", target.Name, numOfTargetWorkspaces, strings.Join(targetWorkspacesNames, ", "))).
+					Title(fmt.Sprintf("Target '%s' is in use by %d workspace(s). Delete workspaces: [%s]?", targetName, len(targetWorkspaces), strings.Join(targetWorkspacesNames, ", "))).
 					Description(fmt.Sprintf("Do you want to delete workspace(s): [%s]?", strings.Join(targetWorkspacesNames, ", "))).
 					Value(&deleteWorkspacesFlag),
 			),
@@ -195,30 +219,16 @@ func RemoveTarget(ctx context.Context, apiClient *apiclient.APIClient, target *a
 		if err != nil {
 			return err
 		}
-
-		if deleteWorkspacesFlag {
-			for _, workspace := range targetWorkspaces {
-				err := common.RemoveWorkspace(ctx, apiClient, &workspace, force)
-				if err != nil {
-					log.Errorf("Failed to delete workspace %s: %v", workspace.Name, err)
-					continue
-				}
-			}
-		}
 	}
 
-	message := fmt.Sprintf("Deleting target %s", target.Name)
-	err := views_util.WithInlineSpinner(message, func() error {
-		res, err := apiClient.TargetAPI.RemoveTarget(ctx, target.Id).Force(force).Execute()
-		if err != nil {
-			return apiclient_util.HandleErrorResponse(res, err)
+	if yesFlag || deleteWorkspacesFlag {
+		for _, workspace := range targetWorkspaces {
+			err := common.RemoveWorkspace(ctx, apiClient, &workspace, forceFlag)
+			if err != nil {
+				log.Errorf("Failed to delete workspace %s: %v", workspace.Name, err)
+				continue
+			}
 		}
-
-		return nil
-	})
-
-	if err != nil {
-		return err
 	}
 
 	return nil
@@ -231,5 +241,6 @@ func getTargetWorkspacesFromWorkspaceList(targetId string, workspaceList []apicl
 			workspaces = append(workspaces, workspace)
 		}
 	}
+
 	return workspaces
 }
