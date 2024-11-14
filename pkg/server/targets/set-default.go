@@ -41,10 +41,10 @@ func (s *TargetService) SetDefault(ctx context.Context, id string) error {
 
 func TargetDtoToTarget(targetDto dto.TargetDTO) *models.Target {
 	return &models.Target{
-		Id:           targetDto.Id,
-		Name:         targetDto.Name,
-		ProviderInfo: targetDto.ProviderInfo,
-		Options:      targetDto.Options,
-		IsDefault:    targetDto.IsDefault,
+		Id:               targetDto.Id,
+		Name:             targetDto.Name,
+		TargetConfigName: targetDto.TargetConfigName,
+		TargetConfig:     targetDto.TargetConfig,
+		IsDefault:        targetDto.IsDefault,
 	}
 }

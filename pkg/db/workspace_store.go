@@ -5,7 +5,6 @@ package db
 
 import (
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 
 	"github.com/daytonaio/daytona/pkg/models"
 	"github.com/daytonaio/daytona/pkg/server/workspaces"
@@ -26,7 +25,7 @@ func NewWorkspaceStore(db *gorm.DB) (*WorkspaceStore, error) {
 
 func (store *WorkspaceStore) List() ([]*models.Workspace, error) {
 	workspaces := []*models.Workspace{}
-	tx := store.db.Preload(clause.Associations).Find(&workspaces)
+	tx := store.db.Preload("Target.TargetConfig").Find(&workspaces)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -36,7 +35,7 @@ func (store *WorkspaceStore) List() ([]*models.Workspace, error) {
 
 func (w *WorkspaceStore) Find(idOrName string) (*models.Workspace, error) {
 	workspace := &models.Workspace{}
-	tx := w.db.Preload(clause.Associations).Where("id = ? OR name = ?", idOrName, idOrName).First(workspace)
+	tx := w.db.Preload("Target.TargetConfig").Where("id = ? OR name = ?", idOrName, idOrName).First(workspace)
 	if tx.Error != nil {
 		if IsRecordNotFound(tx.Error) {
 			return nil, workspaces.ErrWorkspaceNotFound

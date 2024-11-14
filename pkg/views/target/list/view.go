@@ -34,9 +34,9 @@ func ListTargets(targetList []apiclient.TargetDTO, verbose bool, activeProfileNa
 	headers := []string{"Target", "Provider", "Default", "# Workspaces", "Options"}
 
 	data := util.ArrayMap(targetList, func(target apiclient.TargetDTO) []string {
-		provider := target.ProviderInfo.Name
-		if target.ProviderInfo.Label != nil {
-			provider = *target.ProviderInfo.Label
+		provider := target.TargetConfig.ProviderInfo.Name
+		if target.TargetConfig.ProviderInfo.Label != nil {
+			provider = *target.TargetConfig.ProviderInfo.Label
 		}
 
 		rowData := RowData{
@@ -44,7 +44,7 @@ func ListTargets(targetList []apiclient.TargetDTO, verbose bool, activeProfileNa
 			Provider:       provider,
 			Default:        target.Default,
 			WorkspaceCount: fmt.Sprintf("%d", len(target.Workspaces)),
-			Options:        target.Options,
+			Options:        target.TargetConfig.Options,
 		}
 
 		return getRowFromRowData(rowData)

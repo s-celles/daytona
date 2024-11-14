@@ -2881,8 +2881,8 @@
                 "default",
                 "id",
                 "name",
-                "options",
-                "providerInfo"
+                "targetConfig",
+                "targetConfigName"
             ],
             "properties": {
                 "default": {
@@ -2894,12 +2894,11 @@
                 "name": {
                     "type": "string"
                 },
-                "options": {
-                    "description": "JSON encoded map of options",
-                    "type": "string"
+                "targetConfig": {
+                    "$ref": "#/definitions/TargetConfig"
                 },
-                "providerInfo": {
-                    "$ref": "#/definitions/TargetProviderInfo"
+                "targetConfigName": {
+                    "type": "string"
                 },
                 "workspaces": {
                     "type": "array",
@@ -2912,11 +2911,15 @@
         "TargetConfig": {
             "type": "object",
             "required": [
+                "deleted",
                 "name",
                 "options",
                 "providerInfo"
             ],
             "properties": {
+                "deleted": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -2978,8 +2981,8 @@
                 "default",
                 "id",
                 "name",
-                "options",
-                "providerInfo"
+                "targetConfig",
+                "targetConfigName"
             ],
             "properties": {
                 "default": {
@@ -2994,12 +2997,11 @@
                 "name": {
                     "type": "string"
                 },
-                "options": {
-                    "description": "JSON encoded map of options",
-                    "type": "string"
+                "targetConfig": {
+                    "$ref": "#/definitions/TargetConfig"
                 },
-                "providerInfo": {
-                    "$ref": "#/definitions/TargetProviderInfo"
+                "targetConfigName": {
+                    "type": "string"
                 },
                 "workspaces": {
                     "type": "array",

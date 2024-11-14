@@ -7,15 +7,15 @@ Name | Type | Description | Notes
 **Default** | **bool** |  | 
 **Id** | **string** |  | 
 **Name** | **string** |  | 
-**Options** | **string** | JSON encoded map of options | 
-**ProviderInfo** | [**TargetProviderInfo**](TargetProviderInfo.md) |  | 
+**TargetConfig** | [**TargetConfig**](TargetConfig.md) |  | 
+**TargetConfigName** | **string** |  | 
 **Workspaces** | Pointer to [**[]Workspace**](Workspace.md) |  | [optional] 
 
 ## Methods
 
 ### NewTarget
 
-`func NewTarget(default_ bool, id string, name string, options string, providerInfo TargetProviderInfo, ) *Target`
+`func NewTarget(default_ bool, id string, name string, targetConfig TargetConfig, targetConfigName string, ) *Target`
 
 NewTarget instantiates a new Target object
 This constructor will assign default values to properties that have it defined,
@@ -90,44 +90,44 @@ and a boolean to check if the value has been set.
 SetName sets Name field to given value.
 
 
-### GetOptions
+### GetTargetConfig
 
-`func (o *Target) GetOptions() string`
+`func (o *Target) GetTargetConfig() TargetConfig`
 
-GetOptions returns the Options field if non-nil, zero value otherwise.
+GetTargetConfig returns the TargetConfig field if non-nil, zero value otherwise.
 
-### GetOptionsOk
+### GetTargetConfigOk
 
-`func (o *Target) GetOptionsOk() (*string, bool)`
+`func (o *Target) GetTargetConfigOk() (*TargetConfig, bool)`
 
-GetOptionsOk returns a tuple with the Options field if it's non-nil, zero value otherwise
+GetTargetConfigOk returns a tuple with the TargetConfig field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetOptions
+### SetTargetConfig
 
-`func (o *Target) SetOptions(v string)`
+`func (o *Target) SetTargetConfig(v TargetConfig)`
 
-SetOptions sets Options field to given value.
+SetTargetConfig sets TargetConfig field to given value.
 
 
-### GetProviderInfo
+### GetTargetConfigName
 
-`func (o *Target) GetProviderInfo() TargetProviderInfo`
+`func (o *Target) GetTargetConfigName() string`
 
-GetProviderInfo returns the ProviderInfo field if non-nil, zero value otherwise.
+GetTargetConfigName returns the TargetConfigName field if non-nil, zero value otherwise.
 
-### GetProviderInfoOk
+### GetTargetConfigNameOk
 
-`func (o *Target) GetProviderInfoOk() (*TargetProviderInfo, bool)`
+`func (o *Target) GetTargetConfigNameOk() (*string, bool)`
 
-GetProviderInfoOk returns a tuple with the ProviderInfo field if it's non-nil, zero value otherwise
+GetTargetConfigNameOk returns a tuple with the TargetConfigName field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetProviderInfo
+### SetTargetConfigName
 
-`func (o *Target) SetProviderInfo(v TargetProviderInfo)`
+`func (o *Target) SetTargetConfigName(v string)`
 
-SetProviderInfo sets ProviderInfo field to given value.
+SetTargetConfigName sets TargetConfigName field to given value.
 
 
 ### GetWorkspaces

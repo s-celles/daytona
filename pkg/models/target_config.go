@@ -8,4 +8,5 @@ type TargetConfig struct {
 	ProviderInfo ProviderInfo `json:"providerInfo" validate:"required" gorm:"serializer:json"`
 	// JSON encoded map of options
 	Options string `json:"options" validate:"required"`
+	Deleted bool   `json:"deleted" validate:"required"`
 } // @name TargetConfig

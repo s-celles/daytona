@@ -4,15 +4,14 @@
 package models
 
 type Target struct {
-	Id           string       `json:"id" validate:"required" gorm:"primaryKey"`
-	Name         string       `json:"name" validate:"required" gorm:"unique"`
-	ProviderInfo ProviderInfo `json:"providerInfo" validate:"required" gorm:"serializer:json"`
-	// JSON encoded map of options
-	Options    string            `json:"options" validate:"required"`
-	ApiKey     string            `json:"-"`
-	EnvVars    map[string]string `json:"-" gorm:"serializer:json"`
-	IsDefault  bool              `json:"default" validate:"required"`
-	Workspaces []Workspace       `gorm:"foreignKey:TargetId;references:Id"`
+	Id               string            `json:"id" validate:"required" gorm:"primaryKey"`
+	Name             string            `json:"name" validate:"required" gorm:"unique"`
+	TargetConfigName string            `json:"targetConfigName" validate:"required" gorm:"foreignKey:TargetConfigName;references:Name"`
+	TargetConfig     TargetConfig      `json:"targetConfig" validate:"required" gorm:"foreignKey:TargetConfigName"`
+	ApiKey           string            `json:"-"`
+	EnvVars          map[string]string `json:"-" gorm:"serializer:json"`
+	IsDefault        bool              `json:"default" validate:"required"`
+	Workspaces       []Workspace       `gorm:"foreignKey:TargetId;references:Id"`
 } // @name Target
 
 type TargetInfo struct {

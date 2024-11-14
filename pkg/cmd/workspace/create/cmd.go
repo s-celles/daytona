@@ -186,11 +186,11 @@ var CreateCmd = &cobra.Command{
 				return apiclient_util.HandleErrorResponse(res, err)
 			}
 			target = &apiclient.TargetDTO{
-				Id:           t.Id,
-				Name:         t.Name,
-				Options:      t.Options,
-				ProviderInfo: t.ProviderInfo,
-				Default:      t.Default,
+				Id:               t.Id,
+				Name:             t.Name,
+				TargetConfig:     t.TargetConfig,
+				TargetConfigName: t.TargetConfigName,
+				Default:          t.Default,
 			}
 		}
 
@@ -364,9 +364,9 @@ func waitForDial(target *apiclient.TargetDTO, workspaceId string, activeProfile 
 }
 
 func IsLocalDockerTarget(target *apiclient.TargetDTO) bool {
-	if target.ProviderInfo.Name != "docker-provider" {
+	if target.TargetConfig.ProviderInfo.Name != "docker-provider" {
 		return false
 	}
 
-	return !strings.Contains(target.Options, "Remote Hostname")
+	return !strings.Contains(target.TargetConfig.Options, "Remote Hostname")
 }

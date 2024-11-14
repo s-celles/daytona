@@ -2884,8 +2884,8 @@ const docTemplate = `{
                 "default",
                 "id",
                 "name",
-                "options",
-                "providerInfo"
+                "targetConfig",
+                "targetConfigName"
             ],
             "properties": {
                 "default": {
@@ -2897,12 +2897,11 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "options": {
-                    "description": "JSON encoded map of options",
-                    "type": "string"
+                "targetConfig": {
+                    "$ref": "#/definitions/TargetConfig"
                 },
-                "providerInfo": {
-                    "$ref": "#/definitions/TargetProviderInfo"
+                "targetConfigName": {
+                    "type": "string"
                 },
                 "workspaces": {
                     "type": "array",
@@ -2915,11 +2914,15 @@ const docTemplate = `{
         "TargetConfig": {
             "type": "object",
             "required": [
+                "deleted",
                 "name",
                 "options",
                 "providerInfo"
             ],
             "properties": {
+                "deleted": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -2981,8 +2984,8 @@ const docTemplate = `{
                 "default",
                 "id",
                 "name",
-                "options",
-                "providerInfo"
+                "targetConfig",
+                "targetConfigName"
             ],
             "properties": {
                 "default": {
@@ -2997,12 +3000,11 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "options": {
-                    "description": "JSON encoded map of options",
-                    "type": "string"
+                "targetConfig": {
+                    "$ref": "#/definitions/TargetConfig"
                 },
-                "providerInfo": {
-                    "$ref": "#/definitions/TargetProviderInfo"
+                "targetConfigName": {
+                    "type": "string"
                 },
                 "workspaces": {
                     "type": "array",

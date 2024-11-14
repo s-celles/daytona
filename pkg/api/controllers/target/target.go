@@ -49,11 +49,11 @@ func GetTarget(ctx *gin.Context) {
 		return
 	}
 
-	maskedOptions, err := util.GetMaskedOptions(server, t.ProviderInfo.Name, t.Options)
+	maskedOptions, err := util.GetMaskedOptions(server, t.TargetConfig.ProviderInfo.Name, t.TargetConfig.Options)
 	if err != nil {
-		t.Options = fmt.Sprintf("Error: %s", err.Error())
+		t.TargetConfig.Options = fmt.Sprintf("Error: %s", err.Error())
 	} else {
-		t.Options = maskedOptions
+		t.TargetConfig.Options = maskedOptions
 	}
 
 	ctx.JSON(200, t)
@@ -92,13 +92,13 @@ func ListTargets(ctx *gin.Context) {
 	}
 
 	for i, t := range targetList {
-		maskedOptions, err := util.GetMaskedOptions(server, t.ProviderInfo.Name, t.Options)
+		maskedOptions, err := util.GetMaskedOptions(server, t.TargetConfig.ProviderInfo.Name, t.TargetConfig.Options)
 		if err != nil {
-			targetList[i].Options = fmt.Sprintf("Error: %s", err.Error())
+			targetList[i].TargetConfig.Options = fmt.Sprintf("Error: %s", err.Error())
 			continue
 		}
 
-		targetList[i].Options = maskedOptions
+		targetList[i].TargetConfig.Options = maskedOptions
 	}
 
 	ctx.JSON(200, targetList)

@@ -35,14 +35,21 @@ var workspace1 = &models.Workspace{
 	},
 }
 
-var target1 = &models.Target{
-	Id:   "123",
+var targetConfig1 = &models.TargetConfig{
 	Name: "test",
 	ProviderInfo: models.ProviderInfo{
 		Name:    "test-provider",
 		Version: "test",
 	},
 	Options: "test-options",
+	Deleted: false,
+}
+
+var target1 = &models.Target{
+	Id:               "123",
+	Name:             "test",
+	TargetConfigName: targetConfig1.Name,
+	TargetConfig:     *targetConfig1,
 }
 
 var gitStatus1 = &models.GitStatus{

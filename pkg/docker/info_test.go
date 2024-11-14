@@ -45,14 +45,21 @@ func (s *DockerClientTestSuite) TestGetWorkspaceInfo() {
 }
 
 func (s *DockerClientTestSuite) TestGetTargetInfo() {
-	targetWithoutWorkspaces := &models.Target{
-		Id:   "123",
+	var targetConfig = &models.TargetConfig{
 		Name: "test",
 		ProviderInfo: models.ProviderInfo{
 			Name:    "test-provider",
 			Version: "test",
 		},
-		Options: "",
+		Options: "test-options",
+		Deleted: false,
+	}
+
+	targetWithoutWorkspaces := &models.Target{
+		Id:               "123",
+		Name:             "test",
+		TargetConfigName: targetConfig.Name,
+		TargetConfig:     *targetConfig,
 	}
 
 	targetInfo, err := s.dockerClient.GetTargetInfo(targetWithoutWorkspaces)

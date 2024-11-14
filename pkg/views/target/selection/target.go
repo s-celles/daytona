@@ -25,10 +25,10 @@ func generateTargetList(targets []apiclient.TargetDTO, isMultipleSelect bool, wi
 	for _, target := range targets {
 		var providerName string
 
-		if target.ProviderInfo.Label != nil {
-			providerName = *target.ProviderInfo.Label
+		if target.TargetConfig.ProviderInfo.Label != nil {
+			providerName = *target.TargetConfig.ProviderInfo.Label
 		} else {
-			providerName = target.ProviderInfo.Name
+			providerName = target.TargetConfig.ProviderInfo.Name
 		}
 
 		newItem := item[apiclient.TargetDTO]{

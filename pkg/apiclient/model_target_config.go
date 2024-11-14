@@ -21,7 +21,8 @@ var _ MappedNullable = &TargetConfig{}
 
 // TargetConfig struct for TargetConfig
 type TargetConfig struct {
-	Name string `json:"name"`
+	Deleted bool   `json:"deleted"`
+	Name    string `json:"name"`
 	// JSON encoded map of options
 	Options      string             `json:"options"`
 	ProviderInfo TargetProviderInfo `json:"providerInfo"`
@@ -33,8 +34,9 @@ type _TargetConfig TargetConfig
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTargetConfig(name string, options string, providerInfo TargetProviderInfo) *TargetConfig {
+func NewTargetConfig(deleted bool, name string, options string, providerInfo TargetProviderInfo) *TargetConfig {
 	this := TargetConfig{}
+	this.Deleted = deleted
 	this.Name = name
 	this.Options = options
 	this.ProviderInfo = providerInfo
@@ -47,6 +49,30 @@ func NewTargetConfig(name string, options string, providerInfo TargetProviderInf
 func NewTargetConfigWithDefaults() *TargetConfig {
 	this := TargetConfig{}
 	return &this
+}
+
+// GetDeleted returns the Deleted field value
+func (o *TargetConfig) GetDeleted() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.Deleted
+}
+
+// GetDeletedOk returns a tuple with the Deleted field value
+// and a boolean to check if the value has been set.
+func (o *TargetConfig) GetDeletedOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Deleted, true
+}
+
+// SetDeleted sets field value
+func (o *TargetConfig) SetDeleted(v bool) {
+	o.Deleted = v
 }
 
 // GetName returns the Name field value
@@ -131,6 +157,7 @@ func (o TargetConfig) MarshalJSON() ([]byte, error) {
 
 func (o TargetConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	toSerialize["deleted"] = o.Deleted
 	toSerialize["name"] = o.Name
 	toSerialize["options"] = o.Options
 	toSerialize["providerInfo"] = o.ProviderInfo
@@ -142,6 +169,7 @@ func (o *TargetConfig) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
+		"deleted",
 		"name",
 		"options",
 		"providerInfo",
