@@ -202,7 +202,7 @@ func removeWorkspacesForTarget(ctx context.Context, apiClient *apiclient.APIClie
 		form := huh.NewForm(
 			huh.NewGroup(
 				huh.NewConfirm().
-					Title(fmt.Sprintf("Target '%s' is in use by %d workspace(s). Delete workspaces: [%s]?", target.Name, len(target.Workspaces), strings.Join(targetWorkspacesNames, ", "))).
+					Title(fmt.Sprintf("Target '%s' is used by %d workspace(s). Delete workspaces: [%s]?", target.Name, len(target.Workspaces), strings.Join(targetWorkspacesNames, ", "))).
 					Description(fmt.Sprintf("Do you want to delete workspace(s): [%s]?", strings.Join(targetWorkspacesNames, ", "))).
 					Value(&deleteWorkspacesFlag),
 			),
