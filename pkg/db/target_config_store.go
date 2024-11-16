@@ -57,22 +57,14 @@ func (s *TargetConfigStore) Save(targetConfig *models.TargetConfig) error {
 	return nil
 }
 
-func (s *TargetConfigStore) Delete(targetConfig *models.TargetConfig) error {
-	tx := s.db.Delete(targetConfig)
-	if tx.Error != nil {
-		return tx.Error
-	}
-	if tx.RowsAffected == 0 {
-		return stores.ErrTargetConfigNotFound
-	}
-
-	return nil
-}
-
 func processTargetConfigFilters(tx *gorm.DB, filter *stores.TargetConfigFilter) *gorm.DB {
 	if filter != nil {
 		if filter.Name != nil {
 			tx = tx.Where("name = ?", *filter.Name)
+		}
+
+		if filter.Deleted != nil {
+			tx = tx.Where("deleted = ?", *filter.Deleted)
 		}
 	}
 

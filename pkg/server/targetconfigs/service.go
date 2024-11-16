@@ -50,5 +50,6 @@ func (s *TargetConfigService) Save(targetConfig *models.TargetConfig) error {
 }
 
 func (s *TargetConfigService) Delete(targetConfig *models.TargetConfig) error {
-	return s.targetConfigStore.Delete(targetConfig)
+	targetConfig.Deleted = true
+	return s.targetConfigStore.Save(targetConfig)
 }

@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"net/http"
 
+	internal_util "github.com/daytonaio/daytona/internal/util"
 	"github.com/daytonaio/daytona/pkg/api/util"
 	"github.com/daytonaio/daytona/pkg/server"
+	"github.com/daytonaio/daytona/pkg/stores"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,7 +27,7 @@ import (
 func ListTargetConfigs(ctx *gin.Context) {
 	server := server.GetInstance(nil)
 
-	targetConfigs, err := server.TargetConfigService.List(nil)
+	targetConfigs, err := server.TargetConfigService.List(&stores.TargetConfigFilter{Deleted: internal_util.Pointer(false)})
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, fmt.Errorf("failed to list target configs: %w", err))
 		return

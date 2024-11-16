@@ -44,11 +44,6 @@ func (s *InMemoryTargetConfigStore) Save(targetConfig *models.TargetConfig) erro
 	return nil
 }
 
-func (s *InMemoryTargetConfigStore) Delete(targetConfig *models.TargetConfig) error {
-	delete(s.targetConfigs, targetConfig.Name)
-	return nil
-}
-
 func (s *InMemoryTargetConfigStore) processFilters(filter *stores.TargetConfigFilter) ([]*models.TargetConfig, error) {
 	var result []*models.TargetConfig
 

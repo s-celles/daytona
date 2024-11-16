@@ -23,11 +23,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var TargetConfigSetCmd = &cobra.Command{
-	Use:     "set",
-	Short:   "Set target config",
+var TargetConfigAddCmd = &cobra.Command{
+	Use:     "add",
+	Short:   "Add target config",
 	Args:    cobra.NoArgs,
-	Aliases: []string{"s", "add", "update", "register", "edit", "new", "create"},
+	Aliases: []string{"a", "set", "register", "new", "create"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 
