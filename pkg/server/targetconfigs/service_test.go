@@ -80,7 +80,7 @@ func (s *TargetConfigServiceTestSuite) SetupTest() {
 	})
 
 	for _, targetConfig := range expectedConfigs {
-		_ = s.targetConfigService.Save(targetConfig)
+		_ = s.targetConfigService.Add(targetConfig)
 	}
 }
 
@@ -119,7 +119,7 @@ func (s *TargetConfigServiceTestSuite) TestSave() {
 
 	require := s.Require()
 
-	err := s.targetConfigService.Save(targetConfig4)
+	err := s.targetConfigService.Add(targetConfig4)
 	require.Nil(err)
 
 	targetConfigs, err := s.targetConfigService.List(nil)

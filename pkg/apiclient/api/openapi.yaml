@@ -859,14 +859,14 @@ paths:
       tags:
       - target-config
     put:
-      description: Set a target config
-      operationId: SetTargetConfig
+      description: Add a target config
+      operationId: AddTargetConfig
       requestBody:
         content:
           '*/*':
             schema:
               $ref: '#/components/schemas/CreateTargetConfigDTO'
-        description: Target config to set
+        description: Target config to add
         required: true
       responses:
         "200":
@@ -875,7 +875,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TargetConfig'
           description: OK
-      summary: Set a target config
+      summary: Add a target config
       tags:
       - target-config
       x-codegen-request-body-name: targetConfig

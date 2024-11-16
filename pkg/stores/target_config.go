@@ -22,6 +22,7 @@ type TargetConfigStore interface {
 
 var (
 	ErrTargetConfigNotFound = errors.New("target config not found")
+	ErrTargetAlreadyExists  = errors.New("target already exists")
 )
 
 func IsTargetConfigNotFound(err error) bool {

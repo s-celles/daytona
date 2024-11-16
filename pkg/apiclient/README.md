@@ -128,9 +128,9 @@ Class | Method | HTTP request | Description
 *TargetAPI* | [**SetDefaultTarget**](docs/TargetAPI.md#setdefaulttarget) | **Patch** /target/{targetId}/set-default | Set target to be used by default
 *TargetAPI* | [**StartTarget**](docs/TargetAPI.md#starttarget) | **Post** /target/{targetId}/start | Start target
 *TargetAPI* | [**StopTarget**](docs/TargetAPI.md#stoptarget) | **Post** /target/{targetId}/stop | Stop target
+*TargetConfigAPI* | [**AddTargetConfig**](docs/TargetConfigAPI.md#addtargetconfig) | **Put** /target-config | Add a target config
 *TargetConfigAPI* | [**ListTargetConfigs**](docs/TargetConfigAPI.md#listtargetconfigs) | **Get** /target-config | List target configs
 *TargetConfigAPI* | [**RemoveTargetConfig**](docs/TargetConfigAPI.md#removetargetconfig) | **Delete** /target-config/{configName} | Remove a target config
-*TargetConfigAPI* | [**SetTargetConfig**](docs/TargetConfigAPI.md#settargetconfig) | **Put** /target-config | Set a target config
 *WorkspaceAPI* | [**CreateWorkspace**](docs/WorkspaceAPI.md#createworkspace) | **Post** /workspace | Create a workspace
 *WorkspaceAPI* | [**GetWorkspace**](docs/WorkspaceAPI.md#getworkspace) | **Get** /workspace/{workspaceId} | Get workspace info
 *WorkspaceAPI* | [**ListWorkspaces**](docs/WorkspaceAPI.md#listworkspaces) | **Get** /workspace | List workspaces

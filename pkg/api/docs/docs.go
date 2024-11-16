@@ -1213,15 +1213,15 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Set a target config",
+                "description": "Add a target config",
                 "tags": [
                     "target-config"
                 ],
-                "summary": "Set a target config",
-                "operationId": "SetTargetConfig",
+                "summary": "Add a target config",
+                "operationId": "AddTargetConfig",
                 "parameters": [
                     {
-                        "description": "Target config to set",
+                        "description": "Target config to add",
                         "name": "targetConfig",
                         "in": "body",
                         "required": true,

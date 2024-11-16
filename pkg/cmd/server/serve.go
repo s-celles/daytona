@@ -428,7 +428,7 @@ func GetInstance(c *server.Config, configDir string, version string, telemetrySe
 			return targetConfigService.Map()
 		},
 		CreateTargetConfig: func(ctx context.Context, targetConfig *models.TargetConfig) error {
-			return targetConfigService.Save(targetConfig)
+			return targetConfigService.Add(targetConfig)
 		},
 	})
 

@@ -14,17 +14,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SetTargetConfig godoc
+// AddTargetConfig godoc
 //
 //	@Tags			target-config
-//	@Summary		Set a target config
-//	@Description	Set a target config
-//	@Param			targetConfig	body		CreateTargetConfigDTO	true	"Target config to set"
+//	@Summary		Add a target config
+//	@Description	Add a target config
+//	@Param			targetConfig	body		CreateTargetConfigDTO	true	"Target config to add"
 //	@Success		200				{object}	TargetConfig
 //	@Router			/target-config [put]
 //
-//	@id				SetTargetConfig
-func SetTargetConfig(ctx *gin.Context) {
+//	@id				AddTargetConfig
+func AddTargetConfig(ctx *gin.Context) {
 	var req dto.CreateTargetConfigDTO
 	err := ctx.BindJSON(&req)
 	if err != nil {
@@ -36,7 +36,7 @@ func SetTargetConfig(ctx *gin.Context) {
 
 	targetConfig := conversion.ToTargetConfig(req)
 
-	err = server.TargetConfigService.Save(targetConfig)
+	err = server.TargetConfigService.Add(targetConfig)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, fmt.Errorf("failed to set target config: %w", err))
 		return

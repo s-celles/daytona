@@ -45,7 +45,17 @@ func (s *TargetConfigService) Find(filter *stores.TargetConfigFilter) (*models.T
 	return s.targetConfigStore.Find(filter)
 }
 
-func (s *TargetConfigService) Save(targetConfig *models.TargetConfig) error {
+func (s *TargetConfigService) Add(targetConfig *models.TargetConfig) error {
+	persistedTargetConfig, err := s.Find(&stores.TargetConfigFilter{
+		Name: &targetConfig.Name,
+	})
+	if err != nil && !stores.IsTargetConfigNotFound(err) {
+		return err
+	}
+	if persistedTargetConfig != nil && !persistedTargetConfig.Deleted {
+		return stores.ErrTargetAlreadyExists
+	}
+
 	return s.targetConfigStore.Save(targetConfig)
 }
 

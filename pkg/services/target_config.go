@@ -13,5 +13,5 @@ type ITargetConfigService interface {
 	Find(filter *stores.TargetConfigFilter) (*models.TargetConfig, error)
 	List(filter *stores.TargetConfigFilter) ([]*models.TargetConfig, error)
 	Map() (map[string]*models.TargetConfig, error)
-	Save(targetConfig *models.TargetConfig) error
+	Add(targetConfig *models.TargetConfig) error
 }
