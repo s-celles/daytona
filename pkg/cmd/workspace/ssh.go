@@ -67,7 +67,7 @@ var SshCmd = &cobra.Command{
 			}
 		}
 
-		if ws.State == nil || ws.State.Uptime < 1 {
+		if ws.Metadata == nil || ws.Metadata.Uptime < 1 {
 			wsRunningStatus, err := AutoStartWorkspace(*ws)
 			if err != nil {
 				return err

@@ -19,9 +19,10 @@ type RowData struct {
 	Name       string
 	Repository string
 	TargetName string
-	Status     string
+	Status     apiclient.ModelsResourceStateName
 	Created    string
 	Branch     string
+	Uptime     string
 }
 
 func ListWorkspaces(workspaceList []apiclient.WorkspaceDTO, specifyGitProviders bool, verbose bool, activeProfileName string) {
@@ -79,11 +80,11 @@ func renderUnstyledList(workspaceList []apiclient.WorkspaceDTO) {
 }
 
 func getRowFromRowData(rowData RowData, isMultiWorkspaceAccordion bool) []string {
-	var state string
-	if rowData.Status == "" {
-		state = views.InactiveStyle.Render("STOPPED")
-	} else {
-		state = views.ActiveStyle.Render("RUNNING")
+	stateLabel := views.GetStateLabel(rowData.Status)
+	uptimeLabel := rowData.Uptime
+
+	if rowData.Uptime != "" {
+		stateLabel = fmt.Sprintf("%s (%s)", stateLabel, uptimeLabel)
 	}
 
 	if isMultiWorkspaceAccordion {
@@ -94,13 +95,9 @@ func getRowFromRowData(rowData RowData, isMultiWorkspaceAccordion bool) []string
 		views.NameStyle.Render(rowData.Name),
 		views.DefaultRowDataStyle.Render(rowData.Repository),
 		views.DefaultRowDataStyle.Render(rowData.TargetName),
-		state,
+		stateLabel,
 		views.DefaultRowDataStyle.Render(rowData.Created),
 		views.DefaultRowDataStyle.Render(views.GetBranchNameLabel(rowData.Branch)),
-	}
-
-	if rowData.Status != "" {
-		row[3] = fmt.Sprintf("%s %s", state, views.DefaultRowDataStyle.Render(fmt.Sprintf("(%s)", rowData.Status)))
 	}
 
 	return row
@@ -122,26 +119,27 @@ func SortWorkspaces(workspaceList *[]apiclient.WorkspaceDTO, verbose bool) {
 	sort.Slice(*workspaceList, func(i, j int) bool {
 		w1 := (*workspaceList)[i]
 		w2 := (*workspaceList)[j]
-		if w1.State == nil || w2.State == nil {
+		if w1.Metadata == nil || w2.Metadata == nil {
 			return true
 		}
-		return w1.State.Uptime < w2.State.Uptime
+		return w1.Metadata.Uptime < w2.Metadata.Uptime
 	})
 }
 
 func getTableRowData(workspace apiclient.WorkspaceDTO, specifyGitProviders bool) *RowData {
-	rowData := RowData{"", "", "", "", "", ""}
+	rowData := RowData{"", "", "", "", "", "", ""}
 	rowData.Name = workspace.Name + views_util.AdditionalPropertyPadding
 	rowData.Repository = util.GetRepositorySlugFromUrl(workspace.Repository.Url, specifyGitProviders)
 	rowData.Branch = workspace.Repository.Branch
+	rowData.Status = workspace.State.Name
 
 	rowData.TargetName = workspace.Target.Name + views_util.AdditionalPropertyPadding
 
 	if workspace.Info != nil {
 		rowData.Created = util.FormatTimestamp(workspace.Info.Created)
 	}
-	if workspace.State != nil && workspace.State.Uptime > 0 {
-		rowData.Status = util.FormatUptime(workspace.State.Uptime)
+	if workspace.Metadata != nil && workspace.Metadata.Uptime > 0 {
+		rowData.Uptime = util.FormatUptime(workspace.Metadata.Uptime)
 	}
 	return &rowData
 }

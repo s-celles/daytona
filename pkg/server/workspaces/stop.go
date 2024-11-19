@@ -5,7 +5,6 @@ package workspaces
 
 import (
 	"context"
-	"time"
 
 	"github.com/daytonaio/daytona/pkg/models"
 	"github.com/daytonaio/daytona/pkg/telemetry"
@@ -18,18 +17,7 @@ func (s *WorkspaceService) StopWorkspace(ctx context.Context, workspaceId string
 		return s.handleStopError(ctx, ws, ErrWorkspaceNotFound)
 	}
 
-	//	todo: go routines
-	err = s.provisioner.StopWorkspace(ws)
-	if err != nil {
-		return s.handleStopError(ctx, ws, err)
-	}
-	if ws.State != nil {
-		ws.State.Uptime = 0
-		ws.State.UpdatedAt = time.Now().Format(time.RFC1123)
-	}
-
-	err = s.workspaceStore.Save(ws)
-
+	err = s.createJob(ctx, ws.Id, models.JobActionStop)
 	return s.handleStopError(ctx, ws, err)
 }
 

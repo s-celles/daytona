@@ -30,19 +30,16 @@ func generateWorkspaceList(workspaces []apiclient.WorkspaceDTO, isMultipleSelect
 		}
 
 		// Get the time if available
-		uptime := ""
 		createdTime := ""
 
 		if workspace.Info != nil {
 			createdTime = util.FormatTimestamp(workspace.Info.Created)
 		}
 
-		if workspace.State != nil {
-			if workspace.State.Uptime == 0 {
-				uptime = "STOPPED"
-			} else {
-				uptime = fmt.Sprintf("up %s", util.FormatUptime(workspace.State.Uptime))
-			}
+		stateLabel := views.GetStateLabel(workspace.State.Name)
+
+		if workspace.Metadata != nil && workspace.Metadata.Uptime > 0 {
+			stateLabel = fmt.Sprintf("%s (%s)", stateLabel, util.FormatUptime(workspace.Metadata.Uptime))
 		}
 
 		newItem := item[apiclient.WorkspaceDTO]{
@@ -52,7 +49,7 @@ func generateWorkspaceList(workspaces []apiclient.WorkspaceDTO, isMultipleSelect
 			targetName:     workspace.Target.Name,
 			repository:     workspace.Repository.Url,
 			createdTime:    createdTime,
-			uptime:         uptime,
+			state:          stateLabel,
 			workspace:      &workspace,
 			choiceProperty: workspace,
 		}

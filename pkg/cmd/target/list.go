@@ -5,6 +5,7 @@ package target
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/daytonaio/daytona/cmd/daytona/config"
 	"github.com/daytonaio/daytona/internal/util/apiclient"
@@ -32,6 +33,8 @@ var listCmd = &cobra.Command{
 		targetList, res, err := apiClient.TargetAPI.ListTargets(ctx).Verbose(verbose).Execute()
 
 		if err != nil {
+			fmt.Println(res)
+			fmt.Println(err)
 			return apiclient.HandleErrorResponse(res, err)
 		}
 

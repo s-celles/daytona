@@ -1,7 +1,7 @@
 // Copyright 2024 Daytona Platforms Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-package build
+package scheduler
 
 import (
 	"github.com/robfig/cron/v3"

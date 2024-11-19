@@ -10,6 +10,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/daytonaio/daytona/internal/util"
 	"github.com/daytonaio/daytona/pkg/apiclient"
 	"github.com/daytonaio/daytona/pkg/views"
 	list_view "github.com/daytonaio/daytona/pkg/views/target/list"
@@ -31,10 +32,17 @@ func generateTargetList(targets []apiclient.TargetDTO, isMultipleSelect bool, wi
 			providerName = target.ProviderInfo.Name
 		}
 
+		stateLabel := views.GetStateLabel(target.State.Name)
+
+		if target.Metadata != nil && target.Metadata.Uptime > 0 {
+			stateLabel = fmt.Sprintf("%s (%s)", stateLabel, util.FormatUptime(target.Metadata.Uptime))
+		}
+
 		newItem := item[apiclient.TargetDTO]{
 			title:          target.Name,
 			id:             target.Id,
 			desc:           providerName,
+			state:          stateLabel,
 			target:         &target,
 			choiceProperty: target,
 		}

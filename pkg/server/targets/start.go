@@ -36,25 +36,16 @@ func (s *TargetService) StartTarget(ctx context.Context, targetId string) error 
 		ClientId:      telemetry.ClientId(ctx),
 	}, telemetry.TelemetryEnabled(ctx))
 
-	err = s.startTarget(t, logger)
+	logger.Write([]byte("Starting target\n"))
+
+	err = s.provisioner.StartTarget(t)
 	if err != nil {
-		return s.handleStartError(ctx, t, err)
+		return s.handleStartError(ctx, t, ErrTargetNotFound)
 	}
+
+	logger.Write([]byte(views.GetPrettyLogLine(fmt.Sprintf("Target %s started", t.Name))))
 
 	return s.handleStartError(ctx, t, err)
-}
-
-func (s *TargetService) startTarget(target *models.Target, targetLogger io.Writer) error {
-	targetLogger.Write([]byte("Starting target\n"))
-
-	err := s.provisioner.StartTarget(target)
-	if err != nil {
-		return err
-	}
-
-	targetLogger.Write([]byte(views.GetPrettyLogLine(fmt.Sprintf("Target %s started", target.Name))))
-
-	return err
 }
 
 func (s *TargetService) handleStartError(ctx context.Context, target *models.Target, err error) error {

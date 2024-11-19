@@ -82,7 +82,7 @@ var RestartCmd = &cobra.Command{
 		return nil
 	},
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return common.GetAllWorkspacesByState(common.WORKSPACE_STATE_RUNNING)
+		return common.GetAllWorkspacesByState(apiclient.ResourceStateNameStarted)
 	},
 }
 

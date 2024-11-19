@@ -7,14 +7,8 @@ import (
 	"context"
 
 	apiclient_util "github.com/daytonaio/daytona/internal/util/apiclient"
+	"github.com/daytonaio/daytona/pkg/apiclient"
 	"github.com/spf13/cobra"
-)
-
-type workspaceState string
-
-const (
-	WORKSPACE_STATE_RUNNING workspaceState = "Running"
-	WORKSPACE_STATE_STOPPED workspaceState = "Unavailable"
 )
 
 func GetWorkspaceNameCompletions() ([]string, cobra.ShellCompDirective) {
@@ -37,7 +31,7 @@ func GetWorkspaceNameCompletions() ([]string, cobra.ShellCompDirective) {
 	return choices, cobra.ShellCompDirectiveNoFileComp
 }
 
-func GetAllWorkspacesByState(state workspaceState) ([]string, cobra.ShellCompDirective) {
+func GetAllWorkspacesByState(state apiclient.ModelsResourceStateName) ([]string, cobra.ShellCompDirective) {
 	ctx := context.Background()
 	apiClient, err := apiclient_util.GetApiClient(nil)
 	if err != nil {
@@ -51,11 +45,11 @@ func GetAllWorkspacesByState(state workspaceState) ([]string, cobra.ShellCompDir
 
 	var choices []string
 	for _, workspace := range workspaceList {
-		if state == WORKSPACE_STATE_RUNNING && workspace.State.Uptime != 0 {
+		if state == apiclient.ResourceStateNameStarted {
 			choices = append(choices, workspace.Name)
 			break
 		}
-		if state == WORKSPACE_STATE_STOPPED && workspace.State.Uptime == 0 {
+		if state == apiclient.ResourceStateNameStopped {
 			choices = append(choices, workspace.Name)
 			break
 		}

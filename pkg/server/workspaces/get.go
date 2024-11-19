@@ -22,6 +22,7 @@ func (s *WorkspaceService) GetWorkspace(ctx context.Context, workspaceId string,
 
 	response := &services.WorkspaceDTO{
 		Workspace: *ws,
+		State:     ws.ReduceState(),
 	}
 
 	if !verbose {

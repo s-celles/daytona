@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/daytonaio/daytona/internal/util"
 	"github.com/daytonaio/daytona/pkg/apiclient"
 	"github.com/daytonaio/daytona/pkg/views"
 	"golang.org/x/term"
@@ -40,6 +41,11 @@ func Render(target *apiclient.TargetDTO, forceUnstyled bool) {
 
 	if target.Default {
 		output += getInfoLine("Default", "Yes") + "\n"
+	}
+
+	output += getInfoLineState("State", target.State, target.Metadata) + "\n"
+	if target.State.Error != nil {
+		output += getInfoLine("Error", *target.State.Error) + "\n"
 	}
 
 	output += getInfoLine("Options", target.Options) + "\n"
@@ -77,4 +83,14 @@ func renderTUIView(output string, width int) {
 
 func getInfoLine(key, value string) string {
 	return propertyNameStyle.Render(fmt.Sprintf("%-*s", propertyNameWidth, key)) + propertyValueStyle.Render(value) + "\n"
+}
+
+func getInfoLineState(key string, state apiclient.ResourceState, metadata *apiclient.TargetMetadata) string {
+	stateLabel := views.GetStateLabel(state.Name)
+
+	if metadata != nil && metadata.Uptime != 0 {
+		stateLabel = fmt.Sprintf("%s (%s)", stateLabel, util.FormatUptime(metadata.Uptime))
+	}
+
+	return propertyNameStyle.Render(fmt.Sprintf("%-*s", propertyNameWidth, key)) + stateLabel + propertyValueStyle.Foreground(views.Light).Render("\n")
 }

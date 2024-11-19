@@ -26,7 +26,6 @@ var deleteCmd = &cobra.Command{
 	Short:   "Delete a target",
 	Aliases: []string{"remove", "rm"},
 	RunE: func(cmd *cobra.Command, args []string) error {
-
 		ctx := context.Background()
 
 		var targetDeleteList = []*apiclient.TargetDTO{}
@@ -137,7 +136,7 @@ var deleteCmd = &cobra.Command{
 		return nil
 	},
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return getTargetNameCompletions()
+		return getAllTargetsByState(nil)
 	},
 }
 

@@ -21,17 +21,19 @@ var _ MappedNullable = &Workspace{}
 
 // Workspace struct for Workspace
 type Workspace struct {
-	BuildConfig         *BuildConfig      `json:"buildConfig,omitempty"`
-	EnvVars             map[string]string `json:"envVars"`
-	GitProviderConfigId *string           `json:"gitProviderConfigId,omitempty"`
-	Id                  string            `json:"id"`
-	Image               string            `json:"image"`
-	Name                string            `json:"name"`
-	Repository          GitRepository     `json:"repository"`
-	State               *WorkspaceState   `json:"state,omitempty"`
-	Target              Target            `json:"target"`
-	TargetId            string            `json:"targetId"`
-	User                string            `json:"user"`
+	ApiKey              *string            `json:"apiKey,omitempty"`
+	BuildConfig         *BuildConfig       `json:"buildConfig,omitempty"`
+	EnvVars             map[string]string  `json:"envVars"`
+	GitProviderConfigId *string            `json:"gitProviderConfigId,omitempty"`
+	Id                  string             `json:"id"`
+	Image               string             `json:"image"`
+	Jobs                []Job              `json:"jobs,omitempty"`
+	Metadata            *WorkspaceMetadata `json:"metadata,omitempty"`
+	Name                string             `json:"name"`
+	Repository          GitRepository      `json:"repository"`
+	Target              Target             `json:"target"`
+	TargetId            string             `json:"targetId"`
+	User                string             `json:"user"`
 }
 
 type _Workspace Workspace
@@ -59,6 +61,38 @@ func NewWorkspace(envVars map[string]string, id string, image string, name strin
 func NewWorkspaceWithDefaults() *Workspace {
 	this := Workspace{}
 	return &this
+}
+
+// GetApiKey returns the ApiKey field value if set, zero value otherwise.
+func (o *Workspace) GetApiKey() string {
+	if o == nil || IsNil(o.ApiKey) {
+		var ret string
+		return ret
+	}
+	return *o.ApiKey
+}
+
+// GetApiKeyOk returns a tuple with the ApiKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Workspace) GetApiKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.ApiKey) {
+		return nil, false
+	}
+	return o.ApiKey, true
+}
+
+// HasApiKey returns a boolean if a field has been set.
+func (o *Workspace) HasApiKey() bool {
+	if o != nil && !IsNil(o.ApiKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetApiKey gets a reference to the given string and assigns it to the ApiKey field.
+func (o *Workspace) SetApiKey(v string) {
+	o.ApiKey = &v
 }
 
 // GetBuildConfig returns the BuildConfig field value if set, zero value otherwise.
@@ -197,6 +231,70 @@ func (o *Workspace) SetImage(v string) {
 	o.Image = v
 }
 
+// GetJobs returns the Jobs field value if set, zero value otherwise.
+func (o *Workspace) GetJobs() []Job {
+	if o == nil || IsNil(o.Jobs) {
+		var ret []Job
+		return ret
+	}
+	return o.Jobs
+}
+
+// GetJobsOk returns a tuple with the Jobs field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Workspace) GetJobsOk() ([]Job, bool) {
+	if o == nil || IsNil(o.Jobs) {
+		return nil, false
+	}
+	return o.Jobs, true
+}
+
+// HasJobs returns a boolean if a field has been set.
+func (o *Workspace) HasJobs() bool {
+	if o != nil && !IsNil(o.Jobs) {
+		return true
+	}
+
+	return false
+}
+
+// SetJobs gets a reference to the given []Job and assigns it to the Jobs field.
+func (o *Workspace) SetJobs(v []Job) {
+	o.Jobs = v
+}
+
+// GetMetadata returns the Metadata field value if set, zero value otherwise.
+func (o *Workspace) GetMetadata() WorkspaceMetadata {
+	if o == nil || IsNil(o.Metadata) {
+		var ret WorkspaceMetadata
+		return ret
+	}
+	return *o.Metadata
+}
+
+// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Workspace) GetMetadataOk() (*WorkspaceMetadata, bool) {
+	if o == nil || IsNil(o.Metadata) {
+		return nil, false
+	}
+	return o.Metadata, true
+}
+
+// HasMetadata returns a boolean if a field has been set.
+func (o *Workspace) HasMetadata() bool {
+	if o != nil && !IsNil(o.Metadata) {
+		return true
+	}
+
+	return false
+}
+
+// SetMetadata gets a reference to the given WorkspaceMetadata and assigns it to the Metadata field.
+func (o *Workspace) SetMetadata(v WorkspaceMetadata) {
+	o.Metadata = &v
+}
+
 // GetName returns the Name field value
 func (o *Workspace) GetName() string {
 	if o == nil {
@@ -243,38 +341,6 @@ func (o *Workspace) GetRepositoryOk() (*GitRepository, bool) {
 // SetRepository sets field value
 func (o *Workspace) SetRepository(v GitRepository) {
 	o.Repository = v
-}
-
-// GetState returns the State field value if set, zero value otherwise.
-func (o *Workspace) GetState() WorkspaceState {
-	if o == nil || IsNil(o.State) {
-		var ret WorkspaceState
-		return ret
-	}
-	return *o.State
-}
-
-// GetStateOk returns a tuple with the State field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Workspace) GetStateOk() (*WorkspaceState, bool) {
-	if o == nil || IsNil(o.State) {
-		return nil, false
-	}
-	return o.State, true
-}
-
-// HasState returns a boolean if a field has been set.
-func (o *Workspace) HasState() bool {
-	if o != nil && !IsNil(o.State) {
-		return true
-	}
-
-	return false
-}
-
-// SetState gets a reference to the given WorkspaceState and assigns it to the State field.
-func (o *Workspace) SetState(v WorkspaceState) {
-	o.State = &v
 }
 
 // GetTarget returns the Target field value
@@ -359,6 +425,9 @@ func (o Workspace) MarshalJSON() ([]byte, error) {
 
 func (o Workspace) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.ApiKey) {
+		toSerialize["apiKey"] = o.ApiKey
+	}
 	if !IsNil(o.BuildConfig) {
 		toSerialize["buildConfig"] = o.BuildConfig
 	}
@@ -368,11 +437,14 @@ func (o Workspace) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["id"] = o.Id
 	toSerialize["image"] = o.Image
+	if !IsNil(o.Jobs) {
+		toSerialize["jobs"] = o.Jobs
+	}
+	if !IsNil(o.Metadata) {
+		toSerialize["metadata"] = o.Metadata
+	}
 	toSerialize["name"] = o.Name
 	toSerialize["repository"] = o.Repository
-	if !IsNil(o.State) {
-		toSerialize["state"] = o.State
-	}
 	toSerialize["target"] = o.Target
 	toSerialize["targetId"] = o.TargetId
 	toSerialize["user"] = o.User

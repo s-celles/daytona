@@ -12,6 +12,7 @@ import (
 	"github.com/daytonaio/daytona/internal/util"
 	apiclient_util "github.com/daytonaio/daytona/internal/util/apiclient"
 	"github.com/daytonaio/daytona/pkg/apiclient"
+	workspace_common "github.com/daytonaio/daytona/pkg/cmd/workspace/common"
 	"github.com/daytonaio/daytona/pkg/views"
 	logs_view "github.com/daytonaio/daytona/pkg/views/logs"
 	"github.com/daytonaio/daytona/pkg/views/target/selection"
@@ -109,10 +110,9 @@ var stopCmd = &cobra.Command{
 		}
 		return nil
 	},
-	// FIXME: add after adding state to targets
-	// ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	// 	return getAllTargetsByState(TARGET_STATE_RUNNING)
-	// },
+	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return getAllTargetsByState(util.Pointer(apiclient.ResourceStateNameStarted))
+	},
 }
 
 func init() {
@@ -162,7 +162,8 @@ func StopTarget(apiClient *apiclient.APIClient, targetId string) error {
 		if err != nil {
 			return apiclient_util.HandleErrorResponse(res, err)
 		}
-		return nil
+
+		return workspace_common.AwaitTargetState(targetId, apiclient.ResourceStateNameStarted)
 	})
 	if err != nil {
 		return err

@@ -66,6 +66,7 @@ func TestTargetService(t *testing.T) {
 	ctx = context.WithValue(ctx, telemetry.CLIENT_ID_CONTEXT_KEY, "test-client-id")
 
 	targetStore := t_targets.NewInMemoryTargetStore()
+	targetMetadataStore := t_targets.NewInMemoryTargetMetadataStore()
 	targetConfigStore := t_targetconfigs.NewInMemoryTargetConfigStore()
 
 	targetConfigStore.Save(&tc) // nolint:errcheck
@@ -77,7 +78,8 @@ func TestTargetService(t *testing.T) {
 	buildLogsDir := t.TempDir()
 
 	service := targets.NewTargetService(targets.TargetServiceConfig{
-		TargetStore: targetStore,
+		TargetStore:         targetStore,
+		TargetMetadataStore: targetMetadataStore,
 		FindTargetConfig: func(ctx context.Context, name string) (*models.TargetConfig, error) {
 			return targetConfigStore.Find(&stores.TargetConfigFilter{Name: &name})
 		},
@@ -216,6 +218,16 @@ func TestTargetService(t *testing.T) {
 		_, err := service.CreateTarget(ctx, invalidTargetRequest)
 		require.NotNil(t, err)
 		require.Equal(t, targets.ErrInvalidTargetName, err)
+	})
+
+	t.Run("SetTargetMetadata", func(t *testing.T) {
+		err := targetStore.Save(tg)
+		require.Nil(t, err)
+
+		_, err = service.SetTargetMetadata(tg.Id, &models.TargetMetadata{
+			Uptime: 10,
+		})
+		require.Nil(t, err)
 	})
 
 	t.Cleanup(func() {

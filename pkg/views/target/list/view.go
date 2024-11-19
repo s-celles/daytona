@@ -18,9 +18,11 @@ import (
 type RowData struct {
 	Name           string
 	Provider       string
-	Default        bool
 	WorkspaceCount string
+	Default        bool
+	Status         apiclient.ModelsResourceStateName
 	Options        string
+	Uptime         string
 }
 
 func ListTargets(targetList []apiclient.TargetDTO, verbose bool, activeProfileName string) {
@@ -31,7 +33,7 @@ func ListTargets(targetList []apiclient.TargetDTO, verbose bool, activeProfileNa
 
 	SortTargets(&targetList)
 
-	headers := []string{"Target", "Provider", "Default", "# Workspaces", "Options"}
+	headers := []string{"Target", "Options", "# Workspaces", "Default", "Status"}
 
 	data := util.ArrayMap(targetList, func(target apiclient.TargetDTO) []string {
 		provider := target.ProviderInfo.Name
@@ -42,9 +44,14 @@ func ListTargets(targetList []apiclient.TargetDTO, verbose bool, activeProfileNa
 		rowData := RowData{
 			Name:           target.Name,
 			Provider:       provider,
-			Default:        target.Default,
-			WorkspaceCount: fmt.Sprintf("%d", len(target.Workspaces)),
 			Options:        target.Options,
+			WorkspaceCount: fmt.Sprintf("%d", len(target.Workspaces)),
+			Default:        target.Default,
+			Status:         target.State.Name,
+		}
+
+		if target.Metadata != nil && target.Metadata.Uptime > 0 {
+			rowData.Uptime = util.FormatUptime(target.Metadata.Uptime)
 		}
 
 		return getRowFromRowData(rowData)
@@ -70,20 +77,26 @@ func renderUnstyledList(targetList []apiclient.TargetDTO) {
 }
 
 func getRowFromRowData(rowData RowData) []string {
+	stateLabel := views.GetStateLabel(rowData.Status)
+
+	if rowData.Uptime != "" {
+		stateLabel = fmt.Sprintf("%s (%s)", stateLabel, rowData.Uptime)
+	}
+
 	var isDefault string
 
 	if rowData.Default {
-		isDefault = views.ActiveStyle.Render("Yes")
+		isDefault = "Yes"
 	} else {
-		isDefault = views.InactiveStyle.Render("/")
+		isDefault = "/"
 	}
 
 	return []string{
-		views.NameStyle.Render(rowData.Name),
-		views.DefaultRowDataStyle.Render(rowData.Provider),
-		isDefault,
-		views.DefaultRowDataStyle.Render(rowData.WorkspaceCount),
+		fmt.Sprintf("%s %s", views.NameStyle.Render(rowData.Name), views.DefaultRowDataStyle.Render(fmt.Sprintf("(%s)", rowData.Provider))),
 		views.DefaultRowDataStyle.Render(rowData.Options),
+		views.DefaultRowDataStyle.Render(rowData.WorkspaceCount),
+		isDefault,
+		stateLabel,
 	}
 }
 

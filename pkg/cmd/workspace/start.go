@@ -130,7 +130,7 @@ var StartCmd = &cobra.Command{
 		return nil
 	},
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return common.GetAllWorkspacesByState(common.WORKSPACE_STATE_STOPPED)
+		return common.GetAllWorkspacesByState(apiclient.ResourceStateNameStopped)
 	},
 }
 
@@ -197,7 +197,15 @@ func StartWorkspace(apiClient *apiclient.APIClient, workspace apiclient.Workspac
 		stopLogs()
 		return apiclient_util.HandleErrorResponse(res, err)
 	}
+
+	err = common.AwaitWorkspaceState(workspace.Id, apiclient.ResourceStateNameStarted)
+	if err != nil {
+		stopLogs()
+		return err
+	}
+
 	time.Sleep(100 * time.Millisecond)
+
 	stopLogs()
 	return nil
 }

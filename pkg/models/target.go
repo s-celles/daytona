@@ -3,6 +3,15 @@
 
 package models
 
+import (
+	"slices"
+	"time"
+
+	"github.com/daytonaio/daytona/internal/util"
+)
+
+var providersWithoutTargetMode = []string{"docker-provider"}
+
 type Target struct {
 	Id           string       `json:"id" validate:"required" gorm:"primaryKey"`
 	Name         string       `json:"name" validate:"required" gorm:"unique"`
@@ -10,10 +19,52 @@ type Target struct {
 	// JSON encoded map of options
 	Options    string            `json:"options" validate:"required"`
 	ApiKey     string            `json:"-"`
-	EnvVars    map[string]string `json:"-" gorm:"serializer:json"`
+	EnvVars    map[string]string `json:"envVars" validate:"required" gorm:"serializer:json"`
 	IsDefault  bool              `json:"default" validate:"required"`
 	Workspaces []Workspace       `gorm:"foreignKey:TargetId;references:Id"`
+	Metadata   *TargetMetadata   `gorm:"foreignKey:TargetId;references:Id" validate:"optional"`
+	Jobs       []Job             `gorm:"foreignKey:ResourceId;references:Id"`
 } // @name Target
+
+type TargetMetadata struct {
+	TargetId  string    `json:"targetId" validate:"required" gorm:"primaryKey;foreignKey:TargetId;references:Id"`
+	UpdatedAt time.Time `json:"updatedAt" validate:"required"`
+	Uptime    uint64    `json:"uptime" validate:"required"`
+} // @name TargetMetadata
+
+func (t *Target) ReduceState() ResourceState {
+	// Some providers do not utilize agents in target mode
+	if slices.Contains(providersWithoutTargetMode, t.ProviderInfo.Name) {
+		return ResourceState{
+			Name:      ResourceStateNameUndefined,
+			UpdatedAt: time.Now(),
+		}
+	}
+
+	state := ResourceState{
+		Name:      ResourceStateNamePendingCreate,
+		UpdatedAt: time.Now(),
+	}
+
+	// Jobs are sorted by most recent - deduce the state from the first non-pending one
+	for _, job := range t.Jobs {
+		if job.State != JobStatePending {
+			state = getResourceStateFromJob(&job)
+			break
+		}
+	}
+
+	// If the target should be running, check if it is unresponsive
+	if state.Name == ResourceStateNameStarted {
+		if t.Metadata != nil && time.Since(t.Metadata.UpdatedAt) > WORKSPACE_UNRESPONSIVE_THRESHOLD {
+			state.Name = ResourceStateNameUnresponsive
+			state.Error = util.Pointer("Target is unresponsive")
+			state.UpdatedAt = t.Metadata.UpdatedAt
+		}
+	}
+
+	return state
+}
 
 type TargetInfo struct {
 	Name             string `json:"name" validate:"required"`

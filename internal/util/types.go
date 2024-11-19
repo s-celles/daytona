@@ -3,6 +3,11 @@
 
 package util
 
+// Use generics to create a pointer to a value
+func Pointer[T any](d T) *T {
+	return &d
+}
+
 func ArrayMap[T, U any](data []T, f func(T) U) []U {
 	res := make([]U, 0, len(data))
 
@@ -11,4 +16,12 @@ func ArrayMap[T, U any](data []T, f func(T) U) []U {
 	}
 
 	return res
+}
+
+func StringsToInterface(slice []string) []interface{} {
+	args := make([]interface{}, len(slice))
+	for i, v := range slice {
+		args[i] = v
+	}
+	return args
 }

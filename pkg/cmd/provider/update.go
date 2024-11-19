@@ -42,12 +42,7 @@ var providerUpdateCmd = &cobra.Command{
 			return nil
 		}
 
-		serverConfig, res, err := apiClient.ServerAPI.GetConfigExecute(apiclient.ApiGetConfigRequest{})
-		if err != nil {
-			return apiclient_util.HandleErrorResponse(res, err)
-		}
-
-		providerManager := manager.NewProviderManager(manager.ProviderManagerConfig{RegistryUrl: serverConfig.RegistryUrl})
+		providerManager := manager.GetProviderManager(nil)
 
 		providersManifest, err := providerManager.GetProvidersManifest()
 		if err != nil {

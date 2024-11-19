@@ -6,7 +6,6 @@ package targets
 import (
 	"context"
 
-	"github.com/daytonaio/daytona/pkg/logs"
 	"github.com/daytonaio/daytona/pkg/models"
 	"github.com/daytonaio/daytona/pkg/stores"
 	"github.com/daytonaio/daytona/pkg/telemetry"
@@ -14,34 +13,13 @@ import (
 )
 
 func (s *TargetService) RemoveTarget(ctx context.Context, targetId string) error {
-	target, err := s.targetStore.Find(&stores.TargetFilter{IdOrName: &targetId})
+	t, err := s.targetStore.Find(&stores.TargetFilter{IdOrName: &targetId})
 	if err != nil {
-		return s.handleRemoveError(ctx, target, ErrTargetNotFound)
+		return s.handleRemoveError(ctx, t, ErrTargetNotFound)
 	}
 
-	log.Infof("Destroying target %s", target.Id)
-
-	err = s.provisioner.DestroyTarget(target)
-	if err != nil {
-		return s.handleRemoveError(ctx, target, err)
-	}
-
-	// Should not fail the whole operation if the API key cannot be revoked
-	err = s.revokeApiKey(ctx, target.Id)
-	if err != nil {
-		log.Error(err)
-	}
-
-	logger := s.loggerFactory.CreateTargetLogger(target.Id, target.Name, logs.LogSourceServer)
-	err = logger.Cleanup()
-	if err != nil {
-		// Should not fail the whole operation if the target logger cannot be cleaned up
-		log.Error(err)
-	}
-
-	err = s.targetStore.Delete(target)
-
-	return s.handleRemoveError(ctx, target, err)
+	err = s.createJob(ctx, t.Id, models.JobActionDelete)
+	return s.handleRemoveError(ctx, t, err)
 }
 
 // ForceRemoveTarget ignores provider errors and makes sure the target is removed from storage.
@@ -51,21 +29,34 @@ func (s *TargetService) ForceRemoveTarget(ctx context.Context, targetId string) 
 		return s.handleRemoveError(ctx, nil, ErrTargetNotFound)
 	}
 
-	log.Infof("Destroying target %s", target.Id)
-
-	err = s.provisioner.DestroyTarget(target)
-	if err != nil {
-		log.Error(err)
-	}
-
-	err = s.revokeApiKey(ctx, target.Id)
-	if err != nil {
-		log.Error(err)
-	}
-
-	err = s.targetStore.Delete(target)
-
+	err = s.createJob(ctx, target.Id, models.JobActionForceDelete)
 	return s.handleRemoveError(ctx, target, err)
+}
+
+func (s *TargetService) HandleSuccessfulRemoval(ctx context.Context, targetId string) error {
+	err := s.revokeApiKey(ctx, targetId)
+	if err != nil {
+		// Should not fail the whole operation if the API key cannot be revoked
+		log.Error(err)
+	}
+
+	t, err := s.targetStore.Find(&stores.TargetFilter{IdOrName: &targetId})
+	if err != nil {
+		return s.handleRemoveError(ctx, t, ErrTargetNotFound)
+	}
+
+	metadata, err := s.targetMetadataStore.Find(&stores.TargetMetadataFilter{TargetId: &targetId})
+	if err != nil {
+		return s.handleRemoveError(ctx, t, err)
+	}
+
+	err = s.targetMetadataStore.Delete(metadata)
+	if err != nil {
+		return s.handleRemoveError(ctx, t, err)
+	}
+
+	err = s.targetStore.Delete(t)
+	return s.handleRemoveError(ctx, t, err)
 }
 
 func (s *TargetService) handleRemoveError(ctx context.Context, target *models.Target, err error) error {

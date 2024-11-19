@@ -10,6 +10,7 @@ import (
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/daytonaio/daytona/pkg/apiclient"
 	"golang.org/x/term"
 )
 
@@ -182,4 +183,35 @@ func GetEnvVarsInput(envVars *map[string]string) *huh.Text {
 // Bolds the message and prepends a checkmark
 func GetPrettyLogLine(message string) string {
 	return fmt.Sprintf("%s \033[1m%s\033[0m\n", lipgloss.NewStyle().Foreground(lipgloss.Color("42")).SetString("✓").String(), message)
+}
+
+func GetStateLabel(state apiclient.ModelsResourceStateName) string {
+	switch state {
+	case apiclient.ResourceStateNameUndefined:
+		return UndefinedStyle.Render("/")
+	case apiclient.ResourceStateNamePendingCreate:
+		return PendingStyle.Render("PENDING")
+	case apiclient.ResourceStateNameCreating:
+		return CreatingStyle.Render("CREATING")
+	case apiclient.ResourceStateNamePendingStart:
+		return PendingStyle.Render("STARTING")
+	case apiclient.ResourceStateNameStarting:
+		return StartingStyle.Render("STARTING")
+	case apiclient.ResourceStateNameStarted:
+		return StartedStyle.Render("STARTED")
+	case apiclient.ResourceStateNamePendingStop:
+		return PendingStyle.Render("STOPPING")
+	case apiclient.ResourceStateNameStopping:
+		return StoppingStyle.Render("STOPPING")
+	case apiclient.ResourceStateNameStopped:
+		return StoppedStyle.Render("STOPPED")
+	case apiclient.ResourceStateNamePendingRestart:
+		return PendingStyle.Render("RESTARTING")
+	case apiclient.ResourceStateNameError:
+		return ErrorStyle.Render("ERROR")
+	case apiclient.ResourceStateNameUnresponsive:
+		return UnresponsiveStyle.Render("UNRESPONSIVE")
+	}
+
+	return "/"
 }

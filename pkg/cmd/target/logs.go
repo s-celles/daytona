@@ -17,7 +17,7 @@ import (
 var logsCmd = &cobra.Command{
 	Use:     "logs [TARGET]",
 	Short:   "View the logs of a target",
-	Args:    cobra.RangeArgs(0, 2),
+	Args:    cobra.RangeArgs(0, 1),
 	Aliases: []string{"lg", "log"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
@@ -66,10 +66,9 @@ var logsCmd = &cobra.Command{
 
 		return nil
 	},
-	// FIXME: add after adding state to targets
-	// ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	// 	return getAllTargetsByState(TARGET_STATE_RUNNING)
-	// },
+	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return getAllTargetsByState(nil)
+	},
 }
 
 var followFlag bool

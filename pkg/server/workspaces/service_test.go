@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"testing"
-	"time"
 
 	t_targets "github.com/daytonaio/daytona/internal/testing/server/targets"
 	"github.com/daytonaio/daytona/internal/testing/server/targets/mocks"
@@ -284,14 +283,12 @@ func TestTargetService(t *testing.T) {
 		require.Equal(t, workspaces.ErrWorkspaceNotFound, err)
 	})
 
-	t.Run("SetWorkspaceState", func(t *testing.T) {
+	t.Run("SetWorkspaceMetadata", func(t *testing.T) {
 		err := workspaceStore.Save(ws)
 		require.Nil(t, err)
 
-		updatedAt := time.Now().Format(time.RFC1123)
-		res, err := service.SetWorkspaceState(createWorkspaceDTO.Id, &models.WorkspaceState{
-			UpdatedAt: updatedAt,
-			Uptime:    10,
+		res, err := service.SetWorkspaceMetadata(createWorkspaceDTO.Id, &models.WorkspaceMetadata{
+			Uptime: 10,
 			GitStatus: &models.GitStatus{
 				CurrentBranch: "main",
 			},
@@ -299,7 +296,7 @@ func TestTargetService(t *testing.T) {
 		require.Nil(t, err)
 
 		require.Nil(t, err)
-		require.Equal(t, "main", res.State.GitStatus.CurrentBranch)
+		require.Equal(t, "main", res.GitStatus.CurrentBranch)
 	})
 
 	t.Cleanup(func() {

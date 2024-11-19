@@ -185,6 +185,12 @@ var CreateCmd = &cobra.Command{
 			if err != nil {
 				return apiclient_util.HandleErrorResponse(res, err)
 			}
+
+			err = workspace_common.AwaitTargetState(t.Id, apiclient.ResourceStateNameStarted)
+			if err != nil {
+				return err
+			}
+
 			target = &apiclient.TargetDTO{
 				Id:           t.Id,
 				Name:         t.Name,
@@ -216,6 +222,11 @@ var CreateCmd = &cobra.Command{
 			_, res, err = apiClient.WorkspaceAPI.CreateWorkspace(ctx).Workspace(createWorkspaceDtos[i]).Execute()
 			if err != nil {
 				return apiclient_util.HandleErrorResponse(res, err)
+			}
+
+			err = workspace_common.AwaitWorkspaceState(createWorkspaceDtos[i].Id, apiclient.ResourceStateNameStarted)
+			if err != nil {
+				return err
 			}
 		}
 

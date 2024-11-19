@@ -4,14 +4,16 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**ApiKey** | Pointer to **string** |  | [optional] 
 **BuildConfig** | Pointer to [**BuildConfig**](BuildConfig.md) |  | [optional] 
 **EnvVars** | **map[string]string** |  | 
 **GitProviderConfigId** | Pointer to **string** |  | [optional] 
 **Id** | **string** |  | 
 **Image** | **string** |  | 
+**Jobs** | Pointer to [**[]Job**](Job.md) |  | [optional] 
+**Metadata** | Pointer to [**WorkspaceMetadata**](WorkspaceMetadata.md) |  | [optional] 
 **Name** | **string** |  | 
 **Repository** | [**GitRepository**](GitRepository.md) |  | 
-**State** | Pointer to [**WorkspaceState**](WorkspaceState.md) |  | [optional] 
 **Target** | [**Target**](Target.md) |  | 
 **TargetId** | **string** |  | 
 **User** | **string** |  | 
@@ -34,6 +36,31 @@ will change when the set of required properties is changed
 NewWorkspaceWithDefaults instantiates a new Workspace object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetApiKey
+
+`func (o *Workspace) GetApiKey() string`
+
+GetApiKey returns the ApiKey field if non-nil, zero value otherwise.
+
+### GetApiKeyOk
+
+`func (o *Workspace) GetApiKeyOk() (*string, bool)`
+
+GetApiKeyOk returns a tuple with the ApiKey field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetApiKey
+
+`func (o *Workspace) SetApiKey(v string)`
+
+SetApiKey sets ApiKey field to given value.
+
+### HasApiKey
+
+`func (o *Workspace) HasApiKey() bool`
+
+HasApiKey returns a boolean if a field has been set.
 
 ### GetBuildConfig
 
@@ -145,6 +172,56 @@ and a boolean to check if the value has been set.
 SetImage sets Image field to given value.
 
 
+### GetJobs
+
+`func (o *Workspace) GetJobs() []Job`
+
+GetJobs returns the Jobs field if non-nil, zero value otherwise.
+
+### GetJobsOk
+
+`func (o *Workspace) GetJobsOk() (*[]Job, bool)`
+
+GetJobsOk returns a tuple with the Jobs field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetJobs
+
+`func (o *Workspace) SetJobs(v []Job)`
+
+SetJobs sets Jobs field to given value.
+
+### HasJobs
+
+`func (o *Workspace) HasJobs() bool`
+
+HasJobs returns a boolean if a field has been set.
+
+### GetMetadata
+
+`func (o *Workspace) GetMetadata() WorkspaceMetadata`
+
+GetMetadata returns the Metadata field if non-nil, zero value otherwise.
+
+### GetMetadataOk
+
+`func (o *Workspace) GetMetadataOk() (*WorkspaceMetadata, bool)`
+
+GetMetadataOk returns a tuple with the Metadata field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMetadata
+
+`func (o *Workspace) SetMetadata(v WorkspaceMetadata)`
+
+SetMetadata sets Metadata field to given value.
+
+### HasMetadata
+
+`func (o *Workspace) HasMetadata() bool`
+
+HasMetadata returns a boolean if a field has been set.
+
 ### GetName
 
 `func (o *Workspace) GetName() string`
@@ -184,31 +261,6 @@ and a boolean to check if the value has been set.
 
 SetRepository sets Repository field to given value.
 
-
-### GetState
-
-`func (o *Workspace) GetState() WorkspaceState`
-
-GetState returns the State field if non-nil, zero value otherwise.
-
-### GetStateOk
-
-`func (o *Workspace) GetStateOk() (*WorkspaceState, bool)`
-
-GetStateOk returns a tuple with the State field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetState
-
-`func (o *Workspace) SetState(v WorkspaceState)`
-
-SetState sets State field to given value.
-
-### HasState
-
-`func (o *Workspace) HasState() bool`
-
-HasState returns a boolean if a field has been set.
 
 ### GetTarget
 
