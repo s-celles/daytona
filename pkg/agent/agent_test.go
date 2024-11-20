@@ -46,10 +46,10 @@ var targetConfig1 = &models.TargetConfig{
 }
 
 var target1 = &models.Target{
-	Id:               "123",
-	Name:             "test",
-	TargetConfigName: targetConfig1.Name,
-	TargetConfig:     *targetConfig1,
+	Id:             "123",
+	Name:           "test",
+	TargetConfigId: targetConfig1.Id,
+	TargetConfig:   *targetConfig1,
 }
 
 var gitStatus1 = &models.GitStatus{

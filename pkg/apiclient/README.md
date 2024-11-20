@@ -130,7 +130,7 @@ Class | Method | HTTP request | Description
 *TargetAPI* | [**StopTarget**](docs/TargetAPI.md#stoptarget) | **Post** /target/{targetId}/stop | Stop target
 *TargetConfigAPI* | [**AddTargetConfig**](docs/TargetConfigAPI.md#addtargetconfig) | **Put** /target-config | Add a target config
 *TargetConfigAPI* | [**ListTargetConfigs**](docs/TargetConfigAPI.md#listtargetconfigs) | **Get** /target-config | List target configs
-*TargetConfigAPI* | [**RemoveTargetConfig**](docs/TargetConfigAPI.md#removetargetconfig) | **Delete** /target-config/{configName} | Remove a target config
+*TargetConfigAPI* | [**RemoveTargetConfig**](docs/TargetConfigAPI.md#removetargetconfig) | **Delete** /target-config/{configId} | Remove a target config
 *WorkspaceAPI* | [**CreateWorkspace**](docs/WorkspaceAPI.md#createworkspace) | **Post** /workspace | Create a workspace
 *WorkspaceAPI* | [**GetWorkspace**](docs/WorkspaceAPI.md#getworkspace) | **Get** /workspace/{workspaceId} | Get workspace info
 *WorkspaceAPI* | [**ListWorkspaces**](docs/WorkspaceAPI.md#listworkspaces) | **Get** /workspace | List workspaces
@@ -148,6 +148,7 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AddTargetConfigDTO](docs/AddTargetConfigDTO.md)
  - [ApiKey](docs/ApiKey.md)
  - [Build](docs/Build.md)
  - [BuildConfig](docs/BuildConfig.md)
@@ -157,7 +158,6 @@ Class | Method | HTTP request | Description
  - [ContainerRegistry](docs/ContainerRegistry.md)
  - [CreateBuildDTO](docs/CreateBuildDTO.md)
  - [CreatePrebuildDTO](docs/CreatePrebuildDTO.md)
- - [CreateTargetConfigDTO](docs/CreateTargetConfigDTO.md)
  - [CreateTargetDTO](docs/CreateTargetDTO.md)
  - [CreateWorkspaceConfigDTO](docs/CreateWorkspaceConfigDTO.md)
  - [CreateWorkspaceDTO](docs/CreateWorkspaceDTO.md)

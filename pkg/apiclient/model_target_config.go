@@ -22,6 +22,7 @@ var _ MappedNullable = &TargetConfig{}
 // TargetConfig struct for TargetConfig
 type TargetConfig struct {
 	Deleted bool   `json:"deleted"`
+	Id      string `json:"id"`
 	Name    string `json:"name"`
 	// JSON encoded map of options
 	Options      string             `json:"options"`
@@ -34,9 +35,10 @@ type _TargetConfig TargetConfig
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTargetConfig(deleted bool, name string, options string, providerInfo TargetProviderInfo) *TargetConfig {
+func NewTargetConfig(deleted bool, id string, name string, options string, providerInfo TargetProviderInfo) *TargetConfig {
 	this := TargetConfig{}
 	this.Deleted = deleted
+	this.Id = id
 	this.Name = name
 	this.Options = options
 	this.ProviderInfo = providerInfo
@@ -73,6 +75,30 @@ func (o *TargetConfig) GetDeletedOk() (*bool, bool) {
 // SetDeleted sets field value
 func (o *TargetConfig) SetDeleted(v bool) {
 	o.Deleted = v
+}
+
+// GetId returns the Id field value
+func (o *TargetConfig) GetId() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value
+// and a boolean to check if the value has been set.
+func (o *TargetConfig) GetIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Id, true
+}
+
+// SetId sets field value
+func (o *TargetConfig) SetId(v string) {
+	o.Id = v
 }
 
 // GetName returns the Name field value
@@ -158,6 +184,7 @@ func (o TargetConfig) MarshalJSON() ([]byte, error) {
 func (o TargetConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["deleted"] = o.Deleted
+	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	toSerialize["options"] = o.Options
 	toSerialize["providerInfo"] = o.ProviderInfo
@@ -170,6 +197,7 @@ func (o *TargetConfig) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"deleted",
+		"id",
 		"name",
 		"options",
 		"providerInfo",

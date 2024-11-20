@@ -1,5 +1,18 @@
 basePath: /
 definitions:
+  AddTargetConfigDTO:
+    properties:
+      name:
+        type: string
+      options:
+        type: string
+      providerInfo:
+        $ref: '#/definitions/TargetProviderInfo'
+    required:
+    - name
+    - options
+    - providerInfo
+    type: object
   ApiKey:
     properties:
       keyHash:
@@ -131,19 +144,6 @@ definitions:
         type: array
     required:
     - retention
-    type: object
-  CreateTargetConfigDTO:
-    properties:
-      name:
-        type: string
-      options:
-        type: string
-      providerInfo:
-        $ref: '#/definitions/TargetProviderInfo'
-    required:
-    - name
-    - options
-    - providerInfo
     type: object
   CreateTargetDTO:
     properties:
@@ -638,7 +638,7 @@ definitions:
         type: string
       targetConfig:
         $ref: '#/definitions/TargetConfig'
-      targetConfigName:
+      targetConfigId:
         type: string
       workspaces:
         items:
@@ -649,12 +649,14 @@ definitions:
     - id
     - name
     - targetConfig
-    - targetConfigName
+    - targetConfigId
     type: object
   TargetConfig:
     properties:
       deleted:
         type: boolean
+      id:
+        type: string
       name:
         type: string
       options:
@@ -664,6 +666,7 @@ definitions:
         $ref: '#/definitions/TargetProviderInfo'
     required:
     - deleted
+    - id
     - name
     - options
     - providerInfo
@@ -716,7 +719,7 @@ definitions:
         type: string
       targetConfig:
         $ref: '#/definitions/TargetConfig'
-      targetConfigName:
+      targetConfigId:
         type: string
       workspaces:
         items:
@@ -727,7 +730,7 @@ definitions:
     - id
     - name
     - targetConfig
-    - targetConfigName
+    - targetConfigId
     type: object
   TargetInfo:
     properties:
@@ -1750,7 +1753,7 @@ paths:
         name: targetConfig
         required: true
         schema:
-          $ref: '#/definitions/CreateTargetConfigDTO'
+          $ref: '#/definitions/AddTargetConfigDTO'
       responses:
         "200":
           description: OK
@@ -1759,14 +1762,14 @@ paths:
       summary: Add a target config
       tags:
       - target-config
-  /target-config/{configName}:
+  /target-config/{configId}:
     delete:
       description: Remove a target config
       operationId: RemoveTargetConfig
       parameters:
-      - description: Target Config name
+      - description: Target Config Id
         in: path
-        name: configName
+        name: configId
         required: true
         type: string
       responses:

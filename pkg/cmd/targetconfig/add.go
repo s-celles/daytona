@@ -145,7 +145,7 @@ func TargetConfigCreationFlow(ctx context.Context, apiClient *apiclient.APIClien
 		return nil, err
 	}
 
-	targetConfigData := apiclient.CreateTargetConfigDTO{
+	targetConfigData := apiclient.AddTargetConfigDTO{
 		Name:    selectedTargetConfig.Name,
 		Options: selectedTargetConfig.Options,
 		ProviderInfo: apiclient.TargetProviderInfo{
@@ -161,6 +161,7 @@ func TargetConfigCreationFlow(ctx context.Context, apiClient *apiclient.APIClien
 	}
 
 	return &targetconfig.TargetConfigView{
+		Id:      targetConfig.Id,
 		Name:    targetConfig.Name,
 		Options: targetConfig.Options,
 		ProviderInfo: targetconfig.ProviderInfo{

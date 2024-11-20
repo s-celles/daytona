@@ -21,12 +21,12 @@ var _ MappedNullable = &Target{}
 
 // Target struct for Target
 type Target struct {
-	Default          bool         `json:"default"`
-	Id               string       `json:"id"`
-	Name             string       `json:"name"`
-	TargetConfig     TargetConfig `json:"targetConfig"`
-	TargetConfigName string       `json:"targetConfigName"`
-	Workspaces       []Workspace  `json:"workspaces,omitempty"`
+	Default        bool         `json:"default"`
+	Id             string       `json:"id"`
+	Name           string       `json:"name"`
+	TargetConfig   TargetConfig `json:"targetConfig"`
+	TargetConfigId string       `json:"targetConfigId"`
+	Workspaces     []Workspace  `json:"workspaces,omitempty"`
 }
 
 type _Target Target
@@ -35,13 +35,13 @@ type _Target Target
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTarget(default_ bool, id string, name string, targetConfig TargetConfig, targetConfigName string) *Target {
+func NewTarget(default_ bool, id string, name string, targetConfig TargetConfig, targetConfigId string) *Target {
 	this := Target{}
 	this.Default = default_
 	this.Id = id
 	this.Name = name
 	this.TargetConfig = targetConfig
-	this.TargetConfigName = targetConfigName
+	this.TargetConfigId = targetConfigId
 	return &this
 }
 
@@ -149,28 +149,28 @@ func (o *Target) SetTargetConfig(v TargetConfig) {
 	o.TargetConfig = v
 }
 
-// GetTargetConfigName returns the TargetConfigName field value
-func (o *Target) GetTargetConfigName() string {
+// GetTargetConfigId returns the TargetConfigId field value
+func (o *Target) GetTargetConfigId() string {
 	if o == nil {
 		var ret string
 		return ret
 	}
 
-	return o.TargetConfigName
+	return o.TargetConfigId
 }
 
-// GetTargetConfigNameOk returns a tuple with the TargetConfigName field value
+// GetTargetConfigIdOk returns a tuple with the TargetConfigId field value
 // and a boolean to check if the value has been set.
-func (o *Target) GetTargetConfigNameOk() (*string, bool) {
+func (o *Target) GetTargetConfigIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.TargetConfigName, true
+	return &o.TargetConfigId, true
 }
 
-// SetTargetConfigName sets field value
-func (o *Target) SetTargetConfigName(v string) {
-	o.TargetConfigName = v
+// SetTargetConfigId sets field value
+func (o *Target) SetTargetConfigId(v string) {
+	o.TargetConfigId = v
 }
 
 // GetWorkspaces returns the Workspaces field value if set, zero value otherwise.
@@ -219,7 +219,7 @@ func (o Target) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	toSerialize["targetConfig"] = o.TargetConfig
-	toSerialize["targetConfigName"] = o.TargetConfigName
+	toSerialize["targetConfigId"] = o.TargetConfigId
 	if !IsNil(o.Workspaces) {
 		toSerialize["workspaces"] = o.Workspaces
 	}
@@ -235,7 +235,7 @@ func (o *Target) UnmarshalJSON(data []byte) (err error) {
 		"id",
 		"name",
 		"targetConfig",
-		"targetConfigName",
+		"targetConfigId",
 	}
 
 	allProperties := make(map[string]interface{})

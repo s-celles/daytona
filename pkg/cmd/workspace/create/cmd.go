@@ -186,11 +186,11 @@ var CreateCmd = &cobra.Command{
 				return apiclient_util.HandleErrorResponse(res, err)
 			}
 			target = &apiclient.TargetDTO{
-				Id:               t.Id,
-				Name:             t.Name,
-				TargetConfig:     t.TargetConfig,
-				TargetConfigName: t.TargetConfigName,
-				Default:          t.Default,
+				Id:             t.Id,
+				Name:           t.Name,
+				TargetConfig:   t.TargetConfig,
+				TargetConfigId: t.TargetConfigId,
+				Default:        t.Default,
 			}
 		}
 

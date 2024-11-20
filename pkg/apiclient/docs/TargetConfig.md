@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Deleted** | **bool** |  | 
+**Id** | **string** |  | 
 **Name** | **string** |  | 
 **Options** | **string** | JSON encoded map of options | 
 **ProviderInfo** | [**TargetProviderInfo**](TargetProviderInfo.md) |  | 
@@ -13,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewTargetConfig
 
-`func NewTargetConfig(deleted bool, name string, options string, providerInfo TargetProviderInfo, ) *TargetConfig`
+`func NewTargetConfig(deleted bool, id string, name string, options string, providerInfo TargetProviderInfo, ) *TargetConfig`
 
 NewTargetConfig instantiates a new TargetConfig object
 This constructor will assign default values to properties that have it defined,
@@ -46,6 +47,26 @@ and a boolean to check if the value has been set.
 `func (o *TargetConfig) SetDeleted(v bool)`
 
 SetDeleted sets Deleted field to given value.
+
+
+### GetId
+
+`func (o *TargetConfig) GetId() string`
+
+GetId returns the Id field if non-nil, zero value otherwise.
+
+### GetIdOk
+
+`func (o *TargetConfig) GetIdOk() (*string, bool)`
+
+GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetId
+
+`func (o *TargetConfig) SetId(v string)`
+
+SetId sets Id field to given value.
 
 
 ### GetName

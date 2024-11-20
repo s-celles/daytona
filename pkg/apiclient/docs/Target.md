@@ -8,14 +8,14 @@ Name | Type | Description | Notes
 **Id** | **string** |  | 
 **Name** | **string** |  | 
 **TargetConfig** | [**TargetConfig**](TargetConfig.md) |  | 
-**TargetConfigName** | **string** |  | 
+**TargetConfigId** | **string** |  | 
 **Workspaces** | Pointer to [**[]Workspace**](Workspace.md) |  | [optional] 
 
 ## Methods
 
 ### NewTarget
 
-`func NewTarget(default_ bool, id string, name string, targetConfig TargetConfig, targetConfigName string, ) *Target`
+`func NewTarget(default_ bool, id string, name string, targetConfig TargetConfig, targetConfigId string, ) *Target`
 
 NewTarget instantiates a new Target object
 This constructor will assign default values to properties that have it defined,
@@ -110,24 +110,24 @@ and a boolean to check if the value has been set.
 SetTargetConfig sets TargetConfig field to given value.
 
 
-### GetTargetConfigName
+### GetTargetConfigId
 
-`func (o *Target) GetTargetConfigName() string`
+`func (o *Target) GetTargetConfigId() string`
 
-GetTargetConfigName returns the TargetConfigName field if non-nil, zero value otherwise.
+GetTargetConfigId returns the TargetConfigId field if non-nil, zero value otherwise.
 
-### GetTargetConfigNameOk
+### GetTargetConfigIdOk
 
-`func (o *Target) GetTargetConfigNameOk() (*string, bool)`
+`func (o *Target) GetTargetConfigIdOk() (*string, bool)`
 
-GetTargetConfigNameOk returns a tuple with the TargetConfigName field if it's non-nil, zero value otherwise
+GetTargetConfigIdOk returns a tuple with the TargetConfigId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetTargetConfigName
+### SetTargetConfigId
 
-`func (o *Target) SetTargetConfigName(v string)`
+`func (o *Target) SetTargetConfigId(v string)`
 
-SetTargetConfigName sets TargetConfigName field to given value.
+SetTargetConfigId sets TargetConfigId field to given value.
 
 
 ### GetWorkspaces

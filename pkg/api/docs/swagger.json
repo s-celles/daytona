@@ -1223,7 +1223,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/CreateTargetConfigDTO"
+                            "$ref": "#/definitions/AddTargetConfigDTO"
                         }
                     }
                 ],
@@ -1237,7 +1237,7 @@
                 }
             }
         },
-        "/target-config/{configName}": {
+        "/target-config/{configId}": {
             "delete": {
                 "description": "Remove a target config",
                 "tags": [
@@ -1248,8 +1248,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Target Config name",
-                        "name": "configName",
+                        "description": "Target Config Id",
+                        "name": "configId",
                         "in": "path",
                         "required": true
                     }
@@ -1964,6 +1964,25 @@
         }
     },
     "definitions": {
+        "AddTargetConfigDTO": {
+            "type": "object",
+            "required": [
+                "name",
+                "options",
+                "providerInfo"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "options": {
+                    "type": "string"
+                },
+                "providerInfo": {
+                    "$ref": "#/definitions/TargetProviderInfo"
+                }
+            }
+        },
         "ApiKey": {
             "type": "object",
             "required": [
@@ -2154,25 +2173,6 @@
                     "items": {
                         "type": "string"
                     }
-                }
-            }
-        },
-        "CreateTargetConfigDTO": {
-            "type": "object",
-            "required": [
-                "name",
-                "options",
-                "providerInfo"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "options": {
-                    "type": "string"
-                },
-                "providerInfo": {
-                    "$ref": "#/definitions/TargetProviderInfo"
                 }
             }
         },
@@ -2882,7 +2882,7 @@
                 "id",
                 "name",
                 "targetConfig",
-                "targetConfigName"
+                "targetConfigId"
             ],
             "properties": {
                 "default": {
@@ -2897,7 +2897,7 @@
                 "targetConfig": {
                     "$ref": "#/definitions/TargetConfig"
                 },
-                "targetConfigName": {
+                "targetConfigId": {
                     "type": "string"
                 },
                 "workspaces": {
@@ -2912,6 +2912,7 @@
             "type": "object",
             "required": [
                 "deleted",
+                "id",
                 "name",
                 "options",
                 "providerInfo"
@@ -2919,6 +2920,9 @@
             "properties": {
                 "deleted": {
                     "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -2982,7 +2986,7 @@
                 "id",
                 "name",
                 "targetConfig",
-                "targetConfigName"
+                "targetConfigId"
             ],
             "properties": {
                 "default": {
@@ -3000,7 +3004,7 @@
                 "targetConfig": {
                     "$ref": "#/definitions/TargetConfig"
                 },
-                "targetConfigName": {
+                "targetConfigId": {
                     "type": "string"
                 },
                 "workspaces": {

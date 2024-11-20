@@ -427,8 +427,13 @@ func GetInstance(c *server.Config, configDir string, version string, telemetrySe
 		GetTargetConfigMap: func(ctx context.Context) (map[string]*models.TargetConfig, error) {
 			return targetConfigService.Map()
 		},
-		CreateTargetConfig: func(ctx context.Context, targetConfig *models.TargetConfig) error {
-			return targetConfigService.Add(targetConfig)
+		CreateTargetConfig: func(ctx context.Context, name, options string, providerInfo models.ProviderInfo) error {
+			_, err := targetConfigService.Add(services.AddTargetConfigDTO{
+				Name:         name,
+				Options:      options,
+				ProviderInfo: providerInfo,
+			})
+			return err
 		},
 	})
 
@@ -439,7 +444,7 @@ func GetInstance(c *server.Config, configDir string, version string, telemetrySe
 	targetService := targets.NewTargetService(targets.TargetServiceConfig{
 		TargetStore: targetStore,
 		FindTargetConfig: func(ctx context.Context, name string) (*models.TargetConfig, error) {
-			return targetConfigService.Find(&stores.TargetConfigFilter{Name: &name})
+			return targetConfigService.Find(name)
 		},
 		GenerateApiKey: func(ctx context.Context, name string) (string, error) {
 			return apiKeyService.Generate(models.ApiKeyTypeTarget, name)

@@ -50,7 +50,7 @@ type IProviderManager interface {
 
 type ProviderManagerConfig struct {
 	GetTargetConfigMap       func(ctx context.Context) (map[string]*models.TargetConfig, error)
-	CreateTargetConfig       func(ctx context.Context, targetConfig *models.TargetConfig) error
+	CreateTargetConfig       func(ctx context.Context, name, options string, providerInfo models.ProviderInfo) error
 	CreateProviderNetworkKey func(ctx context.Context, providerName string) (string, error)
 	DaytonaDownloadUrl       string
 	ServerUrl                string
@@ -84,7 +84,7 @@ func NewProviderManager(config ProviderManagerConfig) *ProviderManager {
 type ProviderManager struct {
 	pluginRefs               map[string]*pluginRef
 	getTargetConfigMap       func(ctx context.Context) (map[string]*models.TargetConfig, error)
-	createTargetConfig       func(ctx context.Context, targetConfig *models.TargetConfig) error
+	createTargetConfig       func(ctx context.Context, name, options string, providerInfo models.ProviderInfo) error
 	createProviderNetworkKey func(ctx context.Context, providerName string) (string, error)
 	daytonaDownloadUrl       string
 	serverUrl                string
@@ -175,15 +175,12 @@ func (m *ProviderManager) RegisterProvider(pluginPath string, manualInstall bool
 				continue
 			}
 
-			err = m.createTargetConfig(ctx, &models.TargetConfig{
-				Name: targetConfig.Name,
-				ProviderInfo: models.ProviderInfo{
+			err = m.createTargetConfig(ctx, targetConfig.Name, targetConfig.Options,
+				models.ProviderInfo{
 					Name:    providerInfo.Name,
 					Version: providerInfo.Version,
 					Label:   providerInfo.Label,
-				},
-				Options: targetConfig.Options,
-			})
+				})
 			if err != nil {
 				log.Errorf("Failed to set target config %s: %s", targetConfig.Name, err)
 			} else {

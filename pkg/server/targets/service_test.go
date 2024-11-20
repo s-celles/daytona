@@ -35,11 +35,11 @@ var tc = models.TargetConfig{
 }
 
 var tg = &models.Target{
-	Id:               "test",
-	Name:             "test",
-	ApiKey:           "test",
-	TargetConfigName: tc.Name,
-	TargetConfig:     tc,
+	Id:             "test",
+	Name:           "test",
+	ApiKey:         "test",
+	TargetConfigId: tc.Id,
+	TargetConfig:   tc,
 }
 
 var createTargetDTO = dto.CreateTargetDTO{
@@ -77,7 +77,7 @@ func TestTargetService(t *testing.T) {
 	service := targets.NewTargetService(targets.TargetServiceConfig{
 		TargetStore: targetStore,
 		FindTargetConfig: func(ctx context.Context, name string) (*models.TargetConfig, error) {
-			return targetConfigStore.Find(&stores.TargetConfigFilter{Name: &name})
+			return targetConfigStore.Find(name, false)
 		},
 		GenerateApiKey: func(ctx context.Context, name string) (string, error) {
 			return apiKeyService.Generate(models.ApiKeyTypeTarget, name)

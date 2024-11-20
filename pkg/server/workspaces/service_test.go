@@ -53,10 +53,10 @@ var tc = &models.TargetConfig{
 }
 
 var tg = &models.Target{
-	Id:               "123",
-	Name:             "test",
-	TargetConfigName: tc.Name,
-	TargetConfig:     *tc,
+	Id:             "123",
+	Name:           "test",
+	TargetConfigId: tc.Id,
+	TargetConfig:   *tc,
 }
 
 var createWorkspaceDTO = services.CreateWorkspaceDTO{

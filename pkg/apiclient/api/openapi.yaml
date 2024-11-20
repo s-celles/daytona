@@ -865,7 +865,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/CreateTargetConfigDTO'
+              $ref: '#/components/schemas/AddTargetConfigDTO'
         description: Target config to add
         required: true
       responses:
@@ -879,14 +879,14 @@ paths:
       tags:
       - target-config
       x-codegen-request-body-name: targetConfig
-  /target-config/{configName}:
+  /target-config/{configId}:
     delete:
       description: Remove a target config
       operationId: RemoveTargetConfig
       parameters:
-      - description: Target Config name
+      - description: Target Config Id
         in: path
-        name: configName
+        name: configId
         required: true
         schema:
           type: string
@@ -1411,6 +1411,26 @@ paths:
       - workspace
 components:
   schemas:
+    AddTargetConfigDTO:
+      example:
+        name: name
+        options: options
+        providerInfo:
+          name: name
+          label: label
+          version: version
+      properties:
+        name:
+          type: string
+        options:
+          type: string
+        providerInfo:
+          $ref: '#/components/schemas/TargetProviderInfo'
+      required:
+      - name
+      - options
+      - providerInfo
+      type: object
     ApiKey:
       example:
         keyHash: keyHash
@@ -1606,26 +1626,6 @@ components:
           type: array
       required:
       - retention
-      type: object
-    CreateTargetConfigDTO:
-      example:
-        name: name
-        options: options
-        providerInfo:
-          name: name
-          label: label
-          version: version
-      properties:
-        name:
-          type: string
-        options:
-          type: string
-        providerInfo:
-          $ref: '#/components/schemas/TargetProviderInfo'
-      required:
-      - name
-      - options
-      - providerInfo
       type: object
     CreateTargetDTO:
       example:
@@ -2331,12 +2331,13 @@ components:
           deleted: true
           name: name
           options: options
+          id: id
           providerInfo:
             name: name
             label: label
             version: version
-        targetConfigName: targetConfigName
         name: name
+        targetConfigId: targetConfigId
         id: id
         workspaces:
         - null
@@ -2350,7 +2351,7 @@ components:
           type: string
         targetConfig:
           $ref: '#/components/schemas/TargetConfig'
-        targetConfigName:
+        targetConfigId:
           type: string
         workspaces:
           items:
@@ -2361,13 +2362,14 @@ components:
       - id
       - name
       - targetConfig
-      - targetConfigName
+      - targetConfigId
       type: object
     TargetConfig:
       example:
         deleted: true
         name: name
         options: options
+        id: id
         providerInfo:
           name: name
           label: label
@@ -2375,6 +2377,8 @@ components:
       properties:
         deleted:
           type: boolean
+        id:
+          type: string
         name:
           type: string
         options:
@@ -2384,6 +2388,7 @@ components:
           $ref: '#/components/schemas/TargetProviderInfo'
       required:
       - deleted
+      - id
       - name
       - options
       - providerInfo
@@ -2431,12 +2436,13 @@ components:
           deleted: true
           name: name
           options: options
+          id: id
           providerInfo:
             name: name
             label: label
             version: version
-        targetConfigName: targetConfigName
         name: name
+        targetConfigId: targetConfigId
         id: id
         workspaces:
         - buildConfig:
@@ -2487,12 +2493,13 @@ components:
               deleted: true
               name: name
               options: options
+              id: id
               providerInfo:
                 name: name
                 label: label
                 version: version
-            targetConfigName: targetConfigName
             name: name
+            targetConfigId: targetConfigId
             id: id
             workspaces:
             - null
@@ -2545,12 +2552,13 @@ components:
               deleted: true
               name: name
               options: options
+              id: id
               providerInfo:
                 name: name
                 label: label
                 version: version
-            targetConfigName: targetConfigName
             name: name
+            targetConfigId: targetConfigId
             id: id
             workspaces:
             - null
@@ -2569,7 +2577,7 @@ components:
           type: string
         targetConfig:
           $ref: '#/components/schemas/TargetConfig'
-        targetConfigName:
+        targetConfigId:
           type: string
         workspaces:
           items:
@@ -2580,7 +2588,7 @@ components:
       - id
       - name
       - targetConfig
-      - targetConfigName
+      - targetConfigId
       type: object
     TargetInfo:
       example:
@@ -2660,12 +2668,13 @@ components:
             deleted: true
             name: name
             options: options
+            id: id
             providerInfo:
               name: name
               label: label
               version: version
-          targetConfigName: targetConfigName
           name: name
+          targetConfigId: targetConfigId
           id: id
           workspaces:
           - null
@@ -2823,12 +2832,13 @@ components:
             deleted: true
             name: name
             options: options
+            id: id
             providerInfo:
               name: name
               label: label
               version: version
-          targetConfigName: targetConfigName
           name: name
+          targetConfigId: targetConfigId
           id: id
           workspaces:
           - null

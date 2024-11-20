@@ -1226,7 +1226,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/CreateTargetConfigDTO"
+                            "$ref": "#/definitions/AddTargetConfigDTO"
                         }
                     }
                 ],
@@ -1240,7 +1240,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/target-config/{configName}": {
+        "/target-config/{configId}": {
             "delete": {
                 "description": "Remove a target config",
                 "tags": [
@@ -1251,8 +1251,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Target Config name",
-                        "name": "configName",
+                        "description": "Target Config Id",
+                        "name": "configId",
                         "in": "path",
                         "required": true
                     }
@@ -1967,6 +1967,25 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "AddTargetConfigDTO": {
+            "type": "object",
+            "required": [
+                "name",
+                "options",
+                "providerInfo"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "options": {
+                    "type": "string"
+                },
+                "providerInfo": {
+                    "$ref": "#/definitions/TargetProviderInfo"
+                }
+            }
+        },
         "ApiKey": {
             "type": "object",
             "required": [
@@ -2157,25 +2176,6 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
-                }
-            }
-        },
-        "CreateTargetConfigDTO": {
-            "type": "object",
-            "required": [
-                "name",
-                "options",
-                "providerInfo"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "options": {
-                    "type": "string"
-                },
-                "providerInfo": {
-                    "$ref": "#/definitions/TargetProviderInfo"
                 }
             }
         },
@@ -2885,7 +2885,7 @@ const docTemplate = `{
                 "id",
                 "name",
                 "targetConfig",
-                "targetConfigName"
+                "targetConfigId"
             ],
             "properties": {
                 "default": {
@@ -2900,7 +2900,7 @@ const docTemplate = `{
                 "targetConfig": {
                     "$ref": "#/definitions/TargetConfig"
                 },
-                "targetConfigName": {
+                "targetConfigId": {
                     "type": "string"
                 },
                 "workspaces": {
@@ -2915,6 +2915,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "deleted",
+                "id",
                 "name",
                 "options",
                 "providerInfo"
@@ -2922,6 +2923,9 @@ const docTemplate = `{
             "properties": {
                 "deleted": {
                     "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -2985,7 +2989,7 @@ const docTemplate = `{
                 "id",
                 "name",
                 "targetConfig",
-                "targetConfigName"
+                "targetConfigId"
             ],
             "properties": {
                 "default": {
@@ -3003,7 +3007,7 @@ const docTemplate = `{
                 "targetConfig": {
                     "$ref": "#/definitions/TargetConfig"
                 },
-                "targetConfigName": {
+                "targetConfigId": {
                     "type": "string"
                 },
                 "workspaces": {

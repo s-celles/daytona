@@ -6,7 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**AddTargetConfig**](TargetConfigAPI.md#AddTargetConfig) | **Put** /target-config | Add a target config
 [**ListTargetConfigs**](TargetConfigAPI.md#ListTargetConfigs) | **Get** /target-config | List target configs
-[**RemoveTargetConfig**](TargetConfigAPI.md#RemoveTargetConfig) | **Delete** /target-config/{configName} | Remove a target config
+[**RemoveTargetConfig**](TargetConfigAPI.md#RemoveTargetConfig) | **Delete** /target-config/{configId} | Remove a target config
 
 
 
@@ -31,7 +31,7 @@ import (
 )
 
 func main() {
-	targetConfig := *openapiclient.NewCreateTargetConfigDTO("Name_example", "Options_example", *openapiclient.NewTargetProviderInfo("Name_example", "Version_example")) // CreateTargetConfigDTO | Target config to add
+	targetConfig := *openapiclient.NewAddTargetConfigDTO("Name_example", "Options_example", *openapiclient.NewTargetProviderInfo("Name_example", "Version_example")) // AddTargetConfigDTO | Target config to add
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -56,7 +56,7 @@ Other parameters are passed through a pointer to a apiAddTargetConfigRequest str
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **targetConfig** | [**CreateTargetConfigDTO**](CreateTargetConfigDTO.md) | Target config to add | 
+ **targetConfig** | [**AddTargetConfigDTO**](AddTargetConfigDTO.md) | Target config to add | 
 
 ### Return type
 
@@ -139,7 +139,7 @@ Other parameters are passed through a pointer to a apiListTargetConfigsRequest s
 
 ## RemoveTargetConfig
 
-> RemoveTargetConfig(ctx, configName).Execute()
+> RemoveTargetConfig(ctx, configId).Execute()
 
 Remove a target config
 
@@ -158,11 +158,11 @@ import (
 )
 
 func main() {
-	configName := "configName_example" // string | Target Config name
+	configId := "configId_example" // string | Target Config Id
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	r, err := apiClient.TargetConfigAPI.RemoveTargetConfig(context.Background(), configName).Execute()
+	r, err := apiClient.TargetConfigAPI.RemoveTargetConfig(context.Background(), configId).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `TargetConfigAPI.RemoveTargetConfig``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -176,7 +176,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**configName** | **string** | Target Config name | 
+**configId** | **string** | Target Config Id | 
 
 ### Other Parameters
 
