@@ -27,7 +27,7 @@ func (s *WorkspaceService) ListWorkspaces(ctx context.Context, verbose bool) ([]
 	for i, ws := range workspaces {
 		response = append(response, services.WorkspaceDTO{
 			Workspace: *ws,
-			State:     ws.ReduceState(),
+			State:     ws.GetState(),
 		})
 		if !verbose {
 			continue

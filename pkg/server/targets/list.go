@@ -28,7 +28,7 @@ func (s *TargetService) ListTargets(ctx context.Context, filter *stores.TargetFi
 	for i, t := range targets {
 		response = append(response, dto.TargetDTO{
 			Target: *t,
-			State:  t.ReduceState(),
+			State:  t.GetState(),
 		})
 		if !verbose {
 			continue

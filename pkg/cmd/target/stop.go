@@ -12,7 +12,7 @@ import (
 	"github.com/daytonaio/daytona/internal/util"
 	apiclient_util "github.com/daytonaio/daytona/internal/util/apiclient"
 	"github.com/daytonaio/daytona/pkg/apiclient"
-	workspace_common "github.com/daytonaio/daytona/pkg/cmd/workspace/common"
+	cmd_common "github.com/daytonaio/daytona/pkg/cmd/common"
 	"github.com/daytonaio/daytona/pkg/views"
 	logs_view "github.com/daytonaio/daytona/pkg/views/logs"
 	"github.com/daytonaio/daytona/pkg/views/target/selection"
@@ -163,7 +163,7 @@ func StopTarget(apiClient *apiclient.APIClient, targetId string) error {
 			return apiclient_util.HandleErrorResponse(res, err)
 		}
 
-		return workspace_common.AwaitTargetState(targetId, apiclient.ResourceStateNameStarted)
+		return cmd_common.AwaitTargetState(targetId, apiclient.ResourceStateNameStarted)
 	})
 	if err != nil {
 		return err

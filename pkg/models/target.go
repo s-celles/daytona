@@ -10,6 +10,8 @@ import (
 	"github.com/daytonaio/daytona/internal/util"
 )
 
+const AGENT_UNRESPONSIVE_THRESHOLD = 30 * time.Second
+
 var providersWithoutTargetMode = []string{"docker-provider"}
 
 type Target struct {
@@ -32,7 +34,7 @@ type TargetMetadata struct {
 	Uptime    uint64    `json:"uptime" validate:"required"`
 } // @name TargetMetadata
 
-func (t *Target) ReduceState() ResourceState {
+func (t *Target) GetState() ResourceState {
 	// Some providers do not utilize agents in target mode
 	if slices.Contains(providersWithoutTargetMode, t.ProviderInfo.Name) {
 		return ResourceState{
@@ -56,7 +58,7 @@ func (t *Target) ReduceState() ResourceState {
 
 	// If the target should be running, check if it is unresponsive
 	if state.Name == ResourceStateNameStarted {
-		if t.Metadata != nil && time.Since(t.Metadata.UpdatedAt) > WORKSPACE_UNRESPONSIVE_THRESHOLD {
+		if t.Metadata != nil && time.Since(t.Metadata.UpdatedAt) > AGENT_UNRESPONSIVE_THRESHOLD {
 			state.Name = ResourceStateNameUnresponsive
 			state.Error = util.Pointer("Target is unresponsive")
 			state.UpdatedAt = t.Metadata.UpdatedAt

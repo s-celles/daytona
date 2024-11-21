@@ -10,7 +10,7 @@ import (
 	"github.com/daytonaio/daytona/internal/util"
 	apiclient_util "github.com/daytonaio/daytona/internal/util/apiclient"
 	"github.com/daytonaio/daytona/pkg/apiclient"
-	"github.com/daytonaio/daytona/pkg/cmd/workspace/common"
+	"github.com/daytonaio/daytona/pkg/cmd/common"
 	"github.com/daytonaio/daytona/pkg/views"
 	views_util "github.com/daytonaio/daytona/pkg/views/util"
 	"github.com/daytonaio/daytona/pkg/views/workspace/selection"

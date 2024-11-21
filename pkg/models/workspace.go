@@ -10,8 +10,6 @@ import (
 	"github.com/daytonaio/daytona/pkg/gitprovider"
 )
 
-const WORKSPACE_UNRESPONSIVE_THRESHOLD = 30 * time.Second
-
 type Workspace struct {
 	Id                  string                     `json:"id" validate:"required" gorm:"primaryKey"`
 	Name                string                     `json:"name" validate:"required"`
@@ -68,7 +66,7 @@ func (w *Workspace) WorkspaceFolderName() string {
 	return w.Name
 }
 
-func (w *Workspace) ReduceState() ResourceState {
+func (w *Workspace) GetState() ResourceState {
 	state := ResourceState{
 		Name:      ResourceStateNamePendingCreate,
 		UpdatedAt: time.Now(),
@@ -84,7 +82,7 @@ func (w *Workspace) ReduceState() ResourceState {
 
 	// If the workspace should be running, check if it is unresponsive
 	if state.Name == ResourceStateNameStarted {
-		if w.Metadata != nil && time.Since(w.Metadata.UpdatedAt) > WORKSPACE_UNRESPONSIVE_THRESHOLD {
+		if w.Metadata != nil && time.Since(w.Metadata.UpdatedAt) > AGENT_UNRESPONSIVE_THRESHOLD {
 			state.Name = ResourceStateNameUnresponsive
 			state.Error = util.Pointer("Workspace is unresponsive")
 			state.UpdatedAt = w.Metadata.UpdatedAt

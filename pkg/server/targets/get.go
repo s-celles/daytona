@@ -23,7 +23,7 @@ func (s *TargetService) GetTarget(ctx context.Context, filter *stores.TargetFilt
 
 	response := dto.TargetDTO{
 		Target: *tg,
-		State:  tg.ReduceState(),
+		State:  tg.GetState(),
 	}
 
 	if !verbose {
