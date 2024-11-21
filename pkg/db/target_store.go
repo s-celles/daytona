@@ -28,7 +28,7 @@ func NewTargetStore(db *gorm.DB) (stores.TargetStore, error) {
 func (s *TargetStore) List(filter *stores.TargetFilter) ([]*models.Target, error) {
 	targets := []*models.Target{}
 
-	tx := processTargetFilters(s.db, filter).Preload("Workspaces").Preload(clause.Associations).Find(&targets)
+	tx := processTargetFilters(s.db, filter).Preload(clause.Associations).Find(&targets)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -38,7 +38,7 @@ func (s *TargetStore) List(filter *stores.TargetFilter) ([]*models.Target, error
 func (s *TargetStore) Find(filter *stores.TargetFilter) (*models.Target, error) {
 	tg := &models.Target{}
 
-	tx := processTargetFilters(s.db, filter).Preload("Workspaces").Preload(clause.Associations).First(tg)
+	tx := processTargetFilters(s.db, filter).Preload(clause.Associations).First(tg)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
