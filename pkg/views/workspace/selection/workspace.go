@@ -13,6 +13,7 @@ import (
 	"github.com/daytonaio/daytona/internal/util"
 	"github.com/daytonaio/daytona/pkg/apiclient"
 	"github.com/daytonaio/daytona/pkg/views"
+	views_util "github.com/daytonaio/daytona/pkg/views/util"
 	list_view "github.com/daytonaio/daytona/pkg/views/workspace/list"
 )
 
@@ -38,8 +39,8 @@ func generateWorkspaceList(workspaces []apiclient.WorkspaceDTO, isMultipleSelect
 
 		stateLabel := views.GetStateLabel(workspace.State.Name)
 
-		if workspace.Metadata != nil && workspace.Metadata.Uptime > 0 {
-			stateLabel = fmt.Sprintf("%s (%s)", stateLabel, util.FormatUptime(workspace.Metadata.Uptime))
+		if workspace.Metadata != nil {
+			views_util.CheckAndAppendTimeLabel(&stateLabel, workspace.State, workspace.Metadata.Uptime)
 		}
 
 		newItem := item[apiclient.WorkspaceDTO]{

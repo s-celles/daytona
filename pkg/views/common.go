@@ -47,6 +47,25 @@ var (
 	widthBreakpoints = []int{60, 80, 100, 120, 140, 160}
 )
 
+// Resources that have actions being performed on them have a higher priority when listing
+var ResourceListStatePriorities = map[apiclient.ModelsResourceStateName]int{
+	apiclient.ResourceStateNamePendingCreate:       1,
+	apiclient.ResourceStateNamePendingStart:        1,
+	apiclient.ResourceStateNamePendingStop:         1,
+	apiclient.ResourceStateNamePendingRestart:      1,
+	apiclient.ResourceStateNamePendingDelete:       1,
+	apiclient.ResourceStateNamePendingForcedDelete: 1,
+	apiclient.ResourceStateNameCreating:            1,
+	apiclient.ResourceStateNameStarting:            1,
+	apiclient.ResourceStateNameStopping:            1,
+	apiclient.ResourceStateNameDeleting:            1,
+	apiclient.ResourceStateNameStarted:             2,
+	apiclient.ResourceStateNameUndefined:           2,
+	apiclient.ResourceStateNameError:               3,
+	apiclient.ResourceStateNameUnresponsive:        4,
+	apiclient.ResourceStateNameStopped:             5,
+}
+
 func RenderMainTitle(title string) {
 	fmt.Println(lipgloss.NewStyle().Foreground(Green).Bold(true).Padding(1, 0, 1, 0).Render(title))
 }

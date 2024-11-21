@@ -20,7 +20,7 @@ type RowData struct {
 	Provider       string
 	WorkspaceCount string
 	Default        bool
-	Status         apiclient.ModelsResourceStateName
+	Status         string
 	Options        string
 	Uptime         string
 }
@@ -47,11 +47,11 @@ func ListTargets(targetList []apiclient.TargetDTO, verbose bool, activeProfileNa
 			Options:        target.Options,
 			WorkspaceCount: fmt.Sprint(len(target.Workspaces)),
 			Default:        target.Default,
-			Status:         target.State.Name,
+			Status:         views.GetStateLabel(target.State.Name),
 		}
 
-		if target.Metadata != nil && target.Metadata.Uptime > 0 {
-			rowData.Uptime = util.FormatUptime(target.Metadata.Uptime)
+		if target.Metadata != nil {
+			views_util.CheckAndAppendTimeLabel(&rowData.Status, target.State, target.Metadata.Uptime)
 		}
 
 		return getRowFromRowData(rowData)
@@ -66,6 +66,34 @@ func ListTargets(targetList []apiclient.TargetDTO, verbose bool, activeProfileNa
 	fmt.Println(table)
 }
 
+func SortTargets(targetList *[]apiclient.TargetDTO) {
+	sort.Slice(*targetList, func(i, j int) bool {
+		// Sort the default target on top
+		if (*targetList)[i].Default && !(*targetList)[j].Default {
+			return true
+		}
+		if !(*targetList)[i].Default && (*targetList)[j].Default {
+			return false
+		}
+
+		pi, ok := views.ResourceListStatePriorities[(*targetList)[i].State.Name]
+		if !ok {
+			pi = 99
+		}
+		pj, ok2 := views.ResourceListStatePriorities[(*targetList)[j].State.Name]
+		if !ok2 {
+			pj = 99
+		}
+
+		if pi != pj {
+			return pi < pj
+		}
+
+		// If two targets have the same state priority, compare the UpdatedAt property
+		return (*targetList)[i].State.UpdatedAt > (*targetList)[j].State.UpdatedAt
+	})
+}
+
 func renderUnstyledList(targetList []apiclient.TargetDTO) {
 	for _, target := range targetList {
 		info_view.Render(&target, true)
@@ -77,12 +105,6 @@ func renderUnstyledList(targetList []apiclient.TargetDTO) {
 }
 
 func getRowFromRowData(rowData RowData) []string {
-	stateLabel := views.GetStateLabel(rowData.Status)
-
-	if rowData.Uptime != "" {
-		stateLabel = fmt.Sprintf("%s (%s)", stateLabel, rowData.Uptime)
-	}
-
 	var isDefault string
 
 	if rowData.Default {
@@ -96,12 +118,6 @@ func getRowFromRowData(rowData RowData) []string {
 		views.DefaultRowDataStyle.Render(rowData.Options),
 		views.DefaultRowDataStyle.Render(rowData.WorkspaceCount),
 		isDefault,
-		stateLabel,
+		rowData.Status,
 	}
-}
-
-func SortTargets(targetList *[]apiclient.TargetDTO) {
-	sort.Slice(*targetList, func(i, j int) bool {
-		return (*targetList)[i].Default && !(*targetList)[j].Default
-	})
 }

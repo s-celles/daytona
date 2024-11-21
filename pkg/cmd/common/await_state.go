@@ -27,9 +27,6 @@ func AwaitWorkspaceState(workspaceId string, stateName apiclient.ModelsResourceS
 			}
 			return errors.New(errorMessage)
 		}
-		if ws.State.Name == apiclient.ResourceStateNameUnresponsive {
-			return errors.New("workspace is unresponsive")
-		}
 		time.Sleep(time.Second)
 	}
 }

@@ -8,9 +8,9 @@ import (
 	"os"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/daytonaio/daytona/internal/util"
 	"github.com/daytonaio/daytona/pkg/apiclient"
 	"github.com/daytonaio/daytona/pkg/views"
+	views_util "github.com/daytonaio/daytona/pkg/views/util"
 	"golang.org/x/term"
 )
 
@@ -88,9 +88,8 @@ func getInfoLine(key, value string) string {
 func getInfoLineState(key string, state apiclient.ResourceState, metadata *apiclient.TargetMetadata) string {
 	stateLabel := views.GetStateLabel(state.Name)
 
-	if metadata != nil && metadata.Uptime != 0 {
-		stateLabel = fmt.Sprintf("%s (%s)", stateLabel, util.FormatUptime(metadata.Uptime))
+	if metadata != nil {
+		views_util.CheckAndAppendTimeLabel(&stateLabel, state, metadata.Uptime)
 	}
-
 	return propertyNameStyle.Render(fmt.Sprintf("%-*s", propertyNameWidth, key)) + stateLabel + propertyValueStyle.Foreground(views.Light).Render("\n")
 }

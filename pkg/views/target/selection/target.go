@@ -10,10 +10,10 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/daytonaio/daytona/internal/util"
 	"github.com/daytonaio/daytona/pkg/apiclient"
 	"github.com/daytonaio/daytona/pkg/views"
 	list_view "github.com/daytonaio/daytona/pkg/views/target/list"
+	views_util "github.com/daytonaio/daytona/pkg/views/util"
 )
 
 var NewTargetIdentifier = "<NEW_TARGET>"
@@ -34,8 +34,8 @@ func generateTargetList(targets []apiclient.TargetDTO, isMultipleSelect bool, wi
 
 		stateLabel := views.GetStateLabel(target.State.Name)
 
-		if target.Metadata != nil && target.Metadata.Uptime > 0 {
-			stateLabel = fmt.Sprintf("%s (%s)", stateLabel, util.FormatUptime(target.Metadata.Uptime))
+		if target.Metadata != nil {
+			views_util.CheckAndAppendTimeLabel(&stateLabel, target.State, target.Metadata.Uptime)
 		}
 
 		newItem := item[apiclient.TargetDTO]{

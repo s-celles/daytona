@@ -67,7 +67,7 @@ var SshCmd = &cobra.Command{
 			}
 		}
 
-		if ws.Metadata == nil || ws.Metadata.Uptime < 1 {
+		if ws.State.Name == apiclient.ResourceStateNameStopped {
 			wsRunningStatus, err := AutoStartWorkspace(*ws)
 			if err != nil {
 				return err
