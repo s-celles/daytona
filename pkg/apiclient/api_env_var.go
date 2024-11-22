@@ -16,49 +16,168 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
-// ProfileAPIService ProfileAPI service
-type ProfileAPIService service
+// EnvVarAPIService EnvVarAPI service
+type EnvVarAPIService service
 
-type ApiDeleteProfileDataRequest struct {
-	ctx        context.Context
-	ApiService *ProfileAPIService
+type ApiAddEnvironmentVariableRequest struct {
+	ctx                 context.Context
+	ApiService          *EnvVarAPIService
+	environmentVariable *EnvironmentVariable
 }
 
-func (r ApiDeleteProfileDataRequest) Execute() (*http.Response, error) {
-	return r.ApiService.DeleteProfileDataExecute(r)
+// Environment Variable
+func (r ApiAddEnvironmentVariableRequest) EnvironmentVariable(environmentVariable EnvironmentVariable) ApiAddEnvironmentVariableRequest {
+	r.environmentVariable = &environmentVariable
+	return r
+}
+
+func (r ApiAddEnvironmentVariableRequest) Execute() (*http.Response, error) {
+	return r.ApiService.AddEnvironmentVariableExecute(r)
 }
 
 /*
-DeleteProfileData Delete profile data
+AddEnvironmentVariable Add environment variable
 
-Delete profile data
+Add environment variable
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiDeleteProfileDataRequest
+	@return ApiAddEnvironmentVariableRequest
 */
-func (a *ProfileAPIService) DeleteProfileData(ctx context.Context) ApiDeleteProfileDataRequest {
-	return ApiDeleteProfileDataRequest{
+func (a *EnvVarAPIService) AddEnvironmentVariable(ctx context.Context) ApiAddEnvironmentVariableRequest {
+	return ApiAddEnvironmentVariableRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-func (a *ProfileAPIService) DeleteProfileDataExecute(r ApiDeleteProfileDataRequest) (*http.Response, error) {
+func (a *EnvVarAPIService) AddEnvironmentVariableExecute(r ApiAddEnvironmentVariableRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EnvVarAPIService.AddEnvironmentVariable")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/env"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.environmentVariable == nil {
+		return nil, reportError("environmentVariable is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.environmentVariable
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["Bearer"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["Authorization"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type ApiDeleteEnvironmentVariableRequest struct {
+	ctx        context.Context
+	ApiService *EnvVarAPIService
+	key        string
+}
+
+func (r ApiDeleteEnvironmentVariableRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteEnvironmentVariableExecute(r)
+}
+
+/*
+DeleteEnvironmentVariable Delete environment variable
+
+Delete environment variable
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param key Environment Variable Key
+	@return ApiDeleteEnvironmentVariableRequest
+*/
+func (a *EnvVarAPIService) DeleteEnvironmentVariable(ctx context.Context, key string) ApiDeleteEnvironmentVariableRequest {
+	return ApiDeleteEnvironmentVariableRequest{
+		ApiService: a,
+		ctx:        ctx,
+		key:        key,
+	}
+}
+
+// Execute executes the request
+func (a *EnvVarAPIService) DeleteEnvironmentVariableExecute(r ApiDeleteEnvironmentVariableRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod = http.MethodDelete
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProfileAPIService.DeleteProfileData")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EnvVarAPIService.DeleteEnvironmentVariable")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/profile"
+	localVarPath := localBasePath + "/env/{key}"
+	localVarPath = strings.Replace(localVarPath, "{"+"key"+"}", url.PathEscape(parameterValueToString(r.key, "key")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -123,25 +242,25 @@ func (a *ProfileAPIService) DeleteProfileDataExecute(r ApiDeleteProfileDataReque
 	return localVarHTTPResponse, nil
 }
 
-type ApiGetProfileDataRequest struct {
+type ApiListEnvironmentVariablesRequest struct {
 	ctx        context.Context
-	ApiService *ProfileAPIService
+	ApiService *EnvVarAPIService
 }
 
-func (r ApiGetProfileDataRequest) Execute() (*ProfileData, *http.Response, error) {
-	return r.ApiService.GetProfileDataExecute(r)
+func (r ApiListEnvironmentVariablesRequest) Execute() ([]EnvironmentVariable, *http.Response, error) {
+	return r.ApiService.ListEnvironmentVariablesExecute(r)
 }
 
 /*
-GetProfileData Get profile data
+ListEnvironmentVariables List environment variables
 
-Get profile data
+List environment variables
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiGetProfileDataRequest
+	@return ApiListEnvironmentVariablesRequest
 */
-func (a *ProfileAPIService) GetProfileData(ctx context.Context) ApiGetProfileDataRequest {
-	return ApiGetProfileDataRequest{
+func (a *EnvVarAPIService) ListEnvironmentVariables(ctx context.Context) ApiListEnvironmentVariablesRequest {
+	return ApiListEnvironmentVariablesRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -149,21 +268,21 @@ func (a *ProfileAPIService) GetProfileData(ctx context.Context) ApiGetProfileDat
 
 // Execute executes the request
 //
-//	@return ProfileData
-func (a *ProfileAPIService) GetProfileDataExecute(r ApiGetProfileDataRequest) (*ProfileData, *http.Response, error) {
+//	@return []EnvironmentVariable
+func (a *EnvVarAPIService) ListEnvironmentVariablesExecute(r ApiListEnvironmentVariablesRequest) ([]EnvironmentVariable, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *ProfileData
+		localVarReturnValue []EnvironmentVariable
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProfileAPIService.GetProfileData")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EnvVarAPIService.ListEnvironmentVariables")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/profile"
+	localVarPath := localBasePath + "/env"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -179,7 +298,7 @@ func (a *ProfileAPIService) GetProfileDataExecute(r ApiGetProfileDataRequest) (*
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"*/*"}
+	localVarHTTPHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
@@ -235,118 +354,4 @@ func (a *ProfileAPIService) GetProfileDataExecute(r ApiGetProfileDataRequest) (*
 	}
 
 	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiSetProfileDataRequest struct {
-	ctx         context.Context
-	ApiService  *ProfileAPIService
-	profileData *ProfileData
-}
-
-// Profile data
-func (r ApiSetProfileDataRequest) ProfileData(profileData ProfileData) ApiSetProfileDataRequest {
-	r.profileData = &profileData
-	return r
-}
-
-func (r ApiSetProfileDataRequest) Execute() (*http.Response, error) {
-	return r.ApiService.SetProfileDataExecute(r)
-}
-
-/*
-SetProfileData Set profile data
-
-Set profile data
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiSetProfileDataRequest
-*/
-func (a *ProfileAPIService) SetProfileData(ctx context.Context) ApiSetProfileDataRequest {
-	return ApiSetProfileDataRequest{
-		ApiService: a,
-		ctx:        ctx,
-	}
-}
-
-// Execute executes the request
-func (a *ProfileAPIService) SetProfileDataExecute(r ApiSetProfileDataRequest) (*http.Response, error) {
-	var (
-		localVarHTTPMethod = http.MethodPut
-		localVarPostBody   interface{}
-		formFiles          []formFile
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProfileAPIService.SetProfileData")
-	if err != nil {
-		return nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/profile"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.profileData == nil {
-		return nil, reportError("profileData is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.profileData
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["Bearer"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarHTTPResponse, newErr
-	}
-
-	return localVarHTTPResponse, nil
 }

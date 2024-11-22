@@ -31,9 +31,9 @@ import (
 	"github.com/daytonaio/daytona/pkg/server/apikeys"
 	"github.com/daytonaio/daytona/pkg/server/builds"
 	"github.com/daytonaio/daytona/pkg/server/containerregistries"
+	"github.com/daytonaio/daytona/pkg/server/env"
 	"github.com/daytonaio/daytona/pkg/server/gitproviders"
 	"github.com/daytonaio/daytona/pkg/server/headscale"
-	"github.com/daytonaio/daytona/pkg/server/profiledata"
 	"github.com/daytonaio/daytona/pkg/server/registry"
 	"github.com/daytonaio/daytona/pkg/server/targetconfigs"
 	"github.com/daytonaio/daytona/pkg/server/targets"
@@ -233,7 +233,7 @@ func GetInstance(c *server.Config, configDir string, version string, telemetrySe
 	if err != nil {
 		return nil, err
 	}
-	profileDataStore, err := db.NewProfileDataStore(dbConnection)
+	environmentVariableStore, err := db.NewEnvironmentVariableStore(dbConnection)
 	if err != nil {
 		return nil, err
 	}
@@ -518,26 +518,26 @@ func GetInstance(c *server.Config, configDir string, version string, telemetrySe
 		LoggerFactory:         loggerFactory,
 	})
 
-	profileDataService := profiledata.NewProfileDataService(profiledata.ProfileDataServiceConfig{
-		ProfileDataStore: profileDataStore,
+	environmentVariableService := env.NewEnvironmentVariableService(env.EnvironmentVariableServiceConfig{
+		EnvironmentVariableStore: environmentVariableStore,
 	})
 
 	s := server.GetInstance(&server.ServerInstanceConfig{
-		Config:                   *c,
-		Version:                  version,
-		TailscaleServer:          headscaleServer,
-		TargetConfigService:      targetConfigService,
-		ContainerRegistryService: containerRegistryService,
-		BuildService:             buildService,
-		WorkspaceConfigService:   workspaceConfigService,
-		WorkspaceService:         workspaceService,
-		LocalContainerRegistry:   localContainerRegistry,
-		ApiKeyService:            apiKeyService,
-		TargetService:            targetService,
-		GitProviderService:       gitProviderService,
-		ProviderManager:          providerManager,
-		ProfileDataService:       profileDataService,
-		TelemetryService:         telemetryService,
+		Config:                     *c,
+		Version:                    version,
+		TailscaleServer:            headscaleServer,
+		TargetConfigService:        targetConfigService,
+		ContainerRegistryService:   containerRegistryService,
+		BuildService:               buildService,
+		WorkspaceConfigService:     workspaceConfigService,
+		WorkspaceService:           workspaceService,
+		LocalContainerRegistry:     localContainerRegistry,
+		ApiKeyService:              apiKeyService,
+		TargetService:              targetService,
+		GitProviderService:         gitProviderService,
+		ProviderManager:            providerManager,
+		EnvironmentVariableService: environmentVariableService,
+		TelemetryService:           telemetryService,
 	})
 
 	return s, s.Initialize()

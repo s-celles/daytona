@@ -1,10 +1,6 @@
-name: daytona env list
-synopsis: List environment variables
-usage: daytona env list [flags]
-options:
-    - name: format
-      shorthand: f
-      usage: Output format. Must be one of (yaml, json)
+name: daytona env add
+synopsis: Add environment variables
+usage: daytona env add [KEY=VALUE]... [flags]
 inherited_options:
     - name: help
       default_value: "false"

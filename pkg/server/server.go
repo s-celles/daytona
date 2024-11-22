@@ -16,21 +16,21 @@ import (
 )
 
 type ServerInstanceConfig struct {
-	Config                   Config
-	Version                  string
-	TailscaleServer          TailscaleServer
-	TargetConfigService      services.ITargetConfigService
-	ContainerRegistryService services.IContainerRegistryService
-	BuildService             services.IBuildService
-	WorkspaceConfigService   services.IWorkspaceConfigService
-	WorkspaceService         services.IWorkspaceService
-	LocalContainerRegistry   ILocalContainerRegistry
-	TargetService            services.ITargetService
-	ApiKeyService            services.IApiKeyService
-	GitProviderService       services.IGitProviderService
-	ProviderManager          manager.IProviderManager
-	ProfileDataService       services.IProfileDataService
-	TelemetryService         telemetry.TelemetryService
+	Config                     Config
+	Version                    string
+	TailscaleServer            TailscaleServer
+	TargetConfigService        services.ITargetConfigService
+	ContainerRegistryService   services.IContainerRegistryService
+	BuildService               services.IBuildService
+	WorkspaceConfigService     services.IWorkspaceConfigService
+	WorkspaceService           services.IWorkspaceService
+	LocalContainerRegistry     ILocalContainerRegistry
+	TargetService              services.ITargetService
+	ApiKeyService              services.IApiKeyService
+	GitProviderService         services.IGitProviderService
+	ProviderManager            manager.IProviderManager
+	EnvironmentVariableService services.IEnvironmentVariableService
+	TelemetryService           telemetry.TelemetryService
 }
 
 var server *Server
@@ -45,22 +45,22 @@ func GetInstance(serverConfig *ServerInstanceConfig) *Server {
 			log.Fatal("Server not initialized")
 		}
 		server = &Server{
-			Id:                       serverConfig.Config.Id,
-			config:                   serverConfig.Config,
-			Version:                  serverConfig.Version,
-			TailscaleServer:          serverConfig.TailscaleServer,
-			TargetConfigService:      serverConfig.TargetConfigService,
-			ContainerRegistryService: serverConfig.ContainerRegistryService,
-			BuildService:             serverConfig.BuildService,
-			WorkspaceConfigService:   serverConfig.WorkspaceConfigService,
-			WorkspaceService:         serverConfig.WorkspaceService,
-			LocalContainerRegistry:   serverConfig.LocalContainerRegistry,
-			TargetService:            serverConfig.TargetService,
-			ApiKeyService:            serverConfig.ApiKeyService,
-			GitProviderService:       serverConfig.GitProviderService,
-			ProviderManager:          serverConfig.ProviderManager,
-			ProfileDataService:       serverConfig.ProfileDataService,
-			TelemetryService:         serverConfig.TelemetryService,
+			Id:                         serverConfig.Config.Id,
+			config:                     serverConfig.Config,
+			Version:                    serverConfig.Version,
+			TailscaleServer:            serverConfig.TailscaleServer,
+			TargetConfigService:        serverConfig.TargetConfigService,
+			ContainerRegistryService:   serverConfig.ContainerRegistryService,
+			BuildService:               serverConfig.BuildService,
+			WorkspaceConfigService:     serverConfig.WorkspaceConfigService,
+			WorkspaceService:           serverConfig.WorkspaceService,
+			LocalContainerRegistry:     serverConfig.LocalContainerRegistry,
+			TargetService:              serverConfig.TargetService,
+			ApiKeyService:              serverConfig.ApiKeyService,
+			GitProviderService:         serverConfig.GitProviderService,
+			ProviderManager:            serverConfig.ProviderManager,
+			EnvironmentVariableService: serverConfig.EnvironmentVariableService,
+			TelemetryService:           serverConfig.TelemetryService,
 		}
 	}
 
@@ -68,22 +68,22 @@ func GetInstance(serverConfig *ServerInstanceConfig) *Server {
 }
 
 type Server struct {
-	Id                       string
-	config                   Config
-	Version                  string
-	TailscaleServer          TailscaleServer
-	TargetConfigService      services.ITargetConfigService
-	ContainerRegistryService services.IContainerRegistryService
-	BuildService             services.IBuildService
-	WorkspaceConfigService   services.IWorkspaceConfigService
-	WorkspaceService         services.IWorkspaceService
-	LocalContainerRegistry   ILocalContainerRegistry
-	TargetService            services.ITargetService
-	ApiKeyService            services.IApiKeyService
-	GitProviderService       services.IGitProviderService
-	ProviderManager          manager.IProviderManager
-	ProfileDataService       services.IProfileDataService
-	TelemetryService         telemetry.TelemetryService
+	Id                         string
+	config                     Config
+	Version                    string
+	TailscaleServer            TailscaleServer
+	TargetConfigService        services.ITargetConfigService
+	ContainerRegistryService   services.IContainerRegistryService
+	BuildService               services.IBuildService
+	WorkspaceConfigService     services.IWorkspaceConfigService
+	WorkspaceService           services.IWorkspaceService
+	LocalContainerRegistry     ILocalContainerRegistry
+	TargetService              services.ITargetService
+	ApiKeyService              services.IApiKeyService
+	GitProviderService         services.IGitProviderService
+	ProviderManager            manager.IProviderManager
+	EnvironmentVariableService services.IEnvironmentVariableService
+	TelemetryService           telemetry.TelemetryService
 }
 
 func (s *Server) Initialize() error {

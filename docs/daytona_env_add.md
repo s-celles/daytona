@@ -1,15 +1,9 @@
-## daytona env list
+## daytona env add
 
-List environment variables
-
-```
-daytona env list [flags]
-```
-
-### Options
+Add environment variables
 
 ```
-  -f, --format string   Output format. Must be one of (yaml, json)
+daytona env add [KEY=VALUE]... [flags]
 ```
 
 ### Options inherited from parent commands
