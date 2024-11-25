@@ -3253,9 +3253,6 @@
                 "user"
             ],
             "properties": {
-                "apiKey": {
-                    "type": "string"
-                },
                 "buildConfig": {
                     "$ref": "#/definitions/BuildConfig"
                 },
@@ -3357,9 +3354,6 @@
                 "user"
             ],
             "properties": {
-                "apiKey": {
-                    "type": "string"
-                },
                 "buildConfig": {
                     "$ref": "#/definitions/BuildConfig"
                 },

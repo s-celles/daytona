@@ -21,7 +21,6 @@ var _ MappedNullable = &Workspace{}
 
 // Workspace struct for Workspace
 type Workspace struct {
-	ApiKey              *string            `json:"apiKey,omitempty"`
 	BuildConfig         *BuildConfig       `json:"buildConfig,omitempty"`
 	EnvVars             map[string]string  `json:"envVars"`
 	GitProviderConfigId *string            `json:"gitProviderConfigId,omitempty"`
@@ -61,38 +60,6 @@ func NewWorkspace(envVars map[string]string, id string, image string, name strin
 func NewWorkspaceWithDefaults() *Workspace {
 	this := Workspace{}
 	return &this
-}
-
-// GetApiKey returns the ApiKey field value if set, zero value otherwise.
-func (o *Workspace) GetApiKey() string {
-	if o == nil || IsNil(o.ApiKey) {
-		var ret string
-		return ret
-	}
-	return *o.ApiKey
-}
-
-// GetApiKeyOk returns a tuple with the ApiKey field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Workspace) GetApiKeyOk() (*string, bool) {
-	if o == nil || IsNil(o.ApiKey) {
-		return nil, false
-	}
-	return o.ApiKey, true
-}
-
-// HasApiKey returns a boolean if a field has been set.
-func (o *Workspace) HasApiKey() bool {
-	if o != nil && !IsNil(o.ApiKey) {
-		return true
-	}
-
-	return false
-}
-
-// SetApiKey gets a reference to the given string and assigns it to the ApiKey field.
-func (o *Workspace) SetApiKey(v string) {
-	o.ApiKey = &v
 }
 
 // GetBuildConfig returns the BuildConfig field value if set, zero value otherwise.
@@ -425,9 +392,6 @@ func (o Workspace) MarshalJSON() ([]byte, error) {
 
 func (o Workspace) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.ApiKey) {
-		toSerialize["apiKey"] = o.ApiKey
-	}
 	if !IsNil(o.BuildConfig) {
 		toSerialize["buildConfig"] = o.BuildConfig
 	}

@@ -234,7 +234,7 @@ func GetWorkspaceJobFactory(c *server.Config, configDir string, version string, 
 		WorkspaceStore:         workspaceStore,
 		WorkspaceMetadataStore: workspaceMetadataStore,
 		FindTarget: func(ctx context.Context, targetId string) (*models.Target, error) {
-			t, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, false)
+			t, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, services.TargetRetrievalParams{})
 			if err != nil {
 				return nil, err
 			}
@@ -311,7 +311,7 @@ func GetWorkspaceJobFactory(c *server.Config, configDir string, version string, 
 			return &workspaceDto.Workspace, nil
 		},
 		FindTarget: func(ctx context.Context, targetId string) (*models.Target, error) {
-			targetDto, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, false)
+			targetDto, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, services.TargetRetrievalParams{})
 			if err != nil {
 				return nil, err
 			}
@@ -423,7 +423,7 @@ func GetTargetJobFactory(c *server.Config, configDir string, version string, tel
 
 	return target.NewTargetJobFactory(target.TargetJobFactoryConfig{
 		FindTarget: func(ctx context.Context, targetId string) (*models.Target, error) {
-			targetDto, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, false)
+			targetDto, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, services.TargetRetrievalParams{})
 			if err != nil {
 				return nil, err
 			}

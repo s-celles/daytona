@@ -318,7 +318,7 @@ func GetInstance(c *server.Config, configDir string, version string, telemetrySe
 		WorkspaceStore:         workspaceStore,
 		WorkspaceMetadataStore: workspaceMetadataStore,
 		FindTarget: func(ctx context.Context, targetId string) (*models.Target, error) {
-			t, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, false)
+			t, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, services.TargetRetrievalParams{})
 			if err != nil {
 				return nil, err
 			}

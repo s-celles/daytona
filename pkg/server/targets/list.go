@@ -10,13 +10,15 @@ import (
 	"sync"
 	"time"
 
+	"github.com/daytonaio/daytona/pkg/models"
 	"github.com/daytonaio/daytona/pkg/provisioner"
 	"github.com/daytonaio/daytona/pkg/server/targets/dto"
+	"github.com/daytonaio/daytona/pkg/services"
 	"github.com/daytonaio/daytona/pkg/stores"
 	log "github.com/sirupsen/logrus"
 )
 
-func (s *TargetService) ListTargets(ctx context.Context, filter *stores.TargetFilter, verbose bool) ([]dto.TargetDTO, error) {
+func (s *TargetService) ListTargets(ctx context.Context, filter *stores.TargetFilter, params services.TargetRetrievalParams) ([]dto.TargetDTO, error) {
 	targets, err := s.targetStore.List(filter)
 	if err != nil {
 		return nil, err
@@ -26,11 +28,18 @@ func (s *TargetService) ListTargets(ctx context.Context, filter *stores.TargetFi
 	response := []dto.TargetDTO{}
 
 	for i, t := range targets {
+		state := t.GetState()
+
+		if state.Name == models.ResourceStateNameDeleted {
+			continue
+		}
+
 		response = append(response, dto.TargetDTO{
 			Target: *t,
-			State:  t.GetState(),
+			State:  state,
 		})
-		if !verbose {
+
+		if !params.Verbose {
 			continue
 		}
 

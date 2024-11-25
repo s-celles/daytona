@@ -3256,9 +3256,6 @@ const docTemplate = `{
                 "user"
             ],
             "properties": {
-                "apiKey": {
-                    "type": "string"
-                },
                 "buildConfig": {
                     "$ref": "#/definitions/BuildConfig"
                 },
@@ -3360,9 +3357,6 @@ const docTemplate = `{
                 "user"
             ],
             "properties": {
-                "apiKey": {
-                    "type": "string"
-                },
                 "buildConfig": {
                     "$ref": "#/definitions/BuildConfig"
                 },

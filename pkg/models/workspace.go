@@ -20,7 +20,7 @@ type Workspace struct {
 	EnvVars             map[string]string          `json:"envVars" validate:"required" gorm:"serializer:json"`
 	TargetId            string                     `json:"targetId" validate:"required" gorm:"foreignKey:TargetId;references:Id"`
 	Target              Target                     `json:"target" validate:"required" gorm:"foreignKey:TargetId"`
-	ApiKey              string                     `json:""`
+	ApiKey              string                     `json:"-"`
 	Metadata            *WorkspaceMetadata         `gorm:"foreignKey:WorkspaceId;references:Id" validate:"optional"`
 	GitProviderConfigId *string                    `json:"gitProviderConfigId,omitempty" validate:"optional"`
 	LastJob             *Job                       `gorm:"foreignKey:ResourceId;references:Id" validate:"optional"`

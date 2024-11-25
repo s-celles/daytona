@@ -14,9 +14,9 @@ import (
 
 type ITargetService interface {
 	CreateTarget(ctx context.Context, req dto.CreateTargetDTO) (*models.Target, error)
-	GetTarget(ctx context.Context, filter *stores.TargetFilter, verbose bool) (*dto.TargetDTO, error)
+	GetTarget(ctx context.Context, filter *stores.TargetFilter, params TargetRetrievalParams) (*dto.TargetDTO, error)
 	GetTargetLogReader(targetId string) (io.Reader, error)
-	ListTargets(ctx context.Context, filter *stores.TargetFilter, verbose bool) ([]dto.TargetDTO, error)
+	ListTargets(ctx context.Context, filter *stores.TargetFilter, params TargetRetrievalParams) ([]dto.TargetDTO, error)
 	StartTarget(ctx context.Context, targetId string) error
 	StopTarget(ctx context.Context, targetId string) error
 	SetDefault(ctx context.Context, targetId string) error
@@ -26,4 +26,9 @@ type ITargetService interface {
 	HandleSuccessfulRemoval(ctx context.Context, targetId string) error
 
 	SetTargetMetadata(targetId string, metadata *models.TargetMetadata) (*models.TargetMetadata, error)
+}
+
+type TargetRetrievalParams struct {
+	Verbose     bool
+	ShowDeleted bool
 }

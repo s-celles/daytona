@@ -851,8 +851,6 @@ definitions:
     type: object
   Workspace:
     properties:
-      apiKey:
-        type: string
       buildConfig:
         $ref: '#/definitions/BuildConfig'
       envVars:
@@ -923,8 +921,6 @@ definitions:
     type: object
   WorkspaceDTO:
     properties:
-      apiKey:
-        type: string
       buildConfig:
         $ref: '#/definitions/BuildConfig'
       envVars:

@@ -2590,7 +2590,13 @@ components:
           error: error
           updatedAt: updatedAt
         workspaces:
-        - gitProviderConfigId: gitProviderConfigId
+        - buildConfig:
+            cachedBuild:
+              image: image
+              user: user
+            devcontainer:
+              filePath: filePath
+          gitProviderConfigId: gitProviderConfigId
           image: image
           metadata:
             gitStatus:
@@ -2610,10 +2616,20 @@ components:
             updatedAt: updatedAt
             uptime: 5
             workspaceId: workspaceId
-          apiKey: apiKey
           targetId: targetId
+          lastJob:
+            createdAt: createdAt
+            resourceId: resourceId
+            action: null
+            id: id
+            state: null
+            error: error
+            resourceType: null
+            updatedAt: updatedAt
           envVars:
             key: envVars
+          name: name
+          id: id
           repository:
             owner: owner
             path: path
@@ -2625,6 +2641,7 @@ components:
             cloneTarget: null
             sha: sha
             url: url
+          user: user
           target:
             default: true
             metadata:
@@ -2652,25 +2669,13 @@ components:
               name: name
               label: label
               version: version
-          buildConfig:
+        - buildConfig:
             cachedBuild:
               image: image
               user: user
             devcontainer:
               filePath: filePath
-          lastJob:
-            createdAt: createdAt
-            resourceId: resourceId
-            action: null
-            id: id
-            state: null
-            error: error
-            resourceType: null
-            updatedAt: updatedAt
-          name: name
-          id: id
-          user: user
-        - gitProviderConfigId: gitProviderConfigId
+          gitProviderConfigId: gitProviderConfigId
           image: image
           metadata:
             gitStatus:
@@ -2690,10 +2695,20 @@ components:
             updatedAt: updatedAt
             uptime: 5
             workspaceId: workspaceId
-          apiKey: apiKey
           targetId: targetId
+          lastJob:
+            createdAt: createdAt
+            resourceId: resourceId
+            action: null
+            id: id
+            state: null
+            error: error
+            resourceType: null
+            updatedAt: updatedAt
           envVars:
             key: envVars
+          name: name
+          id: id
           repository:
             owner: owner
             path: path
@@ -2705,6 +2720,7 @@ components:
             cloneTarget: null
             sha: sha
             url: url
+          user: user
           target:
             default: true
             metadata:
@@ -2732,24 +2748,6 @@ components:
               name: name
               label: label
               version: version
-          buildConfig:
-            cachedBuild:
-              image: image
-              user: user
-            devcontainer:
-              filePath: filePath
-          lastJob:
-            createdAt: createdAt
-            resourceId: resourceId
-            action: null
-            id: id
-            state: null
-            error: error
-            resourceType: null
-            updatedAt: updatedAt
-          name: name
-          id: id
-          user: user
         info:
           providerMetadata: providerMetadata
           name: name
@@ -2841,6 +2839,12 @@ components:
       type: object
     Workspace:
       example:
+        buildConfig:
+          cachedBuild:
+            image: image
+            user: user
+          devcontainer:
+            filePath: filePath
         gitProviderConfigId: gitProviderConfigId
         image: image
         metadata:
@@ -2861,10 +2865,20 @@ components:
           updatedAt: updatedAt
           uptime: 5
           workspaceId: workspaceId
-        apiKey: apiKey
         targetId: targetId
+        lastJob:
+          createdAt: createdAt
+          resourceId: resourceId
+          action: null
+          id: id
+          state: null
+          error: error
+          resourceType: null
+          updatedAt: updatedAt
         envVars:
           key: envVars
+        name: name
+        id: id
         repository:
           owner: owner
           path: path
@@ -2876,6 +2890,7 @@ components:
           cloneTarget: null
           sha: sha
           url: url
+        user: user
         target:
           default: true
           metadata:
@@ -2903,27 +2918,7 @@ components:
             name: name
             label: label
             version: version
-        buildConfig:
-          cachedBuild:
-            image: image
-            user: user
-          devcontainer:
-            filePath: filePath
-        lastJob:
-          createdAt: createdAt
-          resourceId: resourceId
-          action: null
-          id: id
-          state: null
-          error: error
-          resourceType: null
-          updatedAt: updatedAt
-        name: name
-        id: id
-        user: user
       properties:
-        apiKey:
-          type: string
         buildConfig:
           $ref: '#/components/schemas/BuildConfig'
         envVars:
@@ -3044,7 +3039,6 @@ components:
           updatedAt: updatedAt
           uptime: 5
           workspaceId: workspaceId
-        apiKey: apiKey
         targetId: targetId
         envVars:
           key: envVars
@@ -3115,8 +3109,6 @@ components:
           created: created
           name: name
       properties:
-        apiKey:
-          type: string
         buildConfig:
           $ref: '#/components/schemas/BuildConfig'
         envVars:

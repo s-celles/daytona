@@ -9,20 +9,21 @@ import (
 	"github.com/daytonaio/daytona/internal/util"
 	"github.com/daytonaio/daytona/pkg/models"
 	"github.com/daytonaio/daytona/pkg/server/targets/dto"
+	"github.com/daytonaio/daytona/pkg/services"
 	"github.com/daytonaio/daytona/pkg/stores"
 )
 
 func (s *TargetService) SetDefault(ctx context.Context, id string) error {
 	currentTarget, err := s.GetTarget(ctx, &stores.TargetFilter{
 		IdOrName: &id,
-	}, false)
+	}, services.TargetRetrievalParams{})
 	if err != nil || currentTarget == nil {
 		return err
 	}
 
 	defaultTarget, err := s.GetTarget(ctx, &stores.TargetFilter{
 		Default: util.Pointer(true),
-	}, false)
+	}, services.TargetRetrievalParams{})
 	if err != nil && !IsTargetNotFound(err) {
 		return err
 	}

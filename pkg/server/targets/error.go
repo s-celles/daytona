@@ -11,6 +11,7 @@ var (
 	ErrTargetAlreadyExists = errors.New("target already exists")
 	ErrInvalidTargetName   = errors.New("name is not a valid alphanumeric string")
 	ErrTargetNotFound      = errors.New("target not found")
+	ErrTargetDeleted       = errors.New("target is deleted")
 )
 
 func IsTargetNotFound(err error) bool {
