@@ -37,7 +37,7 @@ func isValidWorkspaceName(name string) bool {
 	return true
 }
 
-func (s *WorkspaceService) CreateWorkspace(ctx context.Context, req services.CreateWorkspaceDTO) (*models.Workspace, error) {
+func (s *WorkspaceService) CreateWorkspace(ctx context.Context, req services.CreateWorkspaceDTO) (*services.WorkspaceDTO, error) {
 	_, err := s.workspaceStore.Find(req.Name)
 	if err == nil {
 		return s.handleCreateError(ctx, nil, ErrWorkspaceAlreadyExists)
@@ -151,12 +151,12 @@ func (s *WorkspaceService) CreateWorkspace(ctx context.Context, req services.Cre
 	return s.handleCreateError(ctx, w, err)
 }
 
-func (s *WorkspaceService) handleCreateError(ctx context.Context, w *models.Workspace, err error) (*models.Workspace, error) {
+func (s *WorkspaceService) handleCreateError(ctx context.Context, w *models.Workspace, err error) (*services.WorkspaceDTO, error) {
 	if !telemetry.TelemetryEnabled(ctx) {
 		if w == nil {
 			return nil, err
 		}
-		return w, err
+		return &services.WorkspaceDTO{Workspace: *w}, err
 	}
 
 	clientId := telemetry.ClientId(ctx)
@@ -176,5 +176,5 @@ func (s *WorkspaceService) handleCreateError(ctx context.Context, w *models.Work
 		return nil, err
 	}
 
-	return w, err
+	return &services.WorkspaceDTO{Workspace: *w}, err
 }

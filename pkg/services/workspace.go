@@ -12,7 +12,7 @@ import (
 )
 
 type IWorkspaceService interface {
-	CreateWorkspace(ctx context.Context, req CreateWorkspaceDTO) (*models.Workspace, error)
+	CreateWorkspace(ctx context.Context, req CreateWorkspaceDTO) (*WorkspaceDTO, error)
 	GetWorkspace(ctx context.Context, workspaceId string, verbose bool) (*WorkspaceDTO, error)
 	ListWorkspaces(ctx context.Context, verbose bool) ([]WorkspaceDTO, error)
 	StartWorkspace(ctx context.Context, workspaceId string) error
@@ -21,7 +21,7 @@ type IWorkspaceService interface {
 	ForceRemoveWorkspace(ctx context.Context, workspaceId string) error
 
 	GetWorkspaceLogReader(workspaceId string) (io.Reader, error)
-	SetWorkspaceState(workspaceId string, state *models.WorkspaceState) (*models.Workspace, error)
+	SetWorkspaceState(workspaceId string, state *models.WorkspaceState) (*WorkspaceDTO, error)
 }
 
 type WorkspaceDTO struct {

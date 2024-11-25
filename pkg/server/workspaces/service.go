@@ -83,14 +83,14 @@ type WorkspaceService struct {
 	loggerFactory         logs.LoggerFactory
 }
 
-func (s *WorkspaceService) SetWorkspaceState(workspaceId string, state *models.WorkspaceState) (*models.Workspace, error) {
+func (s *WorkspaceService) SetWorkspaceState(workspaceId string, state *models.WorkspaceState) (*services.WorkspaceDTO, error) {
 	ws, err := s.workspaceStore.Find(workspaceId)
 	if err != nil {
 		return nil, ErrWorkspaceNotFound
 	}
 
 	ws.State = state
-	return ws, s.workspaceStore.Save(ws)
+	return &services.WorkspaceDTO{Workspace: *ws}, s.workspaceStore.Save(ws)
 }
 
 func (s *WorkspaceService) GetWorkspaceLogReader(workspaceId string) (io.Reader, error) {

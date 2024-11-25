@@ -1456,7 +1456,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/Workspace"
+                            "$ref": "#/definitions/WorkspaceDTO"
                         }
                     }
                 }
