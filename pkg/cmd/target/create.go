@@ -81,7 +81,10 @@ var targetCreateCmd = &cobra.Command{
 			return apiclient_util.HandleErrorResponse(res, err)
 		}
 
-		cmd_common.AwaitTargetState(createTargetDto.Id, apiclient.ResourceStateNameStarted)
+		err = cmd_common.AwaitTargetState(createTargetDto.Id, apiclient.ResourceStateNameStarted)
+		if err != nil {
+			return err
+		}
 
 		views.RenderInfoMessage(fmt.Sprintf("Target '%s' set successfully and will be used by default", createTargetDto.Name))
 		return nil
