@@ -18,7 +18,7 @@ import (
 
 var addCmd = &cobra.Command{
 	Use:     "add [KEY=VALUE]...",
-	Short:   "Add environment variables",
+	Short:   "Add server environment variables",
 	Aliases: []string{"a", "new"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		envVarsMap := make(map[string]string)
@@ -55,7 +55,7 @@ var addCmd = &cobra.Command{
 			}
 		}
 
-		views.RenderInfoMessageBold("Profile environment variables have been successfully added")
+		views.RenderInfoMessageBold("Server environment variables have been successfully added")
 
 		return nil
 	},

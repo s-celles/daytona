@@ -1,6 +1,6 @@
 ## daytona env list
 
-List environment variables
+List server environment variables
 
 ```
 daytona env list [flags]
@@ -20,5 +20,5 @@ daytona env list [flags]
 
 ### SEE ALSO
 
-* [daytona env](daytona_env.md)	 - Manage environment variables that are added to all targets and workspaces
+* [daytona env](daytona_env.md)	 - Manage server environment variables that are added to all targets and workspaces
 

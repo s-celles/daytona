@@ -1,6 +1,6 @@
 ## daytona env
 
-Manage environment variables that are added to all targets and workspaces
+Manage server environment variables that are added to all targets and workspaces
 
 ### Options inherited from parent commands
 
@@ -11,7 +11,7 @@ Manage environment variables that are added to all targets and workspaces
 ### SEE ALSO
 
 * [daytona](daytona.md)	 - Daytona is a Dev Environment Manager
-* [daytona env add](daytona_env_add.md)	 - Add environment variables
-* [daytona env list](daytona_env_list.md)	 - List environment variables
-* [daytona env remove](daytona_env_remove.md)	 - Remove environment variables
+* [daytona env add](daytona_env_add.md)	 - Add server environment variables
+* [daytona env list](daytona_env_list.md)	 - List server environment variables
+* [daytona env remove](daytona_env_remove.md)	 - Remove server environment variables
 

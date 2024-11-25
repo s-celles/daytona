@@ -1,6 +1,6 @@
 ## daytona env add
 
-Add environment variables
+Add server environment variables
 
 ```
 daytona env add [KEY=VALUE]... [flags]
@@ -14,5 +14,5 @@ daytona env add [KEY=VALUE]... [flags]
 
 ### SEE ALSO
 
-* [daytona env](daytona_env.md)	 - Manage environment variables that are added to all targets and workspaces
+* [daytona env](daytona_env.md)	 - Manage server environment variables that are added to all targets and workspaces
 

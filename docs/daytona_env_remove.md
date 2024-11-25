@@ -1,6 +1,6 @@
 ## daytona env remove
 
-Remove environment variables
+Remove server environment variables
 
 ```
 daytona env remove [KEY]... [flags]
@@ -14,5 +14,5 @@ daytona env remove [KEY]... [flags]
 
 ### SEE ALSO
 
-* [daytona env](daytona_env.md)	 - Manage environment variables that are added to all targets and workspaces
+* [daytona env](daytona_env.md)	 - Manage server environment variables that are added to all targets and workspaces
 

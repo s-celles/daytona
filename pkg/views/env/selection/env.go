@@ -86,8 +86,8 @@ func GetEnvironmentVariableFromPrompt(envVars []apiclient.EnvironmentVariable, a
 }
 
 func selectEnvironmentVariablesFromPrompt(envVars []apiclient.EnvironmentVariable, actionVerb string, choiceChan chan<- []*apiclient.EnvironmentVariable) {
-	footerText := lipgloss.NewStyle().Bold(true).PaddingLeft(2).Render(fmt.Sprintf("\n\nPress 'x' to mark an environment variable.\nPress 'enter' to %s the current/marked environment variables.", actionVerb))
-	p := getEnvVarsProgramEssentials("Select Environment Variables To ", actionVerb, envVars, footerText, true)
+	footerText := lipgloss.NewStyle().Bold(true).PaddingLeft(2).Render(fmt.Sprintf("\n\nPress 'x' to mark a server environment variable.\nPress 'enter' to %s the current/marked server environment variables.", actionVerb))
+	p := getEnvVarsProgramEssentials("Select Server Environment Variables To ", actionVerb, envVars, footerText, true)
 
 	m, ok := p.(model[apiclient.EnvironmentVariable])
 	if ok && m.choices != nil {

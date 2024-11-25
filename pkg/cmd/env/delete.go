@@ -15,7 +15,7 @@ import (
 
 var deleteCmd = &cobra.Command{
 	Use:     "remove [KEY]...",
-	Short:   "Remove environment variables",
+	Short:   "Remove server environment variables",
 	Aliases: []string{"r", "rm", "d", "delete"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		keys := []string{}
@@ -47,7 +47,7 @@ var deleteCmd = &cobra.Command{
 			}
 		}
 
-		views.RenderInfoMessageBold("Profile environment variables have been successfully removed")
+		views.RenderInfoMessageBold("Server environment variables have been successfully removed")
 
 		return nil
 	},

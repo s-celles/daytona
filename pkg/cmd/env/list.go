@@ -15,7 +15,7 @@ import (
 
 var listCmd = &cobra.Command{
 	Use:     "list",
-	Short:   "List environment variables",
+	Short:   "List server environment variables",
 	Aliases: []string{"ls"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		apiClient, err := apiclient_util.GetApiClient(nil)
