@@ -25,7 +25,7 @@ type TargetDTO struct {
 	EnvVars  map[string]string `json:"envVars"`
 	Id       string            `json:"id"`
 	Info     *TargetInfo       `json:"info,omitempty"`
-	Jobs     []Job             `json:"jobs,omitempty"`
+	LastJob  *Job              `json:"lastJob,omitempty"`
 	Metadata *TargetMetadata   `json:"metadata,omitempty"`
 	Name     string            `json:"name"`
 	// JSON encoded map of options
@@ -165,36 +165,36 @@ func (o *TargetDTO) SetInfo(v TargetInfo) {
 	o.Info = &v
 }
 
-// GetJobs returns the Jobs field value if set, zero value otherwise.
-func (o *TargetDTO) GetJobs() []Job {
-	if o == nil || IsNil(o.Jobs) {
-		var ret []Job
+// GetLastJob returns the LastJob field value if set, zero value otherwise.
+func (o *TargetDTO) GetLastJob() Job {
+	if o == nil || IsNil(o.LastJob) {
+		var ret Job
 		return ret
 	}
-	return o.Jobs
+	return *o.LastJob
 }
 
-// GetJobsOk returns a tuple with the Jobs field value if set, nil otherwise
+// GetLastJobOk returns a tuple with the LastJob field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *TargetDTO) GetJobsOk() ([]Job, bool) {
-	if o == nil || IsNil(o.Jobs) {
+func (o *TargetDTO) GetLastJobOk() (*Job, bool) {
+	if o == nil || IsNil(o.LastJob) {
 		return nil, false
 	}
-	return o.Jobs, true
+	return o.LastJob, true
 }
 
-// HasJobs returns a boolean if a field has been set.
-func (o *TargetDTO) HasJobs() bool {
-	if o != nil && !IsNil(o.Jobs) {
+// HasLastJob returns a boolean if a field has been set.
+func (o *TargetDTO) HasLastJob() bool {
+	if o != nil && !IsNil(o.LastJob) {
 		return true
 	}
 
 	return false
 }
 
-// SetJobs gets a reference to the given []Job and assigns it to the Jobs field.
-func (o *TargetDTO) SetJobs(v []Job) {
-	o.Jobs = v
+// SetLastJob gets a reference to the given Job and assigns it to the LastJob field.
+func (o *TargetDTO) SetLastJob(v Job) {
+	o.LastJob = &v
 }
 
 // GetMetadata returns the Metadata field value if set, zero value otherwise.
@@ -373,8 +373,8 @@ func (o TargetDTO) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Info) {
 		toSerialize["info"] = o.Info
 	}
-	if !IsNil(o.Jobs) {
-		toSerialize["jobs"] = o.Jobs
+	if !IsNil(o.LastJob) {
+		toSerialize["lastJob"] = o.LastJob
 	}
 	if !IsNil(o.Metadata) {
 		toSerialize["metadata"] = o.Metadata

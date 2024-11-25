@@ -5,11 +5,12 @@ package runner
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/daytonaio/daytona/internal/util/apiclient"
-	"github.com/daytonaio/daytona/pkg/build"
+	"github.com/daytonaio/daytona/pkg/jobs"
+	"github.com/daytonaio/daytona/pkg/jobs/target"
+	"github.com/daytonaio/daytona/pkg/jobs/workspace"
 	"github.com/daytonaio/daytona/pkg/logs"
 	"github.com/daytonaio/daytona/pkg/models"
 	"github.com/daytonaio/daytona/pkg/provisioner"
@@ -22,10 +23,10 @@ type JobRunnerConfig struct {
 	ListPendingJobs func(ctx context.Context) ([]*models.Job, error)
 	UpdateJobState  func(ctx context.Context, job *models.Job, state models.JobState, err *error) error
 
-	WorkspaceJobRunner runners.IWorkspaceJobRunner
-	TargetJobRunner    runners.ITargetJobRunner
-	LoggerFactory      logs.LoggerFactory
-	Provisioner        provisioner.IProvisioner
+	WorkspaceJobFactory workspace.IWorkspaceJobFactory
+	TargetJobFactory    target.ITargetJobFactory
+	LoggerFactory       logs.LoggerFactory
+	Provisioner         provisioner.IProvisioner
 }
 
 func NewJobRunner(config JobRunnerConfig) runners.IJobRunner {
@@ -33,10 +34,10 @@ func NewJobRunner(config JobRunnerConfig) runners.IJobRunner {
 		listPendingJobs: config.ListPendingJobs,
 		updateJobState:  config.UpdateJobState,
 
-		workspaceJobRunner: config.WorkspaceJobRunner,
-		targetJobRunner:    config.TargetJobRunner,
-		loggerFactory:      config.LoggerFactory,
-		provisioner:        config.Provisioner,
+		workspaceJobFactory: config.WorkspaceJobFactory,
+		targetJobFactory:    config.TargetJobFactory,
+		loggerFactory:       config.LoggerFactory,
+		provisioner:         config.Provisioner,
 	}
 }
 
@@ -44,10 +45,10 @@ type JobRunner struct {
 	listPendingJobs func(ctx context.Context) ([]*models.Job, error)
 	updateJobState  func(ctx context.Context, job *models.Job, state models.JobState, err *error) error
 
-	workspaceJobRunner runners.IWorkspaceJobRunner
-	targetJobRunner    runners.ITargetJobRunner
-	loggerFactory      logs.LoggerFactory
-	provisioner        provisioner.IProvisioner
+	workspaceJobFactory workspace.IWorkspaceJobFactory
+	targetJobFactory    target.ITargetJobFactory
+	loggerFactory       logs.LoggerFactory
+	provisioner         provisioner.IProvisioner
 }
 
 func (s *JobRunner) StartRunner(ctx context.Context) error {
@@ -62,7 +63,7 @@ func (s *JobRunner) StartRunner(ctx context.Context) error {
 		time.Sleep(500 * time.Millisecond)
 	}
 
-	err := scheduler.AddFunc(build.DEFAULT_JOB_POLL_INTERVAL, func() {
+	err := scheduler.AddFunc(runners.DEFAULT_JOB_POLL_INTERVAL, func() {
 		err := s.CheckAndRunJobs(ctx)
 		if err != nil {
 			log.Error(err)
@@ -94,57 +95,24 @@ func (s *JobRunner) CheckAndRunJobs(ctx context.Context) error {
 }
 
 func (s *JobRunner) runJob(ctx context.Context, j *models.Job) error {
+	var job jobs.IJob
+
 	err := s.updateJobState(ctx, j, models.JobStateRunning, nil)
 	if err != nil {
 		return err
 	}
 
 	switch j.ResourceType {
-	case models.ResourceTypeTarget:
-		err = s.runTargetJob(ctx, j)
 	case models.ResourceTypeWorkspace:
-		err = s.runWorkspaceJob(ctx, j)
+		job = s.workspaceJobFactory.Create(*j)
+	case models.ResourceTypeTarget:
+		job = s.targetJobFactory.Create(*j)
 	}
 
+	err = job.Execute(ctx)
 	if err != nil {
 		return s.updateJobState(ctx, j, models.JobStateError, &err)
 	}
 
 	return s.updateJobState(ctx, j, models.JobStateSuccess, nil)
-}
-
-func (s *JobRunner) runWorkspaceJob(ctx context.Context, j *models.Job) error {
-	switch j.Action {
-	case models.JobActionCreate:
-		return s.workspaceJobRunner.Create(ctx, j)
-	case models.JobActionStart:
-		return s.workspaceJobRunner.Start(ctx, j)
-	case models.JobActionStop:
-		return s.workspaceJobRunner.Stop(ctx, j)
-	case models.JobActionRestart:
-		return s.workspaceJobRunner.Restart(ctx, j)
-	case models.JobActionDelete:
-		return s.workspaceJobRunner.Delete(ctx, j, false)
-	case models.JobActionForceDelete:
-		return s.workspaceJobRunner.Delete(ctx, j, true)
-	}
-	return errors.New("invalid job action")
-}
-
-func (s *JobRunner) runTargetJob(ctx context.Context, j *models.Job) error {
-	switch j.Action {
-	case models.JobActionCreate:
-		return s.targetJobRunner.Create(ctx, j)
-	case models.JobActionStart:
-		return s.targetJobRunner.Start(ctx, j)
-	case models.JobActionStop:
-		return s.targetJobRunner.Stop(ctx, j)
-	case models.JobActionRestart:
-		return s.targetJobRunner.Restart(ctx, j)
-	case models.JobActionDelete:
-		return s.targetJobRunner.Delete(ctx, j, false)
-	case models.JobActionForceDelete:
-		return s.targetJobRunner.Delete(ctx, j, true)
-	}
-	return errors.New("invalid job action")
 }

@@ -70,7 +70,7 @@ func (s *WorkspaceStore) Delete(workspace *models.Workspace) error {
 }
 
 func preloadWorkspaceEntities(tx *gorm.DB) *gorm.DB {
-	return tx.Preload(clause.Associations).Preload("Jobs", func(db *gorm.DB) *gorm.DB {
-		return db.Order("updated_at DESC")
+	return tx.Preload(clause.Associations).Preload("LastJob", func(db *gorm.DB) *gorm.DB {
+		return db.Order("updated_at DESC").Limit(1)
 	})
 }

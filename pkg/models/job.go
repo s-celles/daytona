@@ -5,8 +5,6 @@ package models
 
 import (
 	"time"
-
-	"github.com/daytonaio/daytona/internal/util"
 )
 
 type Job struct {
@@ -49,7 +47,12 @@ const (
 
 func getResourceStateFromJob(job *Job) ResourceState {
 	state := ResourceState{
-		Name: ResourceStateNamePendingCreate,
+		Name:      ResourceStateNamePendingCreate,
+		UpdatedAt: time.Now(),
+	}
+
+	if job == nil {
+		return state
 	}
 
 	if job.State == JobStateSuccess {
@@ -63,11 +66,9 @@ func getResourceStateFromJob(job *Job) ResourceState {
 		case JobActionRestart:
 			state.Name = ResourceStateNameStarted
 		case JobActionDelete:
-			state.Name = ResourceStateNameUnresponsive
-			state.Error = util.Pointer("Resource deleted")
+			state.Name = ResourceStateNameDeleted
 		case JobActionForceDelete:
-			state.Name = ResourceStateNameUnresponsive
-			state.Error = util.Pointer("Resource deleted")
+			state.Name = ResourceStateNameDeleted
 		}
 	} else if job.State == JobStateError {
 		state.Name = ResourceStateNameError

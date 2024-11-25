@@ -11,6 +11,8 @@ import (
 	"github.com/daytonaio/daytona/pkg/build"
 	"github.com/daytonaio/daytona/pkg/db"
 	"github.com/daytonaio/daytona/pkg/gitprovider"
+	"github.com/daytonaio/daytona/pkg/jobs/target"
+	"github.com/daytonaio/daytona/pkg/jobs/workspace"
 	"github.com/daytonaio/daytona/pkg/logs"
 	"github.com/daytonaio/daytona/pkg/models"
 	"github.com/daytonaio/daytona/pkg/provider/manager"
@@ -25,12 +27,11 @@ import (
 	"github.com/daytonaio/daytona/pkg/server/targetconfigs"
 	"github.com/daytonaio/daytona/pkg/server/targets"
 	"github.com/daytonaio/daytona/pkg/server/workspaces"
+	"github.com/daytonaio/daytona/pkg/services"
 	"github.com/daytonaio/daytona/pkg/stores"
 	"github.com/daytonaio/daytona/pkg/telemetry"
 
 	"github.com/daytonaio/daytona/pkg/runners/runner"
-	target_runner "github.com/daytonaio/daytona/pkg/runners/target"
-	workspace_runner "github.com/daytonaio/daytona/pkg/runners/workspace"
 )
 
 func GetJobRunner(c *server.Config, configDir string, version string, telemetryService telemetry.TelemetryService) (runners.IJobRunner, error) {
@@ -50,12 +51,12 @@ func GetJobRunner(c *server.Config, configDir string, version string, telemetryS
 		JobStore: jobStore,
 	})
 
-	workspaceJobRunner, err := GetWorkspaceJobRunner(c, configDir, version, telemetryService)
+	workspaceJobFactory, err := GetWorkspaceJobFactory(c, configDir, version, telemetryService)
 	if err != nil {
 		return nil, err
 	}
 
-	targetJobRunner, err := GetTargetJobRunner(c, configDir, version, telemetryService)
+	targetJobFactory, err := GetTargetJobFactory(c, configDir, version, telemetryService)
 	if err != nil {
 		return nil, err
 	}
@@ -73,14 +74,14 @@ func GetJobRunner(c *server.Config, configDir string, version string, telemetryS
 			}
 			return jobService.Save(job)
 		},
-		WorkspaceJobRunner: workspaceJobRunner,
-		TargetJobRunner:    targetJobRunner,
-		LoggerFactory:      logs.NewLoggerFactory(nil, nil),
-		Provisioner:        provisioner.NewProvisioner(provisioner.ProvisionerConfig{}),
+		WorkspaceJobFactory: workspaceJobFactory,
+		TargetJobFactory:    targetJobFactory,
+		LoggerFactory:       logs.NewLoggerFactory(nil, nil),
+		Provisioner:         provisioner.NewProvisioner(provisioner.ProvisionerConfig{}),
 	}), nil
 }
 
-func GetWorkspaceJobRunner(c *server.Config, configDir string, version string, telemetryService telemetry.TelemetryService) (runners.IWorkspaceJobRunner, error) {
+func GetWorkspaceJobFactory(c *server.Config, configDir string, version string, telemetryService telemetry.TelemetryService) (workspace.IWorkspaceJobFactory, error) {
 	dbPath, err := getDbPath()
 	if err != nil {
 		return nil, err
@@ -301,16 +302,13 @@ func GetWorkspaceJobRunner(c *server.Config, configDir string, version string, t
 		LoggerFactory:         loggerFactory,
 	})
 
-	return workspace_runner.NewWorkspaceJobRunner(workspace_runner.WorkspaceJobRunnerConfig{
+	return workspace.NewWorkspaceJobFactory(workspace.WorkspaceJobFactoryConfig{
 		FindWorkspace: func(ctx context.Context, workspaceId string) (*models.Workspace, error) {
-			workspaceDto, err := workspaceService.GetWorkspace(ctx, workspaceId, false)
+			workspaceDto, err := workspaceService.GetWorkspace(ctx, workspaceId, services.WorkspaceRetrievalParams{Verbose: false})
 			if err != nil {
 				return nil, err
 			}
 			return &workspaceDto.Workspace, nil
-		},
-		HandleSuccessfulRemoval: func(ctx context.Context, workspaceId string) error {
-			return workspaceService.HandleSuccessfulRemoval(ctx, workspaceId)
 		},
 		FindTarget: func(ctx context.Context, targetId string) (*models.Target, error) {
 			targetDto, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, false)
@@ -333,7 +331,7 @@ func GetWorkspaceJobRunner(c *server.Config, configDir string, version string, t
 	}), nil
 }
 
-func GetTargetJobRunner(c *server.Config, configDir string, version string, telemetryService telemetry.TelemetryService) (runners.ITargetJobRunner, error) {
+func GetTargetJobFactory(c *server.Config, configDir string, version string, telemetryService telemetry.TelemetryService) (target.ITargetJobFactory, error) {
 	dbPath, err := getDbPath()
 	if err != nil {
 		return nil, err
@@ -423,7 +421,7 @@ func GetTargetJobRunner(c *server.Config, configDir string, version string, tele
 		TelemetryService: telemetryService,
 	})
 
-	return target_runner.NewTargetJobRunner(target_runner.TargetJobRunnerConfig{
+	return target.NewTargetJobFactory(target.TargetJobFactoryConfig{
 		FindTarget: func(ctx context.Context, targetId string) (*models.Target, error) {
 			targetDto, err := targetService.GetTarget(ctx, &stores.TargetFilter{IdOrName: &targetId}, false)
 			if err != nil {
@@ -433,9 +431,6 @@ func GetTargetJobRunner(c *server.Config, configDir string, version string, tele
 		},
 		HandleSuccessfulCreation: func(ctx context.Context, targetId string) error {
 			return targetService.HandleSuccessfulCreation(ctx, targetId)
-		},
-		HandleSuccessfulRemoval: func(ctx context.Context, targetId string) error {
-			return targetService.HandleSuccessfulRemoval(ctx, targetId)
 		},
 		TrackTelemetryEvent: func(event telemetry.ServerEvent, clientId string, props map[string]interface{}) error {
 			return telemetryService.TrackServerEvent(event, clientId, props)

@@ -201,7 +201,7 @@ func TestTargetService(t *testing.T) {
 	t.Run("GetWorkspace", func(t *testing.T) {
 		provisioner.On("GetWorkspaceInfo", mock.Anything, ws, tg).Return(&workspaceInfo, nil)
 
-		w, err := service.GetWorkspace(ctx, ws.Id, true)
+		w, err := service.GetWorkspace(ctx, ws.Id, services.WorkspaceRetrievalParams{Verbose: true})
 
 		require.Nil(t, err)
 		require.NotNil(t, w)
@@ -210,7 +210,7 @@ func TestTargetService(t *testing.T) {
 	})
 
 	t.Run("GetWorkspace fails when workspace not found", func(t *testing.T) {
-		_, err := service.GetWorkspace(ctx, "invalid-id", true)
+		_, err := service.GetWorkspace(ctx, "invalid-id", services.WorkspaceRetrievalParams{Verbose: true})
 		require.NotNil(t, err)
 		require.Equal(t, workspaces.ErrWorkspaceNotFound, err)
 	})
@@ -218,7 +218,7 @@ func TestTargetService(t *testing.T) {
 	t.Run("ListWorkspaces", func(t *testing.T) {
 		verbose := false
 
-		workspaces, err := service.ListWorkspaces(ctx, verbose)
+		workspaces, err := service.ListWorkspaces(ctx, services.WorkspaceRetrievalParams{Verbose: verbose})
 
 		require.Nil(t, err)
 		require.Len(t, workspaces, 1)
@@ -232,7 +232,7 @@ func TestTargetService(t *testing.T) {
 		verbose := true
 		provisioner.On("GetWorkspaceInfo", mock.Anything, ws, tg).Return(&workspaceInfo, nil)
 
-		workspaces, err := service.ListWorkspaces(ctx, verbose)
+		workspaces, err := service.ListWorkspaces(ctx, services.WorkspaceRetrievalParams{Verbose: verbose})
 
 		require.Nil(t, err)
 		require.Len(t, workspaces, 1)
@@ -264,7 +264,7 @@ func TestTargetService(t *testing.T) {
 
 		require.Nil(t, err)
 
-		_, err = service.GetWorkspace(ctx, createWorkspaceDTO.Id, true)
+		_, err = service.GetWorkspace(ctx, createWorkspaceDTO.Id, services.WorkspaceRetrievalParams{Verbose: true})
 		require.Equal(t, workspaces.ErrWorkspaceNotFound, err)
 	})
 
@@ -279,7 +279,7 @@ func TestTargetService(t *testing.T) {
 
 		require.Nil(t, err)
 
-		_, err = service.GetWorkspace(ctx, createWorkspaceDTO.Id, true)
+		_, err = service.GetWorkspace(ctx, createWorkspaceDTO.Id, services.WorkspaceRetrievalParams{Verbose: true})
 		require.Equal(t, workspaces.ErrWorkspaceNotFound, err)
 	})
 

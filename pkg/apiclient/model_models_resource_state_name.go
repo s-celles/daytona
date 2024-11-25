@@ -35,6 +35,7 @@ const (
 	ResourceStateNamePendingDelete       ModelsResourceStateName = "pending-delete"
 	ResourceStateNamePendingForcedDelete ModelsResourceStateName = "pending-forced-delete"
 	ResourceStateNameDeleting            ModelsResourceStateName = "deleting"
+	ResourceStateNameDeleted             ModelsResourceStateName = "deleted"
 )
 
 // All allowed values of ModelsResourceStateName enum
@@ -54,6 +55,7 @@ var AllowedModelsResourceStateNameEnumValues = []ModelsResourceStateName{
 	"pending-delete",
 	"pending-forced-delete",
 	"deleting",
+	"deleted",
 }
 
 func (v *ModelsResourceStateName) UnmarshalJSON(src []byte) error {

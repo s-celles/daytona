@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **GitProviderConfigId** | Pointer to **string** |  | [optional] 
 **Id** | **string** |  | 
 **Image** | **string** |  | 
-**Jobs** | Pointer to [**[]Job**](Job.md) |  | [optional] 
+**LastJob** | Pointer to [**Job**](Job.md) |  | [optional] 
 **Metadata** | Pointer to [**WorkspaceMetadata**](WorkspaceMetadata.md) |  | [optional] 
 **Name** | **string** |  | 
 **Repository** | [**GitRepository**](GitRepository.md) |  | 
@@ -172,30 +172,30 @@ and a boolean to check if the value has been set.
 SetImage sets Image field to given value.
 
 
-### GetJobs
+### GetLastJob
 
-`func (o *Workspace) GetJobs() []Job`
+`func (o *Workspace) GetLastJob() Job`
 
-GetJobs returns the Jobs field if non-nil, zero value otherwise.
+GetLastJob returns the LastJob field if non-nil, zero value otherwise.
 
-### GetJobsOk
+### GetLastJobOk
 
-`func (o *Workspace) GetJobsOk() (*[]Job, bool)`
+`func (o *Workspace) GetLastJobOk() (*Job, bool)`
 
-GetJobsOk returns a tuple with the Jobs field if it's non-nil, zero value otherwise
+GetLastJobOk returns a tuple with the LastJob field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetJobs
+### SetLastJob
 
-`func (o *Workspace) SetJobs(v []Job)`
+`func (o *Workspace) SetLastJob(v Job)`
 
-SetJobs sets Jobs field to given value.
+SetLastJob sets LastJob field to given value.
 
-### HasJobs
+### HasLastJob
 
-`func (o *Workspace) HasJobs() bool`
+`func (o *Workspace) HasLastJob() bool`
 
-HasJobs returns a boolean if a field has been set.
+HasLastJob returns a boolean if a field has been set.
 
 ### GetMetadata
 

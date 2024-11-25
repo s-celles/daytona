@@ -9,23 +9,30 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/daytonaio/daytona/pkg/models"
 	"github.com/daytonaio/daytona/pkg/provisioner"
 	"github.com/daytonaio/daytona/pkg/services"
 	log "github.com/sirupsen/logrus"
 )
 
-func (s *WorkspaceService) GetWorkspace(ctx context.Context, workspaceId string, verbose bool) (*services.WorkspaceDTO, error) {
+func (s *WorkspaceService) GetWorkspace(ctx context.Context, workspaceId string, params services.WorkspaceRetrievalParams) (*services.WorkspaceDTO, error) {
 	ws, err := s.workspaceStore.Find(workspaceId)
 	if err != nil {
 		return nil, ErrWorkspaceNotFound
 	}
 
-	response := &services.WorkspaceDTO{
-		Workspace: *ws,
-		State:     ws.GetState(),
+	state := ws.GetState()
+
+	if state.Name == models.ResourceStateNameDeleted {
+		return nil, ErrWorkspaceDeleted
 	}
 
-	if !verbose {
+	response := &services.WorkspaceDTO{
+		Workspace: *ws,
+		State:     state,
+	}
+
+	if !params.Verbose {
 		return response, nil
 	}
 

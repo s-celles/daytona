@@ -3048,11 +3048,8 @@
                 "id": {
                     "type": "string"
                 },
-                "jobs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Job"
-                    }
+                "lastJob": {
+                    "$ref": "#/definitions/Job"
                 },
                 "metadata": {
                     "$ref": "#/definitions/TargetMetadata"
@@ -3165,11 +3162,8 @@
                 "info": {
                     "$ref": "#/definitions/TargetInfo"
                 },
-                "jobs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Job"
-                    }
+                "lastJob": {
+                    "$ref": "#/definitions/Job"
                 },
                 "metadata": {
                     "$ref": "#/definitions/TargetMetadata"
@@ -3280,11 +3274,8 @@
                 "image": {
                     "type": "string"
                 },
-                "jobs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Job"
-                    }
+                "lastJob": {
+                    "$ref": "#/definitions/Job"
                 },
                 "metadata": {
                     "$ref": "#/definitions/WorkspaceMetadata"
@@ -3390,11 +3381,8 @@
                 "info": {
                     "$ref": "#/definitions/WorkspaceInfo"
                 },
-                "jobs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Job"
-                    }
+                "lastJob": {
+                    "$ref": "#/definitions/Job"
                 },
                 "metadata": {
                     "$ref": "#/definitions/WorkspaceMetadata"
@@ -3540,7 +3528,8 @@
                 "unresponsive",
                 "pending-delete",
                 "pending-forced-delete",
-                "deleting"
+                "deleting",
+                "deleted"
             ],
             "x-enum-varnames": [
                 "ResourceStateNameUndefined",
@@ -3557,7 +3546,8 @@
                 "ResourceStateNameUnresponsive",
                 "ResourceStateNamePendingDelete",
                 "ResourceStateNamePendingForcedDelete",
-                "ResourceStateNameDeleting"
+                "ResourceStateNameDeleting",
+                "ResourceStateNameDeleted"
             ]
         },
         "provider.TargetConfigPropertyType": {

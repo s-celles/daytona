@@ -2454,16 +2454,8 @@ components:
           targetId: targetId
           updatedAt: updatedAt
           uptime: 0
-        jobs:
-        - createdAt: createdAt
-          resourceId: resourceId
-          action: null
-          id: id
-          state: null
-          error: error
-          resourceType: null
-          updatedAt: updatedAt
-        - createdAt: createdAt
+        lastJob:
+          createdAt: createdAt
           resourceId: resourceId
           action: null
           id: id
@@ -2492,10 +2484,8 @@ components:
           type: object
         id:
           type: string
-        jobs:
-          items:
-            $ref: '#/components/schemas/Job'
-          type: array
+        lastJob:
+          $ref: '#/components/schemas/Job'
         metadata:
           $ref: '#/components/schemas/TargetMetadata'
         name:
@@ -2581,16 +2571,8 @@ components:
           targetId: targetId
           updatedAt: updatedAt
           uptime: 0
-        jobs:
-        - createdAt: createdAt
-          resourceId: resourceId
-          action: null
-          id: id
-          state: null
-          error: error
-          resourceType: null
-          updatedAt: updatedAt
-        - createdAt: createdAt
+        lastJob:
+          createdAt: createdAt
           resourceId: resourceId
           action: null
           id: id
@@ -2630,23 +2612,6 @@ components:
             workspaceId: workspaceId
           apiKey: apiKey
           targetId: targetId
-          jobs:
-          - createdAt: createdAt
-            resourceId: resourceId
-            action: null
-            id: id
-            state: null
-            error: error
-            resourceType: null
-            updatedAt: updatedAt
-          - createdAt: createdAt
-            resourceId: resourceId
-            action: null
-            id: id
-            state: null
-            error: error
-            resourceType: null
-            updatedAt: updatedAt
           envVars:
             key: envVars
           repository:
@@ -2666,16 +2631,8 @@ components:
               targetId: targetId
               updatedAt: updatedAt
               uptime: 0
-            jobs:
-            - createdAt: createdAt
-              resourceId: resourceId
-              action: null
-              id: id
-              state: null
-              error: error
-              resourceType: null
-              updatedAt: updatedAt
-            - createdAt: createdAt
+            lastJob:
+              createdAt: createdAt
               resourceId: resourceId
               action: null
               id: id
@@ -2701,6 +2658,15 @@ components:
               user: user
             devcontainer:
               filePath: filePath
+          lastJob:
+            createdAt: createdAt
+            resourceId: resourceId
+            action: null
+            id: id
+            state: null
+            error: error
+            resourceType: null
+            updatedAt: updatedAt
           name: name
           id: id
           user: user
@@ -2726,23 +2692,6 @@ components:
             workspaceId: workspaceId
           apiKey: apiKey
           targetId: targetId
-          jobs:
-          - createdAt: createdAt
-            resourceId: resourceId
-            action: null
-            id: id
-            state: null
-            error: error
-            resourceType: null
-            updatedAt: updatedAt
-          - createdAt: createdAt
-            resourceId: resourceId
-            action: null
-            id: id
-            state: null
-            error: error
-            resourceType: null
-            updatedAt: updatedAt
           envVars:
             key: envVars
           repository:
@@ -2762,16 +2711,8 @@ components:
               targetId: targetId
               updatedAt: updatedAt
               uptime: 0
-            jobs:
-            - createdAt: createdAt
-              resourceId: resourceId
-              action: null
-              id: id
-              state: null
-              error: error
-              resourceType: null
-              updatedAt: updatedAt
-            - createdAt: createdAt
+            lastJob:
+              createdAt: createdAt
               resourceId: resourceId
               action: null
               id: id
@@ -2797,6 +2738,15 @@ components:
               user: user
             devcontainer:
               filePath: filePath
+          lastJob:
+            createdAt: createdAt
+            resourceId: resourceId
+            action: null
+            id: id
+            state: null
+            error: error
+            resourceType: null
+            updatedAt: updatedAt
           name: name
           id: id
           user: user
@@ -2818,10 +2768,8 @@ components:
           type: string
         info:
           $ref: '#/components/schemas/TargetInfo'
-        jobs:
-          items:
-            $ref: '#/components/schemas/Job'
-          type: array
+        lastJob:
+          $ref: '#/components/schemas/Job'
         metadata:
           $ref: '#/components/schemas/TargetMetadata'
         name:
@@ -2915,23 +2863,6 @@ components:
           workspaceId: workspaceId
         apiKey: apiKey
         targetId: targetId
-        jobs:
-        - createdAt: createdAt
-          resourceId: resourceId
-          action: null
-          id: id
-          state: null
-          error: error
-          resourceType: null
-          updatedAt: updatedAt
-        - createdAt: createdAt
-          resourceId: resourceId
-          action: null
-          id: id
-          state: null
-          error: error
-          resourceType: null
-          updatedAt: updatedAt
         envVars:
           key: envVars
         repository:
@@ -2951,16 +2882,8 @@ components:
             targetId: targetId
             updatedAt: updatedAt
             uptime: 0
-          jobs:
-          - createdAt: createdAt
-            resourceId: resourceId
-            action: null
-            id: id
-            state: null
-            error: error
-            resourceType: null
-            updatedAt: updatedAt
-          - createdAt: createdAt
+          lastJob:
+            createdAt: createdAt
             resourceId: resourceId
             action: null
             id: id
@@ -2986,6 +2909,15 @@ components:
             user: user
           devcontainer:
             filePath: filePath
+        lastJob:
+          createdAt: createdAt
+          resourceId: resourceId
+          action: null
+          id: id
+          state: null
+          error: error
+          resourceType: null
+          updatedAt: updatedAt
         name: name
         id: id
         user: user
@@ -3004,10 +2936,8 @@ components:
           type: string
         image:
           type: string
-        jobs:
-          items:
-            $ref: '#/components/schemas/Job'
-          type: array
+        lastJob:
+          $ref: '#/components/schemas/Job'
         metadata:
           $ref: '#/components/schemas/WorkspaceMetadata'
         name:
@@ -3116,23 +3046,6 @@ components:
           workspaceId: workspaceId
         apiKey: apiKey
         targetId: targetId
-        jobs:
-        - createdAt: createdAt
-          resourceId: resourceId
-          action: null
-          id: id
-          state: null
-          error: error
-          resourceType: null
-          updatedAt: updatedAt
-        - createdAt: createdAt
-          resourceId: resourceId
-          action: null
-          id: id
-          state: null
-          error: error
-          resourceType: null
-          updatedAt: updatedAt
         envVars:
           key: envVars
         repository:
@@ -3152,16 +3065,8 @@ components:
             targetId: targetId
             updatedAt: updatedAt
             uptime: 0
-          jobs:
-          - createdAt: createdAt
-            resourceId: resourceId
-            action: null
-            id: id
-            state: null
-            error: error
-            resourceType: null
-            updatedAt: updatedAt
-          - createdAt: createdAt
+          lastJob:
+            createdAt: createdAt
             resourceId: resourceId
             action: null
             id: id
@@ -3187,6 +3092,15 @@ components:
             user: user
           devcontainer:
             filePath: filePath
+        lastJob:
+          createdAt: createdAt
+          resourceId: resourceId
+          action: null
+          id: id
+          state: null
+          error: error
+          resourceType: null
+          updatedAt: updatedAt
         name: name
         id: id
         state:
@@ -3217,10 +3131,8 @@ components:
           type: string
         info:
           $ref: '#/components/schemas/WorkspaceInfo'
-        jobs:
-          items:
-            $ref: '#/components/schemas/Job'
-          type: array
+        lastJob:
+          $ref: '#/components/schemas/Job'
         metadata:
           $ref: '#/components/schemas/WorkspaceMetadata'
         name:
@@ -3367,6 +3279,7 @@ components:
       - pending-delete
       - pending-forced-delete
       - deleting
+      - deleted
       type: string
       x-enum-varnames:
       - ResourceStateNameUndefined
@@ -3384,6 +3297,7 @@ components:
       - ResourceStateNamePendingDelete
       - ResourceStateNamePendingForcedDelete
       - ResourceStateNameDeleting
+      - ResourceStateNameDeleted
     provider.TargetConfigPropertyType:
       enum:
       - string

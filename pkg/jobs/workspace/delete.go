@@ -12,17 +12,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (s *WorkspaceJobRunner) Delete(ctx context.Context, j *models.Job, force bool) error {
-	w, err := s.findWorkspace(ctx, j.ResourceId)
+func (wj *WorkspaceJob) delete(ctx context.Context, j *models.Job, force bool) error {
+	w, err := wj.findWorkspace(ctx, j.ResourceId)
 	if err != nil {
 		return err
 	}
 
-	workspaceLogger := s.loggerFactory.CreateWorkspaceLogger(w.Id, w.Name, logs.LogSourceServer)
+	workspaceLogger := wj.loggerFactory.CreateWorkspaceLogger(w.Id, w.Name, logs.LogSourceServer)
 
 	workspaceLogger.Write([]byte(fmt.Sprintf("Destroying workspace %s", w.Name)))
 
-	err = s.provisioner.DestroyWorkspace(w)
+	err = wj.provisioner.DestroyWorkspace(w)
 	if err != nil {
 		if !force {
 			return err
@@ -35,14 +35,6 @@ func (s *WorkspaceJobRunner) Delete(ctx context.Context, j *models.Job, force bo
 	err = workspaceLogger.Cleanup()
 	if err != nil {
 		// Should not fail the whole operation if the workspace logger cannot be cleaned up
-		log.Error(err)
-	}
-
-	err = s.handleSuccessfulRemoval(ctx, w.Id)
-	if err != nil {
-		if !force {
-			return err
-		}
 		log.Error(err)
 	}
 

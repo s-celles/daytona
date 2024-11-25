@@ -13,8 +13,8 @@ import (
 
 type IWorkspaceService interface {
 	CreateWorkspace(ctx context.Context, req CreateWorkspaceDTO) (*models.Workspace, error)
-	GetWorkspace(ctx context.Context, workspaceId string, verbose bool) (*WorkspaceDTO, error)
-	ListWorkspaces(ctx context.Context, verbose bool) ([]WorkspaceDTO, error)
+	GetWorkspace(ctx context.Context, workspaceId string, params WorkspaceRetrievalParams) (*WorkspaceDTO, error)
+	ListWorkspaces(ctx context.Context, params WorkspaceRetrievalParams) ([]WorkspaceDTO, error)
 	StartWorkspace(ctx context.Context, workspaceId string) error
 	StopWorkspace(ctx context.Context, workspaceId string) error
 	RemoveWorkspace(ctx context.Context, workspaceId string) error
@@ -30,6 +30,11 @@ type WorkspaceDTO struct {
 	State models.ResourceState  `json:"state" validate:"required"`
 	Info  *models.WorkspaceInfo `json:"info" validate:"optional"`
 } //	@name	WorkspaceDTO
+
+type WorkspaceRetrievalParams struct {
+	Verbose     bool
+	ShowDeleted bool
+}
 
 type CreateWorkspaceDTO struct {
 	Id                  string                   `json:"id" validate:"required"`

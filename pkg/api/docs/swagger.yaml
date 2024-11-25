@@ -704,10 +704,8 @@ definitions:
         type: object
       id:
         type: string
-      jobs:
-        items:
-          $ref: '#/definitions/Job'
-        type: array
+      lastJob:
+        $ref: '#/definitions/Job'
       metadata:
         $ref: '#/definitions/TargetMetadata'
       name:
@@ -791,10 +789,8 @@ definitions:
         type: string
       info:
         $ref: '#/definitions/TargetInfo'
-      jobs:
-        items:
-          $ref: '#/definitions/Job'
-        type: array
+      lastJob:
+        $ref: '#/definitions/Job'
       metadata:
         $ref: '#/definitions/TargetMetadata'
       name:
@@ -869,10 +865,8 @@ definitions:
         type: string
       image:
         type: string
-      jobs:
-        items:
-          $ref: '#/definitions/Job'
-        type: array
+      lastJob:
+        $ref: '#/definitions/Job'
       metadata:
         $ref: '#/definitions/WorkspaceMetadata'
       name:
@@ -945,10 +939,8 @@ definitions:
         type: string
       info:
         $ref: '#/definitions/WorkspaceInfo'
-      jobs:
-        items:
-          $ref: '#/definitions/Job'
-        type: array
+      lastJob:
+        $ref: '#/definitions/Job'
       metadata:
         $ref: '#/definitions/WorkspaceMetadata'
       name:
@@ -1071,6 +1063,7 @@ definitions:
     - pending-delete
     - pending-forced-delete
     - deleting
+    - deleted
     type: string
     x-enum-varnames:
     - ResourceStateNameUndefined
@@ -1088,6 +1081,7 @@ definitions:
     - ResourceStateNamePendingDelete
     - ResourceStateNamePendingForcedDelete
     - ResourceStateNameDeleting
+    - ResourceStateNameDeleted
   provider.TargetConfigPropertyType:
     enum:
     - string

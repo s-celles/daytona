@@ -12,18 +12,18 @@ import (
 	"github.com/daytonaio/daytona/pkg/views"
 )
 
-func (s *WorkspaceJobRunner) Start(ctx context.Context, j *models.Job) error {
-	w, err := s.findWorkspace(ctx, j.ResourceId)
+func (wj *WorkspaceJob) start(ctx context.Context, j *models.Job) error {
+	w, err := wj.findWorkspace(ctx, j.ResourceId)
 	if err != nil {
 		return err
 	}
 
-	workspaceLogger := s.loggerFactory.CreateWorkspaceLogger(w.Id, w.Name, logs.LogSourceServer)
+	workspaceLogger := wj.loggerFactory.CreateWorkspaceLogger(w.Id, w.Name, logs.LogSourceServer)
 	defer workspaceLogger.Close()
 
 	workspaceLogger.Write([]byte(fmt.Sprintf("Starting workspace %s\n", w.Name)))
 
-	err = s.provisioner.StartWorkspace(w)
+	err = wj.provisioner.StartWorkspace(w)
 	if err != nil {
 		return err
 	}

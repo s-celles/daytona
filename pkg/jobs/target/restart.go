@@ -1,7 +1,7 @@
 // Copyright 2024 Daytona Platforms Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-package workspace
+package target
 
 import (
 	"context"
@@ -9,11 +9,11 @@ import (
 	"github.com/daytonaio/daytona/pkg/models"
 )
 
-func (s *WorkspaceJobRunner) Restart(ctx context.Context, j *models.Job) error {
-	err := s.Stop(ctx, j)
+func (tj *TargetJob) restart(ctx context.Context, j *models.Job) error {
+	err := tj.stop(ctx, j)
 	if err != nil {
 		return err
 	}
 
-	return s.Start(ctx, j)
+	return tj.start(ctx, j)
 }

@@ -10,6 +10,7 @@ import (
 var (
 	ErrWorkspaceAlreadyExists = errors.New("workspace already exists")
 	ErrWorkspaceNotFound      = errors.New("workspace not found")
+	ErrWorkspaceDeleted       = errors.New("workspace is deleted")
 	ErrInvalidWorkspaceName   = errors.New("workspace name is not valid. Only [a-zA-Z0-9-_.] are allowed")
 	ErrInvalidWorkspaceConfig = errors.New("workspace config is invalid")
 )

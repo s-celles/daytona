@@ -27,7 +27,7 @@ type Workspace struct {
 	GitProviderConfigId *string            `json:"gitProviderConfigId,omitempty"`
 	Id                  string             `json:"id"`
 	Image               string             `json:"image"`
-	Jobs                []Job              `json:"jobs,omitempty"`
+	LastJob             *Job               `json:"lastJob,omitempty"`
 	Metadata            *WorkspaceMetadata `json:"metadata,omitempty"`
 	Name                string             `json:"name"`
 	Repository          GitRepository      `json:"repository"`
@@ -231,36 +231,36 @@ func (o *Workspace) SetImage(v string) {
 	o.Image = v
 }
 
-// GetJobs returns the Jobs field value if set, zero value otherwise.
-func (o *Workspace) GetJobs() []Job {
-	if o == nil || IsNil(o.Jobs) {
-		var ret []Job
+// GetLastJob returns the LastJob field value if set, zero value otherwise.
+func (o *Workspace) GetLastJob() Job {
+	if o == nil || IsNil(o.LastJob) {
+		var ret Job
 		return ret
 	}
-	return o.Jobs
+	return *o.LastJob
 }
 
-// GetJobsOk returns a tuple with the Jobs field value if set, nil otherwise
+// GetLastJobOk returns a tuple with the LastJob field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Workspace) GetJobsOk() ([]Job, bool) {
-	if o == nil || IsNil(o.Jobs) {
+func (o *Workspace) GetLastJobOk() (*Job, bool) {
+	if o == nil || IsNil(o.LastJob) {
 		return nil, false
 	}
-	return o.Jobs, true
+	return o.LastJob, true
 }
 
-// HasJobs returns a boolean if a field has been set.
-func (o *Workspace) HasJobs() bool {
-	if o != nil && !IsNil(o.Jobs) {
+// HasLastJob returns a boolean if a field has been set.
+func (o *Workspace) HasLastJob() bool {
+	if o != nil && !IsNil(o.LastJob) {
 		return true
 	}
 
 	return false
 }
 
-// SetJobs gets a reference to the given []Job and assigns it to the Jobs field.
-func (o *Workspace) SetJobs(v []Job) {
-	o.Jobs = v
+// SetLastJob gets a reference to the given Job and assigns it to the LastJob field.
+func (o *Workspace) SetLastJob(v Job) {
+	o.LastJob = &v
 }
 
 // GetMetadata returns the Metadata field value if set, zero value otherwise.
@@ -437,8 +437,8 @@ func (o Workspace) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["id"] = o.Id
 	toSerialize["image"] = o.Image
-	if !IsNil(o.Jobs) {
-		toSerialize["jobs"] = o.Jobs
+	if !IsNil(o.LastJob) {
+		toSerialize["lastJob"] = o.LastJob
 	}
 	if !IsNil(o.Metadata) {
 		toSerialize["metadata"] = o.Metadata

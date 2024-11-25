@@ -28,7 +28,7 @@ type WorkspaceDTO struct {
 	Id                  string             `json:"id"`
 	Image               string             `json:"image"`
 	Info                *WorkspaceInfo     `json:"info,omitempty"`
-	Jobs                []Job              `json:"jobs,omitempty"`
+	LastJob             *Job               `json:"lastJob,omitempty"`
 	Metadata            *WorkspaceMetadata `json:"metadata,omitempty"`
 	Name                string             `json:"name"`
 	Repository          GitRepository      `json:"repository"`
@@ -266,36 +266,36 @@ func (o *WorkspaceDTO) SetInfo(v WorkspaceInfo) {
 	o.Info = &v
 }
 
-// GetJobs returns the Jobs field value if set, zero value otherwise.
-func (o *WorkspaceDTO) GetJobs() []Job {
-	if o == nil || IsNil(o.Jobs) {
-		var ret []Job
+// GetLastJob returns the LastJob field value if set, zero value otherwise.
+func (o *WorkspaceDTO) GetLastJob() Job {
+	if o == nil || IsNil(o.LastJob) {
+		var ret Job
 		return ret
 	}
-	return o.Jobs
+	return *o.LastJob
 }
 
-// GetJobsOk returns a tuple with the Jobs field value if set, nil otherwise
+// GetLastJobOk returns a tuple with the LastJob field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *WorkspaceDTO) GetJobsOk() ([]Job, bool) {
-	if o == nil || IsNil(o.Jobs) {
+func (o *WorkspaceDTO) GetLastJobOk() (*Job, bool) {
+	if o == nil || IsNil(o.LastJob) {
 		return nil, false
 	}
-	return o.Jobs, true
+	return o.LastJob, true
 }
 
-// HasJobs returns a boolean if a field has been set.
-func (o *WorkspaceDTO) HasJobs() bool {
-	if o != nil && !IsNil(o.Jobs) {
+// HasLastJob returns a boolean if a field has been set.
+func (o *WorkspaceDTO) HasLastJob() bool {
+	if o != nil && !IsNil(o.LastJob) {
 		return true
 	}
 
 	return false
 }
 
-// SetJobs gets a reference to the given []Job and assigns it to the Jobs field.
-func (o *WorkspaceDTO) SetJobs(v []Job) {
-	o.Jobs = v
+// SetLastJob gets a reference to the given Job and assigns it to the LastJob field.
+func (o *WorkspaceDTO) SetLastJob(v Job) {
+	o.LastJob = &v
 }
 
 // GetMetadata returns the Metadata field value if set, zero value otherwise.
@@ -499,8 +499,8 @@ func (o WorkspaceDTO) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Info) {
 		toSerialize["info"] = o.Info
 	}
-	if !IsNil(o.Jobs) {
-		toSerialize["jobs"] = o.Jobs
+	if !IsNil(o.LastJob) {
+		toSerialize["lastJob"] = o.LastJob
 	}
 	if !IsNil(o.Metadata) {
 		toSerialize["metadata"] = o.Metadata

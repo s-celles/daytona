@@ -23,7 +23,7 @@ type Workspace struct {
 	ApiKey              string                     `json:""`
 	Metadata            *WorkspaceMetadata         `gorm:"foreignKey:WorkspaceId;references:Id" validate:"optional"`
 	GitProviderConfigId *string                    `json:"gitProviderConfigId,omitempty" validate:"optional"`
-	Jobs                []Job                      `gorm:"foreignKey:ResourceId;references:Id"`
+	LastJob             *Job                       `gorm:"foreignKey:ResourceId;references:Id" validate:"optional"`
 } // @name Workspace
 
 type WorkspaceMetadata struct {
@@ -57,6 +57,7 @@ const (
 	ResourceStateNamePendingDelete       ResourceStateName = "pending-delete"
 	ResourceStateNamePendingForcedDelete ResourceStateName = "pending-forced-delete"
 	ResourceStateNameDeleting            ResourceStateName = "deleting"
+	ResourceStateNameDeleted             ResourceStateName = "deleted"
 )
 
 func (w *Workspace) WorkspaceFolderName() string {
@@ -67,18 +68,7 @@ func (w *Workspace) WorkspaceFolderName() string {
 }
 
 func (w *Workspace) GetState() ResourceState {
-	state := ResourceState{
-		Name:      ResourceStateNamePendingCreate,
-		UpdatedAt: time.Now(),
-	}
-
-	// Jobs are sorted by most recent - deduce the state from the first non-pending one
-	for _, job := range w.Jobs {
-		if job.State != JobStatePending {
-			state = getResourceStateFromJob(&job)
-			break
-		}
-	}
+	state := getResourceStateFromJob(w.LastJob)
 
 	// If the workspace should be running, check if it is unresponsive
 	if state.Name == ResourceStateNameStarted {

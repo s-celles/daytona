@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **EnvVars** | **map[string]string** |  | 
 **Id** | **string** |  | 
 **Info** | Pointer to [**TargetInfo**](TargetInfo.md) |  | [optional] 
-**Jobs** | Pointer to [**[]Job**](Job.md) |  | [optional] 
+**LastJob** | Pointer to [**Job**](Job.md) |  | [optional] 
 **Metadata** | Pointer to [**TargetMetadata**](TargetMetadata.md) |  | [optional] 
 **Name** | **string** |  | 
 **Options** | **string** | JSON encoded map of options | 
@@ -120,30 +120,30 @@ SetInfo sets Info field to given value.
 
 HasInfo returns a boolean if a field has been set.
 
-### GetJobs
+### GetLastJob
 
-`func (o *TargetDTO) GetJobs() []Job`
+`func (o *TargetDTO) GetLastJob() Job`
 
-GetJobs returns the Jobs field if non-nil, zero value otherwise.
+GetLastJob returns the LastJob field if non-nil, zero value otherwise.
 
-### GetJobsOk
+### GetLastJobOk
 
-`func (o *TargetDTO) GetJobsOk() (*[]Job, bool)`
+`func (o *TargetDTO) GetLastJobOk() (*Job, bool)`
 
-GetJobsOk returns a tuple with the Jobs field if it's non-nil, zero value otherwise
+GetLastJobOk returns a tuple with the LastJob field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetJobs
+### SetLastJob
 
-`func (o *TargetDTO) SetJobs(v []Job)`
+`func (o *TargetDTO) SetLastJob(v Job)`
 
-SetJobs sets Jobs field to given value.
+SetLastJob sets LastJob field to given value.
 
-### HasJobs
+### HasLastJob
 
-`func (o *TargetDTO) HasJobs() bool`
+`func (o *TargetDTO) HasLastJob() bool`
 
-HasJobs returns a boolean if a field has been set.
+HasLastJob returns a boolean if a field has been set.
 
 ### GetMetadata
 

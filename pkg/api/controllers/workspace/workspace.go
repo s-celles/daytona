@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/daytonaio/daytona/pkg/server"
+	"github.com/daytonaio/daytona/pkg/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,7 +42,7 @@ func GetWorkspace(ctx *gin.Context) {
 
 	server := server.GetInstance(nil)
 
-	w, err := server.WorkspaceService.GetWorkspace(ctx.Request.Context(), workspaceId, verbose)
+	w, err := server.WorkspaceService.GetWorkspace(ctx.Request.Context(), workspaceId, services.WorkspaceRetrievalParams{Verbose: verbose})
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, fmt.Errorf("failed to get workspace: %w", err))
 		return
@@ -76,7 +77,7 @@ func ListWorkspaces(ctx *gin.Context) {
 
 	server := server.GetInstance(nil)
 
-	workspaceList, err := server.WorkspaceService.ListWorkspaces(ctx.Request.Context(), verbose)
+	workspaceList, err := server.WorkspaceService.ListWorkspaces(ctx.Request.Context(), services.WorkspaceRetrievalParams{Verbose: verbose})
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, fmt.Errorf("failed to list workspaces: %w", err))
 		return

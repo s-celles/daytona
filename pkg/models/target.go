@@ -25,7 +25,7 @@ type Target struct {
 	IsDefault  bool              `json:"default" validate:"required"`
 	Workspaces []Workspace       `gorm:"foreignKey:TargetId;references:Id"`
 	Metadata   *TargetMetadata   `gorm:"foreignKey:TargetId;references:Id" validate:"optional"`
-	Jobs       []Job             `gorm:"foreignKey:ResourceId;references:Id"`
+	LastJob    *Job              `gorm:"foreignKey:ResourceId;references:Id" validate:"optional"`
 } // @name Target
 
 type TargetMetadata struct {
@@ -43,18 +43,7 @@ func (t *Target) GetState() ResourceState {
 		}
 	}
 
-	state := ResourceState{
-		Name:      ResourceStateNamePendingCreate,
-		UpdatedAt: time.Now(),
-	}
-
-	// Jobs are sorted by most recent - deduce the state from the first non-pending one
-	for _, job := range t.Jobs {
-		if job.State != JobStatePending {
-			state = getResourceStateFromJob(&job)
-			break
-		}
-	}
+	state := getResourceStateFromJob(t.LastJob)
 
 	// If the target should be running, check if it is unresponsive
 	if state.Name == ResourceStateNameStarted {

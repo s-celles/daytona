@@ -24,7 +24,7 @@ type Target struct {
 	Default  bool              `json:"default"`
 	EnvVars  map[string]string `json:"envVars"`
 	Id       string            `json:"id"`
-	Jobs     []Job             `json:"jobs,omitempty"`
+	LastJob  *Job              `json:"lastJob,omitempty"`
 	Metadata *TargetMetadata   `json:"metadata,omitempty"`
 	Name     string            `json:"name"`
 	// JSON encoded map of options
@@ -130,36 +130,36 @@ func (o *Target) SetId(v string) {
 	o.Id = v
 }
 
-// GetJobs returns the Jobs field value if set, zero value otherwise.
-func (o *Target) GetJobs() []Job {
-	if o == nil || IsNil(o.Jobs) {
-		var ret []Job
+// GetLastJob returns the LastJob field value if set, zero value otherwise.
+func (o *Target) GetLastJob() Job {
+	if o == nil || IsNil(o.LastJob) {
+		var ret Job
 		return ret
 	}
-	return o.Jobs
+	return *o.LastJob
 }
 
-// GetJobsOk returns a tuple with the Jobs field value if set, nil otherwise
+// GetLastJobOk returns a tuple with the LastJob field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Target) GetJobsOk() ([]Job, bool) {
-	if o == nil || IsNil(o.Jobs) {
+func (o *Target) GetLastJobOk() (*Job, bool) {
+	if o == nil || IsNil(o.LastJob) {
 		return nil, false
 	}
-	return o.Jobs, true
+	return o.LastJob, true
 }
 
-// HasJobs returns a boolean if a field has been set.
-func (o *Target) HasJobs() bool {
-	if o != nil && !IsNil(o.Jobs) {
+// HasLastJob returns a boolean if a field has been set.
+func (o *Target) HasLastJob() bool {
+	if o != nil && !IsNil(o.LastJob) {
 		return true
 	}
 
 	return false
 }
 
-// SetJobs gets a reference to the given []Job and assigns it to the Jobs field.
-func (o *Target) SetJobs(v []Job) {
-	o.Jobs = v
+// SetLastJob gets a reference to the given Job and assigns it to the LastJob field.
+func (o *Target) SetLastJob(v Job) {
+	o.LastJob = &v
 }
 
 // GetMetadata returns the Metadata field value if set, zero value otherwise.
@@ -311,8 +311,8 @@ func (o Target) ToMap() (map[string]interface{}, error) {
 	toSerialize["default"] = o.Default
 	toSerialize["envVars"] = o.EnvVars
 	toSerialize["id"] = o.Id
-	if !IsNil(o.Jobs) {
-		toSerialize["jobs"] = o.Jobs
+	if !IsNil(o.LastJob) {
+		toSerialize["lastJob"] = o.LastJob
 	}
 	if !IsNil(o.Metadata) {
 		toSerialize["metadata"] = o.Metadata

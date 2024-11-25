@@ -17,10 +17,6 @@ import (
 // 10 second interval
 const DEFAULT_BUILD_POLL_INTERVAL = "*/10 * * * * *"
 
-// TODO: add lock when running interval func
-// 1 second interval
-const DEFAULT_JOB_POLL_INTERVAL = "*/1 * * * * *"
-
 type Config struct {
 	Id               string `json:"id" validate:"required"`
 	Interval         string `json:"interval" validate:"required"`

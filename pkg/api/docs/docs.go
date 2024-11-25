@@ -3051,11 +3051,8 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "jobs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Job"
-                    }
+                "lastJob": {
+                    "$ref": "#/definitions/Job"
                 },
                 "metadata": {
                     "$ref": "#/definitions/TargetMetadata"
@@ -3168,11 +3165,8 @@ const docTemplate = `{
                 "info": {
                     "$ref": "#/definitions/TargetInfo"
                 },
-                "jobs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Job"
-                    }
+                "lastJob": {
+                    "$ref": "#/definitions/Job"
                 },
                 "metadata": {
                     "$ref": "#/definitions/TargetMetadata"
@@ -3283,11 +3277,8 @@ const docTemplate = `{
                 "image": {
                     "type": "string"
                 },
-                "jobs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Job"
-                    }
+                "lastJob": {
+                    "$ref": "#/definitions/Job"
                 },
                 "metadata": {
                     "$ref": "#/definitions/WorkspaceMetadata"
@@ -3393,11 +3384,8 @@ const docTemplate = `{
                 "info": {
                     "$ref": "#/definitions/WorkspaceInfo"
                 },
-                "jobs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Job"
-                    }
+                "lastJob": {
+                    "$ref": "#/definitions/Job"
                 },
                 "metadata": {
                     "$ref": "#/definitions/WorkspaceMetadata"
@@ -3543,7 +3531,8 @@ const docTemplate = `{
                 "unresponsive",
                 "pending-delete",
                 "pending-forced-delete",
-                "deleting"
+                "deleting",
+                "deleted"
             ],
             "x-enum-varnames": [
                 "ResourceStateNameUndefined",
@@ -3560,7 +3549,8 @@ const docTemplate = `{
                 "ResourceStateNameUnresponsive",
                 "ResourceStateNamePendingDelete",
                 "ResourceStateNamePendingForcedDelete",
-                "ResourceStateNameDeleting"
+                "ResourceStateNameDeleting",
+                "ResourceStateNameDeleted"
             ]
         },
         "provider.TargetConfigPropertyType": {
