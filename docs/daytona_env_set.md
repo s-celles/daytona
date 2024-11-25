@@ -1,9 +1,9 @@
-## daytona env add
+## daytona env set
 
-Add server environment variables
+Set server environment variables
 
 ```
-daytona env add [KEY=VALUE]... [flags]
+daytona env set [KEY=VALUE]... [flags]
 ```
 
 ### Options inherited from parent commands

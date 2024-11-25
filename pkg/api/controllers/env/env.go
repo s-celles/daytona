@@ -38,18 +38,18 @@ func ListEnvironmentVariables(ctx *gin.Context) {
 	ctx.JSON(200, envVars)
 }
 
-// AddEnvironmentVariable godoc
+// SetEnvironmentVariable godoc
 //
 //	@Tags			envVar
-//	@Summary		Add environment variable
-//	@Description	Add environment variable
+//	@Summary		Set environment variable
+//	@Description	Set environment variable
 //	@Accept			json
 //	@Param			environmentVariable	body	models.EnvironmentVariable	true	"Environment Variable"
 //	@Success		201
 //	@Router			/env [put]
 //
-//	@id				AddEnvironmentVariable
-func AddEnvironmentVariable(ctx *gin.Context) {
+//	@id				SetEnvironmentVariable
+func SetEnvironmentVariable(ctx *gin.Context) {
 	var req models.EnvironmentVariable
 	err := ctx.BindJSON(&req)
 	if err != nil {

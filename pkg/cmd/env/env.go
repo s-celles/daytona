@@ -15,7 +15,7 @@ var EnvCmd = &cobra.Command{
 }
 
 func init() {
-	EnvCmd.AddCommand(addCmd)
+	EnvCmd.AddCommand(setCmd)
 	EnvCmd.AddCommand(listCmd)
 	EnvCmd.AddCommand(deleteCmd)
 }

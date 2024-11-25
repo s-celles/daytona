@@ -256,7 +256,7 @@ func (a *ApiServer) Start() error {
 	envVarController := protected.Group("/env")
 	{
 		envVarController.GET("/", env.ListEnvironmentVariables)
-		envVarController.PUT("/", env.AddEnvironmentVariable)
+		envVarController.PUT("/", env.SetEnvironmentVariable)
 		envVarController.DELETE("/:key", env.DeleteEnvironmentVariable)
 	}
 

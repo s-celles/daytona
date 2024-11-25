@@ -1,6 +1,6 @@
-name: daytona env add
-synopsis: Add server environment variables
-usage: daytona env add [KEY=VALUE]... [flags]
+name: daytona env set
+synopsis: Set server environment variables
+usage: daytona env set [KEY=VALUE]... [flags]
 inherited_options:
     - name: help
       default_value: "false"

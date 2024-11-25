@@ -16,10 +16,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var addCmd = &cobra.Command{
-	Use:     "add [KEY=VALUE]...",
-	Short:   "Add server environment variables",
-	Aliases: []string{"a", "new"},
+var setCmd = &cobra.Command{
+	Use:     "set [KEY=VALUE]...",
+	Short:   "Set server environment variables",
+	Aliases: []string{"s", "add", "new"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		envVarsMap := make(map[string]string)
 
@@ -46,7 +46,7 @@ var addCmd = &cobra.Command{
 		}
 
 		for key, value := range envVarsMap {
-			res, err := apiClient.EnvVarAPI.AddEnvironmentVariable(ctx).EnvironmentVariable(apiclient.EnvironmentVariable{
+			res, err := apiClient.EnvVarAPI.SetEnvironmentVariable(ctx).EnvironmentVariable(apiclient.EnvironmentVariable{
 				Key:   key,
 				Value: value,
 			}).Execute()
@@ -55,7 +55,7 @@ var addCmd = &cobra.Command{
 			}
 		}
 
-		views.RenderInfoMessageBold("Server environment variables have been successfully added")
+		views.RenderInfoMessageBold("Server environment variables have been set successfully")
 
 		return nil
 	},

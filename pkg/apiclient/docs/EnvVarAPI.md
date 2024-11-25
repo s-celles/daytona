@@ -4,74 +4,10 @@ All URIs are relative to *http://localhost:3986*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddEnvironmentVariable**](EnvVarAPI.md#AddEnvironmentVariable) | **Put** /env | Add environment variable
 [**DeleteEnvironmentVariable**](EnvVarAPI.md#DeleteEnvironmentVariable) | **Delete** /env/{key} | Delete environment variable
 [**ListEnvironmentVariables**](EnvVarAPI.md#ListEnvironmentVariables) | **Get** /env | List environment variables
+[**SetEnvironmentVariable**](EnvVarAPI.md#SetEnvironmentVariable) | **Put** /env | Set environment variable
 
-
-
-## AddEnvironmentVariable
-
-> AddEnvironmentVariable(ctx).EnvironmentVariable(environmentVariable).Execute()
-
-Add environment variable
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID/apiclient"
-)
-
-func main() {
-	environmentVariable := *openapiclient.NewEnvironmentVariable("Key_example", "Value_example") // EnvironmentVariable | Environment Variable
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	r, err := apiClient.EnvVarAPI.AddEnvironmentVariable(context.Background()).EnvironmentVariable(environmentVariable).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `EnvVarAPI.AddEnvironmentVariable``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiAddEnvironmentVariableRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **environmentVariable** | [**EnvironmentVariable**](EnvironmentVariable.md) | Environment Variable | 
-
-### Return type
-
- (empty response body)
-
-### Authorization
-
-[Bearer](../README.md#Bearer)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: Not defined
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
 
 
 ## DeleteEnvironmentVariable
@@ -197,6 +133,70 @@ Other parameters are passed through a pointer to a apiListEnvironmentVariablesRe
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## SetEnvironmentVariable
+
+> SetEnvironmentVariable(ctx).EnvironmentVariable(environmentVariable).Execute()
+
+Set environment variable
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID/apiclient"
+)
+
+func main() {
+	environmentVariable := *openapiclient.NewEnvironmentVariable("Key_example", "Value_example") // EnvironmentVariable | Environment Variable
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.EnvVarAPI.SetEnvironmentVariable(context.Background()).EnvironmentVariable(environmentVariable).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EnvVarAPI.SetEnvironmentVariable``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSetEnvironmentVariableRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **environmentVariable** | [**EnvironmentVariable**](EnvironmentVariable.md) | Environment Variable | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)

@@ -278,8 +278,8 @@ paths:
       tags:
       - envVar
     put:
-      description: Add environment variable
-      operationId: AddEnvironmentVariable
+      description: Set environment variable
+      operationId: SetEnvironmentVariable
       requestBody:
         content:
           application/json:
@@ -291,7 +291,7 @@ paths:
         "201":
           content: {}
           description: Created
-      summary: Add environment variable
+      summary: Set environment variable
       tags:
       - envVar
       x-codegen-request-body-name: environmentVariable

@@ -91,9 +91,9 @@ Class | Method | HTTP request | Description
 *ContainerRegistryAPI* | [**RemoveContainerRegistry**](docs/ContainerRegistryAPI.md#removecontainerregistry) | **Delete** /container-registry/{server} | Remove a container registry credentials
 *ContainerRegistryAPI* | [**SetContainerRegistry**](docs/ContainerRegistryAPI.md#setcontainerregistry) | **Put** /container-registry/{server} | Set container registry credentials
 *DefaultAPI* | [**HealthCheck**](docs/DefaultAPI.md#healthcheck) | **Get** /health | Health check
-*EnvVarAPI* | [**AddEnvironmentVariable**](docs/EnvVarAPI.md#addenvironmentvariable) | **Put** /env | Add environment variable
 *EnvVarAPI* | [**DeleteEnvironmentVariable**](docs/EnvVarAPI.md#deleteenvironmentvariable) | **Delete** /env/{key} | Delete environment variable
 *EnvVarAPI* | [**ListEnvironmentVariables**](docs/EnvVarAPI.md#listenvironmentvariables) | **Get** /env | List environment variables
+*EnvVarAPI* | [**SetEnvironmentVariable**](docs/EnvVarAPI.md#setenvironmentvariable) | **Put** /env | Set environment variable
 *GitProviderAPI* | [**GetGitContext**](docs/GitProviderAPI.md#getgitcontext) | **Post** /gitprovider/context | Get Git context
 *GitProviderAPI* | [**GetGitProvider**](docs/GitProviderAPI.md#getgitprovider) | **Get** /gitprovider/{gitProviderId} | Get Git provider
 *GitProviderAPI* | [**GetGitProviderIdForUrl**](docs/GitProviderAPI.md#getgitprovideridforurl) | **Get** /gitprovider/id-for-url/{url} | Get Git provider ID

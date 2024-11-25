@@ -385,15 +385,15 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Add environment variable",
+                "description": "Set environment variable",
                 "consumes": [
                     "application/json"
                 ],
                 "tags": [
                     "envVar"
                 ],
-                "summary": "Add environment variable",
-                "operationId": "AddEnvironmentVariable",
+                "summary": "Set environment variable",
+                "operationId": "SetEnvironmentVariable",
                 "parameters": [
                     {
                         "description": "Environment Variable",

@@ -1188,8 +1188,8 @@ paths:
     put:
       consumes:
       - application/json
-      description: Add environment variable
-      operationId: AddEnvironmentVariable
+      description: Set environment variable
+      operationId: SetEnvironmentVariable
       parameters:
       - description: Environment Variable
         in: body
@@ -1200,7 +1200,7 @@ paths:
       responses:
         "201":
           description: Created
-      summary: Add environment variable
+      summary: Set environment variable
       tags:
       - envVar
   /env/{key}:

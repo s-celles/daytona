@@ -22,120 +22,6 @@ import (
 // EnvVarAPIService EnvVarAPI service
 type EnvVarAPIService service
 
-type ApiAddEnvironmentVariableRequest struct {
-	ctx                 context.Context
-	ApiService          *EnvVarAPIService
-	environmentVariable *EnvironmentVariable
-}
-
-// Environment Variable
-func (r ApiAddEnvironmentVariableRequest) EnvironmentVariable(environmentVariable EnvironmentVariable) ApiAddEnvironmentVariableRequest {
-	r.environmentVariable = &environmentVariable
-	return r
-}
-
-func (r ApiAddEnvironmentVariableRequest) Execute() (*http.Response, error) {
-	return r.ApiService.AddEnvironmentVariableExecute(r)
-}
-
-/*
-AddEnvironmentVariable Add environment variable
-
-Add environment variable
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAddEnvironmentVariableRequest
-*/
-func (a *EnvVarAPIService) AddEnvironmentVariable(ctx context.Context) ApiAddEnvironmentVariableRequest {
-	return ApiAddEnvironmentVariableRequest{
-		ApiService: a,
-		ctx:        ctx,
-	}
-}
-
-// Execute executes the request
-func (a *EnvVarAPIService) AddEnvironmentVariableExecute(r ApiAddEnvironmentVariableRequest) (*http.Response, error) {
-	var (
-		localVarHTTPMethod = http.MethodPut
-		localVarPostBody   interface{}
-		formFiles          []formFile
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EnvVarAPIService.AddEnvironmentVariable")
-	if err != nil {
-		return nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/env"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.environmentVariable == nil {
-		return nil, reportError("environmentVariable is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.environmentVariable
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["Bearer"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["Authorization"] = key
-			}
-		}
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarHTTPResponse, newErr
-	}
-
-	return localVarHTTPResponse, nil
-}
-
 type ApiDeleteEnvironmentVariableRequest struct {
 	ctx        context.Context
 	ApiService *EnvVarAPIService
@@ -354,4 +240,118 @@ func (a *EnvVarAPIService) ListEnvironmentVariablesExecute(r ApiListEnvironmentV
 	}
 
 	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiSetEnvironmentVariableRequest struct {
+	ctx                 context.Context
+	ApiService          *EnvVarAPIService
+	environmentVariable *EnvironmentVariable
+}
+
+// Environment Variable
+func (r ApiSetEnvironmentVariableRequest) EnvironmentVariable(environmentVariable EnvironmentVariable) ApiSetEnvironmentVariableRequest {
+	r.environmentVariable = &environmentVariable
+	return r
+}
+
+func (r ApiSetEnvironmentVariableRequest) Execute() (*http.Response, error) {
+	return r.ApiService.SetEnvironmentVariableExecute(r)
+}
+
+/*
+SetEnvironmentVariable Set environment variable
+
+Set environment variable
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiSetEnvironmentVariableRequest
+*/
+func (a *EnvVarAPIService) SetEnvironmentVariable(ctx context.Context) ApiSetEnvironmentVariableRequest {
+	return ApiSetEnvironmentVariableRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+func (a *EnvVarAPIService) SetEnvironmentVariableExecute(r ApiSetEnvironmentVariableRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EnvVarAPIService.SetEnvironmentVariable")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/env"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.environmentVariable == nil {
+		return nil, reportError("environmentVariable is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.environmentVariable
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["Bearer"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["Authorization"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
 }
