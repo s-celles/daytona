@@ -225,7 +225,15 @@ func GetStateLabel(state apiclient.ModelsResourceStateName) string {
 	case apiclient.ResourceStateNameStopped:
 		return StoppedStyle.Render("STOPPED")
 	case apiclient.ResourceStateNamePendingRestart:
-		return PendingStyle.Render("RESTARTING")
+		return DeletingStyle.Render("RESTARTING")
+	case apiclient.ResourceStateNamePendingDelete:
+		return DeletingStyle.Render("DELETING")
+	case apiclient.ResourceStateNamePendingForcedDelete:
+		return DeletingStyle.Render("DELETING")
+	case apiclient.ResourceStateNameDeleting:
+		return DeletingStyle.Render("DELETING")
+	case apiclient.ResourceStateNameDeleted:
+		return DeletedStyle.Render("DELETED")
 	case apiclient.ResourceStateNameError:
 		return ErrorStyle.Render("ERROR")
 	case apiclient.ResourceStateNameUnresponsive:

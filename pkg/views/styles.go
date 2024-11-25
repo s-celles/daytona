@@ -38,7 +38,8 @@ var (
 	ColorStopped      = lipgloss.AdaptiveColor{Light: "#a2a2a2", Dark: "#a2a2a2"}
 	ColorStopping     = ColorStopped
 	ColorError        = lipgloss.AdaptiveColor{Light: "#e74c3c", Dark: "#e74c3c"}
-	ColorDeleting     = ColorError
+	ColorDeleting     = ColorStopped
+	ColorDeleted      = ColorStopped
 	ColorUnresponsive = ColorError
 )
 
@@ -68,6 +69,7 @@ var (
 	StoppingStyle     = lipgloss.NewStyle().Foreground(ColorStopping)
 	ErrorStyle        = lipgloss.NewStyle().Foreground(ColorError)
 	DeletingStyle     = lipgloss.NewStyle().Foreground(ColorDeleting)
+	DeletedStyle      = lipgloss.NewStyle().Foreground(ColorDeleted)
 	UnresponsiveStyle = lipgloss.NewStyle().Foreground(ColorUnresponsive)
 )
 
