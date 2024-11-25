@@ -11,38 +11,34 @@ import (
 )
 
 type InMemoryEnvironmentVariableStore struct {
-	environmentVariables []*models.EnvironmentVariable
+	envVars map[string]*models.EnvironmentVariable
 }
 
 func NewInMemoryEnvironmentVariableStore() stores.EnvironmentVariableStore {
 	return &InMemoryEnvironmentVariableStore{
-		environmentVariables: make([]*models.EnvironmentVariable, 0),
+		envVars: make(map[string]*models.EnvironmentVariable),
 	}
 }
 
 func (s *InMemoryEnvironmentVariableStore) List() ([]*models.EnvironmentVariable, error) {
-	return s.environmentVariables, nil
+	envVars := []*models.EnvironmentVariable{}
+	for _, envVar := range s.envVars {
+		envVars = append(envVars, envVar)
+	}
+
+	return envVars, nil
 }
 
 func (s *InMemoryEnvironmentVariableStore) Save(environmentVariable *models.EnvironmentVariable) error {
-	envVars := make([]*models.EnvironmentVariable, 0)
-	for _, envVar := range s.environmentVariables {
-		if envVar.Key != environmentVariable.Key {
-			envVars = append(envVars, envVar)
-		}
-	}
-	envVars = append(envVars, environmentVariable)
-	s.environmentVariables = envVars
+	s.envVars[environmentVariable.Key] = environmentVariable
 	return nil
 }
 
 func (s *InMemoryEnvironmentVariableStore) Delete(key string) error {
-	envVars := make([]*models.EnvironmentVariable, 0)
-	for _, envVar := range s.environmentVariables {
-		if envVar.Key != key {
-			envVars = append(envVars, envVar)
-		}
+	_, ok := s.envVars[key]
+	if !ok {
+		return stores.ErrEnvironmentVariableNotFound
 	}
-	s.environmentVariables = envVars
+	delete(s.envVars, key)
 	return nil
 }
